@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>浮屿 · 02 短剧内容与追剧闭环</title>
+<link rel="stylesheet" href="fuyu-kit.css">
+<style>
+/* ---- 本板专用 ---- */
+
+/* 浅底榜单行 */
+.rk.lt{color:rgba(26,23,20,.62);border-color:var(--app-line)}
+.rk.lt .nm{color:var(--app-ink)}
+.rk.lt .no{color:rgba(26,23,20,.4)}
+.rk.lt .sc{color:rgba(26,23,20,.45)}
+.rk.lt .im{border-color:var(--app-line)}
+
+/* 横滚条（题材 chips / 已追卡） */
+.hscroll{display:flex;gap:7px;padding:10px 14px 0;overflow:hidden;flex:none}
+.hscroll .chip{flex:none}
+
+/* 双列剧卡网格 */
+.dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:9px 14px 0}
+.dcard{min-width:0}
+.dcard .im{height:90px;border-radius:10px;background-size:cover;background-position:center 24%;position:relative}
+.dcard .im:not(.todo)::after{content:"";position:absolute;inset:0;border-radius:10px;
+  box-shadow:inset 0 -20px 22px -12px rgba(0,0,0,.62)}
+.dcard .im s{position:absolute;left:6px;bottom:5px;z-index:2;text-decoration:none;font-size:8.5px;
+  color:rgba(255,255,255,.9);letter-spacing:.04em}
+.dcard h5{font-size:11px;font-weight:600;color:var(--app-ink);margin-top:6px;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcard p{font-size:9px;color:var(--app-mute);margin-top:3px;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 搜索结果行 */
+.srow{display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--app-line);align-items:center}
+.srow .im{width:46px;height:62px;border-radius:8px;background-size:cover;background-position:center 22%;
+  flex:none;position:relative}
+.srow .im:not(.todo)::after{content:"";position:absolute;inset:0;border-radius:8px;
+  box-shadow:inset 0 -14px 18px -10px rgba(0,0,0,.6)}
+.srow .tx{flex:1;min-width:0}
+.srow .tx b{display:block;font-size:12px;font-weight:600;color:var(--app-ink);letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .tx p{font-size:9.5px;color:var(--app-mute);margin-top:4px;line-height:1.55;letter-spacing:.03em}
+.srow .tx em{font-style:normal;color:var(--gold);font-weight:600}
+.srow .btn{flex:none;display:inline-grid;padding:0 14px}
+
+/* 筛选抽屉分节 */
+.fsec{margin-bottom:13px}
+.fsec .fl{font-size:9px;letter-spacing:.16em;color:rgba(26,23,20,.4);margin-bottom:8px}
+.sheet .footbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.sheet .footbtns .btn.no{background:transparent;border:1px solid var(--app-line);color:var(--app-mute);
+  font-weight:400;font-size:11px}
+
+/* 竖屏播放器 */
+.pl-bg{position:absolute;inset:0;background-size:cover;background-position:center 26%}
+.pl-bg.todo::after{border-radius:0}
+.pshade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,9,.74) 0%,
+  rgba(11,10,9,.05) 24%,rgba(11,10,9,.06) 50%,rgba(11,10,9,.9) 84%)}
+.pl-back{position:absolute;top:44px;left:14px;z-index:4;width:30px;height:30px;border-radius:50%;
+  background:rgba(11,10,9,.5);border:1px solid rgba(242,234,220,.16);display:grid;place-items:center;color:var(--cream)}
+.pl-play{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);z-index:4;width:52px;height:52px;
+  border-radius:50%;background:rgba(11,10,9,.42);border:1px solid rgba(242,234,220,.2);
+  display:grid;place-items:center;color:rgba(242,234,220,.92)}
+.pl-rail{position:absolute;right:12px;bottom:172px;z-index:4;display:grid;gap:16px;justify-items:center}
+.pl-ac{display:grid;justify-items:center;gap:5px;font-size:9px;color:rgba(242,234,220,.9);letter-spacing:.04em;
+  font-variant-numeric:tabular-nums}
+.pl-ac .b{width:36px;height:36px;border-radius:50%;background:rgba(11,10,9,.5);
+  border:1px solid rgba(242,234,220,.16);display:grid;place-items:center;color:var(--cream)}
+.pl-ac.on .b{border-color:var(--gold-dim);color:var(--gold)}
+.pl-bot{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:0 14px 16px;display:grid;gap:9px}
+.pl-info b{display:block;font-size:13.5px;font-weight:600;color:var(--cream);letter-spacing:.06em}
+.pl-info p{font-size:9.5px;color:rgba(242,234,220,.62);margin-top:5px;letter-spacing:.04em}
+.pl-info .badge{margin-left:7px;vertical-align:2px}
+.pl-ep{display:flex;align-items:center;height:34px;border-radius:10px;background:rgba(11,10,9,.5);
+  border:1px solid rgba(242,234,220,.14);padding:0 11px;font-size:10.5px;color:rgba(242,234,220,.92);letter-spacing:.05em}
+.pl-ep s{margin-left:auto;text-decoration:none;font-size:9.5px;color:var(--gold);letter-spacing:.04em}
+.pl-time{display:flex;justify-content:space-between;font-size:8.5px;color:rgba(242,234,220,.55);
+  letter-spacing:.06em;margin-top:5px;font-variant-numeric:tabular-nums}
+
+/* 选集网格（深色抽屉） */
+.eps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.eps b{position:relative;height:32px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;
+  font-size:11px;font-weight:400;color:var(--ic2);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.eps b.seen{color:rgba(242,234,220,.82);border-color:var(--line2)}
+.eps b.seen::after{content:"";position:absolute;top:9px;right:5px;width:6px;height:3.4px;
+  border-left:1.2px solid var(--gold);border-bottom:1.2px solid var(--gold);transform:rotate(-45deg)}
+.eps b.cur{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-bg);font-weight:600}
+.eps b.lock{color:rgba(242,234,220,.36)}
+.eps b.lock .lk{position:absolute;top:3px;right:4px;color:rgba(242,234,220,.5)}
+.sheet .epmeta{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.sheet .epmeta b{font-size:11.5px;font-weight:600;letter-spacing:.08em;color:var(--ic)}
+.sheet .epmeta s{text-decoration:none;font-size:9.5px;color:var(--gold);letter-spacing:.05em}
+.sheet .dkfoot{display:flex;gap:8px;margin-top:13px}
+.sheet .dkfoot span{flex:1;height:32px;border-radius:9px;border:1px solid var(--line);display:grid;place-items:center;
+  font-size:10px;color:var(--ic2);letter-spacing:.06em}
+.sheet .dkfoot span b{color:var(--cream);font-weight:500}
+.sheet .dhead{display:flex;gap:10px;margin-bottom:12px}
+.sheet .dhead .im{width:44px;height:60px;border-radius:8px;background-size:cover;background-position:center 22%;flex:none}
+.sheet .dhead .tx{flex:1;min-width:0}
+.sheet .dhead b{display:block;font-size:13px;font-weight:600;color:var(--ic);letter-spacing:.05em}
+.sheet .dhead p{font-size:9px;color:var(--ic3);margin-top:4px;letter-spacing:.04em}
+.sheet .dhead .ds{font-size:9.5px;color:var(--ic2);line-height:1.6;margin-top:6px;letter-spacing:.02em}
+
+/* 剧终推荐候选卡 */
+.cands{display:grid;gap:8px;margin-top:13px;text-align:left}
+.cand{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:7px 8px}
+.cand .im{width:32px;height:43px;border-radius:6px;background-size:cover;background-position:center 20%;flex:none}
+.cand .tx{flex:1;min-width:0}
+.cand b{display:block;font-size:11px;font-weight:500;color:var(--ic);letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cand p{font-size:8.5px;color:var(--gold);margin-top:3px;letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dlg .subline{font-size:9.5px;color:var(--ic3);margin-top:6px;letter-spacing:.05em}
+.dlg .endtag{display:inline-block;font-size:8.5px;letter-spacing:.2em;color:rgba(242,234,220,.55);
+  border:1px solid var(--line2);border-radius:5px;padding:2px 8px;margin-bottom:2px}
+
+/* 解锁付费弹窗选项行 */
+.payopt{margin-top:12px;display:grid;gap:7px;text-align:left}
+.payopt .o{display:flex;align-items:center;gap:8px;border:1px solid var(--app-line);border-radius:10px;
+  padding:8px 10px;font-size:10px;color:rgba(26,23,20,.66);letter-spacing:.04em}
+.payopt .o .k{width:18px;height:18px;border-radius:6px;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;flex:none}
+.payopt .o b{margin-left:auto;color:var(--app-ink);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dlg .fine{margin-top:10px;font-size:8.5px;color:rgba(26,23,20,.36);letter-spacing:.05em}
+
+/* 追剧日历 */
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:6px 8px 2px}
+.wk div{display:grid;justify-items:center;gap:4px;font-size:9px;color:var(--app-mute);letter-spacing:.04em}
+.wk b{font-size:12px;font-weight:500;color:var(--app-ink);width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.wk .on b{background:var(--disc);color:var(--cream)}
+.wk i{width:3px;height:3px;border-radius:50%;background:rgba(26,23,20,.22)}
+.wk .has i{background:#9A5A3B}
+.tl{padding:2px 14px 0}
+.tl .r{display:flex;gap:10px;position:relative;padding:7px 0}
+.tl .tm{width:34px;flex:none;font-family:var(--serif);font-size:11px;color:var(--app-ink);
+  padding-top:14px;letter-spacing:.02em}
+.tl .ln{width:12px;flex:none;position:relative}
+.tl .ln::before{content:"";position:absolute;left:5px;top:0;bottom:0;width:1px;background:var(--app-line)}
+.tl .ln::after{content:"";position:absolute;left:2px;top:17px;width:7px;height:7px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--app-ink)}
+.tl .r.hot .ln::after{background:#9A5A3B;border-color:#9A5A3B}
+.tl .cd{flex:1;min-width:0;display:flex;gap:9px;align-items:center;background:#fff;
+  border:1px solid var(--app-line);border-radius:11px;padding:8px 9px}
+.tl .cd .im{width:34px;height:46px;border-radius:6px;background-size:cover;background-position:center 20%;flex:none}
+.tl .cd .tx{flex:1;min-width:0}
+.tl .cd b{display:block;font-size:11.5px;font-weight:600;color:var(--app-ink);letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl .cd p{font-size:9px;color:var(--app-mute);margin-top:4px;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl .cd .btn{flex:none;display:inline-grid;padding:0 11px}
+.tcards{display:flex;gap:9px;padding:10px 14px 0;overflow:hidden;flex:none}
+.tcards .c{flex:none;width:70px;min-width:0}
+.tcards .c .im{height:94px;border-radius:9px;background-size:cover;background-position:center 20%;position:relative}
+.tcards .c .im:not(.todo)::after{content:"";position:absolute;inset:0;border-radius:9px;
+  box-shadow:inset 0 -16px 18px -10px rgba(0,0,0,.55)}
+.tcards .c s{display:block;text-decoration:none;font-size:9px;color:rgba(26,23,20,.66);margin-top:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 更新提醒弹窗图标 */
+.dlg .ico-d{width:42px;height:42px;border-radius:50%;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;margin:2px auto 10px}
+
+/* 说明卡（沿用板1规范） */
+.info-card{border:1px solid var(--line);border-radius:14px;background:var(--c2);padding:18px;height:660px;
+  display:flex;flex-direction:column}
+.info-card h5{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:.1em}
+.info-card .l{font-size:10px;letter-spacing:.16em;color:var(--gold);margin-bottom:10px}
+.info-card ol{list-style:none;display:grid;gap:13px;margin-top:18px;counter-reset:s}
+.info-card ol li{counter-increment:s;display:flex;gap:10px;font-size:10.5px;line-height:1.65;color:var(--ic2);letter-spacing:.03em}
+.info-card ol li::before{content:counter(s,decimal-leading-zero);font-family:var(--serif);font-size:11px;
+  color:var(--gold);flex:none;padding-top:1px}
+.info-card ol li b{display:block;color:var(--ic);font-weight:500;font-size:11px;margin-bottom:3px;letter-spacing:.05em}
+.info-card .end{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-family:var(--hand);
+  font-size:17px;line-height:1.7;letter-spacing:.06em;color:rgba(242,234,220,.86)}
+.info-card .end i{font-style:normal;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="board">
+
+  <!-- 板头 -->
+  <div class="hd">
+    <div>
+      <div class="no">FLOATING ISLE · 02</div>
+      <h1>看完一部就留在岛上</h1>
+      <div class="sub">短剧中心 · 搜索 · 竖屏播放 · 选集 · 剧终推荐 · 追剧日历 · 付费解锁</div>
+    </div>
+    <div class="r">
+      <div>内容目标 <b>看完率 · 追剧转化 · 下一部续看</b></div>
+      <div>关键指标 <b>人均观看时长 · 解锁率 · 日历回访</b></div>
+      <div>视觉 <b>深色沉浸播放，浅米底浏览</b></div>
+    </div>
+  </div>
+
+  <!-- 第一排 -->
+  <div class="band grid g5">
+
+    <!-- 1 短剧中心 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div style="padding:8px 14px 0">
+            <div class="fld"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:rgba(26,23,20,.4)"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>搜剧名 · 搜主演 · 搜题材<span style="margin-left:auto;color:var(--gold);letter-spacing:.06em">搜索</span></div>
+          </div>
+          <div class="a-tab"><span class="on">推荐</span><span>热播</span><span>新上</span><span>完结</span><span>免费</span>
+            <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M7 12h10M10 17h4"/></svg></span>
+          </div>
+          <div class="hscroll">
+            <span class="chip lt on">都市恋爱</span><span class="chip lt">悬疑反转</span><span class="chip lt">古风</span>
+            <span class="chip lt">甜宠</span><span class="chip lt">复仇</span><span class="chip lt">青春</span><span class="chip lt">逆袭</span>
+          </div>
+          <div class="a-sec"><h4>今日热榜</h4><small>10 分钟更新 · 查看全部 ›</small></div>
+          <div style="padding:2px 14px 0">
+            <div class="rk lt"><span class="no">1</span><span class="im i5"></span><span class="nm">暗格 · 悬疑反转</span><span class="sc">热度 98.4</span></div>
+            <div class="rk lt"><span class="no">2</span><span class="im i1"></span><span class="nm">他从暮色赶来 · 都市</span><span class="sc">热度 95.1</span></div>
+            <div class="rk lt"><span class="no">3</span><span class="im i4"></span><span class="nm">暮色证人 · 悬疑</span><span class="sc">热度 92.7</span></div>
+          </div>
+          <div class="a-sec"><h4>根据你的口味推荐</h4><small>换一批</small></div>
+          <div class="dgrid">
+            <div class="dcard"><div class="im i3"><s>12 集全</s></div><h5>少年恰如夏</h5><p>青春甜宠 · 86 人在追</p></div>
+            <div class="dcard"><div class="im i6"><s>更新至 8 集</s></div><h5>绣春澜</h5><p>古风 · 热度 88.2</p></div>
+            <div class="dcard"><div class="im i2"><s>26 集全</s></div><h5>夜宴归来</h5><p>都市复仇 · 热度 91.5</p></div>
+            <div class="dcard"><div class="im todo lt" data-t="待补图 · 都市独美海报"><s>14 集全</s></div><h5>一人在城</h5><p>都市 · 热度 84.9</p></div>
+          </div>
+          <div class="a-nav">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>01 · 短剧中心</b>频道 + 题材 + 榜单 + 双列流，浅米底承接浏览型消费</div>
+    </div>
+
+    <!-- 2 筛选抽屉 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab"><span>推荐</span><span class="on">热播</span><span>新上</span><span>完结</span><span>免费</span></div>
+          <div class="hscroll">
+            <span class="chip lt on">悬疑反转</span><span class="chip lt">都市恋爱</span><span class="chip lt">古风</span><span class="chip lt">复仇</span>
+          </div>
+          <div class="dgrid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+            <div class="dcard"><div class="im i5"><s>更新至 17 集</s></div><h5>暗格</h5><p>悬疑反转 · 热度 98.4</p></div>
+            <div class="dcard"><div class="im i4"><s>24 集全</s></div><h5>暮色证人</h5><p>悬疑 · 热度 92.7</p></div>
+            <div class="dcard"><div class="im i2"><s>26 集全</s></div><h5>夜宴归来</h5><p>都市复仇 · 热度 91.5</p></div>
+            <div class="dcard"><div class="im i6"><s>更新至 8 集</s></div><h5>绣春澜</h5><p>古风 · 热度 88.2</p></div>
+          </div>
+        </div>
+        <div class="ovl bottom">
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh"><b>筛选</b><s>清空已选</s></div>
+            <div class="fsec">
+              <div class="fl">题材 · 可多选</div>
+              <div class="chips">
+                <span class="chip lt on">悬疑反转</span><span class="chip lt on">复仇</span><span class="chip lt">都市恋爱</span>
+                <span class="chip lt">古风</span><span class="chip lt">甜宠</span><span class="chip lt">青春</span>
+                <span class="chip lt">逆袭</span><span class="chip lt">穿越</span>
+              </div>
+            </div>
+            <div class="fsec">
+              <div class="fl">集数区间</div>
+              <div class="seg lt"><span class="on">不限</span><span>20 集内</span><span>21–60 集</span><span>60 集以上</span></div>
+            </div>
+            <div class="fsec">
+              <div class="fl">更新状态</div>
+              <div class="seg lt"><span class="on">全部</span><span>更新中</span><span>已完结</span><span>今日新上</span></div>
+            </div>
+            <div class="fsec" style="margin-bottom:0">
+              <div class="fl">排序</div>
+              <div class="seg lt"><span class="on">最热</span><span>最新</span><span>高分</span></div>
+            </div>
+            <div class="footbtns">
+              <div class="btn no">重置</div>
+              <div class="btn">确定 · 24 部</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>02 · 筛选半屏抽屉</b>点右上角漏斗唤起；多选即时生效，确定按钮带结果数</div>
+    </div>
+
+    <!-- 3 搜索结果 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top">
+            <span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <div class="fld" style="flex:1;height:32px"><span class="k">悬疑</span><span style="color:rgba(26,23,20,.3)">反转</span><span style="margin-left:auto;color:var(--app-mute)">取消</span></div>
+          </div>
+          <div style="padding:4px 14px 0">
+            <div class="fcard lt" style="display:flex;gap:10px;align-items:center;padding:11px 12px">
+              <div style="display:flex;flex:none">
+                <span class="im i5" style="width:30px;height:40px;border-radius:5px;background-size:cover;background-position:center 20%;border:1px solid var(--app-line)"></span>
+                <span class="im i4" style="width:30px;height:40px;border-radius:5px;background-size:cover;background-position:center 20%;border:1px solid #fff;margin-left:-9px"></span>
+                <span class="im todo lt" style="width:30px;height:40px;border-radius:5px;margin-left:-9px"></span>
+              </div>
+              <div style="flex:1;min-width:0">
+                <b style="display:block;font-size:11.5px;font-weight:600;color:var(--app-ink);letter-spacing:.04em">剧单 · 悬疑反转入坑合集</b>
+                <p style="font-size:9px;color:var(--app-mute);margin-top:4px">收录 32 部 · 8.6 万人在追 · 每周更新</p>
+              </div>
+              <span style="color:rgba(26,23,20,.3);flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 6l6 6-6 6"/></svg></span>
+            </div>
+          </div>
+          <div class="a-sec" style="padding-top:14px"><h4>找到 18 部相关短剧</h4><small>悬疑 · 反转</small></div>
+          <div style="padding-top:2px">
+            <div class="srow">
+              <div class="im i5"></div>
+              <div class="tx"><b>暗格</b><p><em>悬疑</em><em>反转</em> · 32 集 · 更新至 17 集<br>热度 98.4 · 12.4 万人在追</p></div>
+              <div class="btn sm">追</div>
+            </div>
+            <div class="srow">
+              <div class="im i4"></div>
+              <div class="tx"><b>暮色证人</b><p><em>悬疑</em> · 刑侦 · 24 集全<br>热度 92.7 · 7.1 万人在追</p></div>
+              <div class="btn sm">追</div>
+            </div>
+            <div class="srow">
+              <div class="im todo lt" data-t="待补图 · 悬疑海报"></div>
+              <div class="tx"><b>雨夜归来</b><p><em>悬疑</em> · 家庭 · 20 集全<br>热度 87.3 · 4.8 万人在追</p></div>
+              <div class="btn sm">追</div>
+            </div>
+            <div class="srow">
+              <div class="im i6"></div>
+              <div class="tx"><b>灯下录</b><p>古风<em>悬疑</em> · 18 集全<br>热度 84.1 · 3.2 万人在追</p></div>
+              <div class="btn sm">追</div>
+            </div>
+          </div>
+          <div style="padding:14px 14px 0;text-align:center;font-size:9px;color:rgba(26,23,20,.34);letter-spacing:.08em">没有更多结果 · 试试搜「复仇」「甜宠」</div>
+          <div class="a-sec" style="padding-top:13px"><h4>大家都在搜</h4></div>
+          <div class="hscroll" style="padding-top:8px">
+            <span class="chip lt">暗格 第二季</span><span class="chip lt">雨夜跑腿员</span><span class="chip lt">长风渡 短剧版</span>
+            <span class="chip lt">复仇大小姐</span>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>03 · 搜索结果页</b>关键词高亮 + 剧单卡置顶，结果行直接给"追"降低进片成本</div>
+    </div>
+
+    <!-- 4 竖屏播放 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="pl-bg i10"></div>
+        <div class="pshade"></div>
+        <div class="sb" style="position:relative;z-index:4"><span>9:44</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="pl-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></div>
+        <div class="pl-play"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l12 7-12 7z"/></svg></div>
+        <div class="pl-rail">
+          <div class="pl-ac"><span class="b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg></span>2.3 万</div>
+          <div class="pl-ac"><span class="b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v10H8l-4 3z"/></svg></span>894</div>
+          <div class="pl-ac on"><span class="b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"/></svg></span>已追</div>
+          <div class="pl-ac"><span class="b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12v8h16v-8M12 3v11M8 7l4-4 4 4"/></svg></span>分享</div>
+        </div>
+        <div class="pl-bot">
+          <div class="pl-info"><b>他从暮色赶来<span class="badge">都市恋爱 · 16 集全</span></b>
+            <p>7.2 万人在追 · 第 7 集「雨巷重逢」正在播放 · 主演 陆见白 / 许晚</p>
+          </div>
+          <div class="pl-ep">选集 · 第 7/16 集<s>今日免费 3 集 ›</s></div>
+          <div>
+            <div class="prg"><i style="width:42%"></i></div>
+            <div class="pl-time"><span>00:52</span><span>02:04</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>04 · 竖屏播放页</b>满屏画幅 + 上下压暗渐变，右侧黑色圆盘线性图标，选集入口常驻底部</div>
+    </div>
+
+    <!-- 5 选集与详情抽屉 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="pl-bg i10"></div>
+        <div class="pshade"></div>
+        <div class="sb" style="position:relative;z-index:4"><span>9:44</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="pl-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></div>
+        <div class="ovl bottom">
+          <div class="sheet dk">
+            <div class="grab"></div>
+            <div class="dhead">
+              <div class="im i10"></div>
+              <div class="tx">
+                <b>他从暮色赶来</b>
+                <p>都市恋爱 · 16 集全 · 热度 95.1 · 7.2 万人在追</p>
+                <div class="ds">年末最后一场雨里，一张本该销毁的设计图重新出现。许晚转身时，那个默默替她挡了三年的男人，就站在街角的水光里。</div>
+              </div>
+            </div>
+            <div class="epmeta"><b>选集 · 16 集</b><s>解锁全部 ›</s></div>
+            <div class="eps">
+              <b class="seen">1</b><b class="seen">2</b><b class="seen">3</b><b class="seen">4</b>
+              <b class="seen">5</b><b class="seen">6</b><b class="cur">7</b>
+              <b class="lock">8<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">9<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">10<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">11<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">12<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">13<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">14<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">15<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+              <b class="lock">16<svg class="lk" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></b>
+            </div>
+            <div class="dkfoot">
+              <span>倍速 <b>1.25×</b></span>
+              <span>清晰度 <b>1080P</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>05 · 选集与详情抽屉</b>点底部"选集"唤起；已看打勾、当前集金色高亮、未解锁带锁标</div>
+    </div>
+  </div>
+
+  <!-- 第二排 -->
+  <div class="band tight grid g5" style="padding-top:6px">
+
+    <!-- 6 剧终推荐 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="pl-bg i1"></div>
+        <div class="pshade" style="background:rgba(11,10,9,.82)"></div>
+        <div class="sb" style="position:relative;z-index:4"><span>9:51</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="ovl">
+          <div class="dlg dk" style="width:252px">
+            <span class="endtag">16 集 · 全剧终</span>
+            <div class="h" style="margin-top:10px">看完了？</div>
+            <div class="subline">按你追完的这 3 部，接着给你挑了</div>
+            <div class="cands">
+              <div class="cand"><span class="im i2"></span><div class="tx"><b>夜宴归来</b><p>同主演 · 陆见白 新身份</p></div></div>
+              <div class="cand"><span class="im i11"></span><div class="tx"><b>一人在城</b><p>同为都市恋爱 · 独美结局</p></div></div>
+              <div class="cand"><span class="im i5"></span><div class="tx"><b>暗格</b><p>92% 的观众接着看了它</p></div></div>
+            </div>
+            <div class="btns">
+              <div class="btn">接着看第一部</div>
+              <div class="btn ghost">加入追剧日历</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>06 · 剧终推荐</b>最后一集播完 3 秒后自动浮出；候选各带一条共同点理由</div>
+    </div>
+
+    <!-- 7 追剧日历 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top"><span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <h4>追剧日历</h4><span class="rt">管理 ›</span>
+          </div>
+          <div class="wk">
+            <div><span>一</span><b>12</b><i></i></div>
+            <div><span>二</span><b>13</b><i></i></div>
+            <div><span>三</span><b>14</b><i></i></div>
+            <div class="on has"><span>今天</span><b>15</b><i></i></div>
+            <div class="has"><span>五</span><b>16</b><i></i></div>
+            <div class="has"><span>六</span><b>17</b><i></i></div>
+            <div><span>日</span><b>18</b><i></i></div>
+          </div>
+          <div class="a-sec"><h4>今日更新 · 3 部</h4><small>按开播时间</small></div>
+          <div class="tl">
+            <div class="r hot">
+              <span class="tm">18:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i6"></span><div class="tx"><b>绣春澜</b><p>更新到第 9 集 · 「灯下故人」</p></div><div class="btn sm">观看</div></div>
+            </div>
+            <div class="r hot">
+              <span class="tm">20:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i5"></span><div class="tx"><b>暗格</b><p>更新到第 17 集 · 管家身世将揭晓</p></div><div class="btn sm">预约</div></div>
+            </div>
+            <div class="r">
+              <span class="tm">22:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i3"></span><div class="tx"><b>少年恰如夏</b><p>第 3 集预告上线 · 明日开播</p></div><div class="btn sm">提醒</div></div>
+            </div>
+          </div>
+          <div class="a-sec"><h4>已追 12 部</h4><small>按更新排序 ›</small></div>
+          <div class="tcards">
+            <div class="c"><div class="im i5"></div><s>暗格 · 更至 16</s></div>
+            <div class="c"><div class="im i6"></div><s>绣春澜 · 更至 8</s></div>
+            <div class="c"><div class="im i3"></div><s>少年恰如夏</s></div>
+            <div class="c"><div class="im i2"></div><s>夜宴归来 · 完结</s></div>
+            <div class="c"><div class="im todo lt" data-t="待补图 · 古风海报"></div><s>火久鼎</s></div>
+          </div>
+          <div class="a-nav">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>07 · 追剧日历</b>把"下次再来"排进日程；周条红点标记有更新的日期，时间轴直连播放</div>
+    </div>
+
+    <!-- 8 更新提醒 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>19:58</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top"><span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <h4>追剧日历</h4><span class="rt">管理 ›</span>
+          </div>
+          <div class="wk">
+            <div><span>一</span><b>12</b><i></i></div>
+            <div><span>二</span><b>13</b><i></i></div>
+            <div><span>三</span><b>14</b><i></i></div>
+            <div class="on has"><span>今天</span><b>15</b><i></i></div>
+            <div class="has"><span>五</span><b>16</b><i></i></div>
+            <div class="has"><span>六</span><b>17</b><i></i></div>
+            <div><span>日</span><b>18</b><i></i></div>
+          </div>
+          <div class="a-sec"><h4>今日更新 · 3 部</h4><small>按开播时间</small></div>
+          <div class="tl">
+            <div class="r hot">
+              <span class="tm">18:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i6"></span><div class="tx"><b>绣春澜</b><p>更新到第 9 集 · 「灯下故人」</p></div><div class="btn sm">观看</div></div>
+            </div>
+            <div class="r hot">
+              <span class="tm">20:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i5"></span><div class="tx"><b>暗格</b><p>更新到第 17 集 · 管家身世将揭晓</p></div><div class="btn sm">预约</div></div>
+            </div>
+            <div class="r">
+              <span class="tm">22:00</span><span class="ln"></span>
+              <div class="cd"><span class="im i3"></span><div class="tx"><b>少年恰如夏</b><p>第 3 集预告上线 · 明日开播</p></div><div class="btn sm">提醒</div></div>
+            </div>
+          </div>
+          <div class="a-sec"><h4>已追 12 部</h4><small>按更新排序 ›</small></div>
+          <div class="tcards">
+            <div class="c"><div class="im i5"></div><s>暗格 · 更至 16</s></div>
+            <div class="c"><div class="im i6"></div><s>绣春澜 · 更至 8</s></div>
+            <div class="c"><div class="im i3"></div><s>少年恰如夏</s></div>
+            <div class="c"><div class="im i2"></div><s>夜宴归来 · 完结</s></div>
+          </div>
+          <div class="a-nav">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+        <div class="ovl">
+          <div class="dlg">
+            <div class="ico-d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M18 15V10a6 6 0 1 0-12 0v5l-2 3h16zM10 21h4"/></svg></div>
+            <h6>你追的《暗格》更新了</h6>
+            <p>今日 20:00 上线第 17 集 · 你已看到第 16 集。管家抽屉里的钥匙，终于要对上锁了。</p>
+            <div class="btns c2">
+              <div class="btn no" style="background:transparent;border:1px solid var(--app-line);color:var(--app-mute);font-weight:400">稍后</div>
+              <div class="btn">立即观看</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>08 · 更新提醒</b>触发条件：已追剧集开播更新且用户开启通知，每次更新仅提醒一次</div>
+    </div>
+
+    <!-- 9 免费额度用完 · 解锁付费 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="pl-bg i10"></div>
+        <div class="pshade" style="background:rgba(11,10,9,.7)"></div>
+        <div class="sb" style="position:relative;z-index:4"><span>9:57</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="ovl">
+          <div class="dlg">
+            <div class="ico-d"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14l-7 12z"/><path d="M8 4h8l1.5 4h-11z"/></svg></div>
+            <h6>今日免费 3 集已用完</h6>
+            <p>《他从暮色赶来》第 8 集「图稿疑云」· 看完这一集，就追上更新了</p>
+            <div class="payopt">
+              <div class="o"><span class="k"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-7 12z"/></svg></span>单集解锁 · 30 钻石<b>余额 128</b></div>
+              <div class="o"><span class="k"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M10 10l4 2-4 2z"/></svg></span>开通会员 · 全站短剧免费<b>首月 ¥18</b></div>
+            </div>
+            <div class="btns">
+              <div class="btn gold">看广告 · 免费解锁 1 集</div>
+              <div class="btn ghost" style="border-color:var(--app-line);color:var(--app-mute)">用 30 钻石解锁</div>
+            </div>
+            <div class="fine">看 30 秒广告即可继续 · 每天 0:00 免费额度刷新</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>09 · 免费额度用完 · 解锁付费</b>变现关键屏：免费的广告路径放主按钮，钻石与会员降为次选</div>
+    </div>
+
+    <!-- 说明卡 -->
+    <div class="scr">
+      <div class="info-card">
+        <div class="l">PRINCIPLES</div>
+        <h5>短剧侧的三条设计口径</h5>
+        <ol>
+          <li><div><b>免费集数前置</b>每部前 3 集不设门槛，让钩子先替你说话，再谈钱。解锁那一刻用户已经投入了剧情，付费是"继续"而不是"购买"。</div></li>
+          <li><div><b>解锁动作永远留一条不花钱的路</b>看广告、等次日免费额度、加入日历预约，三条免费出口摆在付费之前，先给理由再要钱。</div></li>
+          <li><div><b>每一部剧的出口都指向人和社交</b>剧终推荐带共同点理由、选集页挂讨论入口、日历提醒直连播放——内容负责让人来，关系负责让人留。</div></li>
+          <li><div><b>提醒只在有价值时出现</b>更新提醒每次更新仅一次，且必须带直达播放的按钮，绝不做无内容的召回骚扰。</div></li>
+        </ol>
+        <div style="margin-top:22px;padding-top:14px;border-top:1px solid var(--line)">
+          <div style="font-size:9px;letter-spacing:.16em;color:var(--ic3);margin-bottom:10px">这条链路要盯的四个数</div>
+          <div class="kv" style="padding:10px 0"><span>免费 3 集看完率</span><b>≥ 68%</b></div>
+          <div class="kv" style="padding:10px 0"><span>看完 → 加入追剧</span><b>≥ 35%</b></div>
+          <div class="kv" style="padding:10px 0"><span>解锁中广告路径占比</span><b>≥ 55%</b></div>
+          <div class="kv" style="padding:10px 0"><span>日历入口 7 日回访</span><b>≥ 41%</b></div>
+        </div>
+        <div class="end">一部剧看完，<br>留在岛上的<i>不该只有进度条</i>。</div>
+      </div>
+      <div class="cap"><b>设计口径</b>内容消费 → 关系沉淀 → 付费转化，每一环都留免费出口</div>
+    </div>
+  </div>
+
+  <!-- 流程带 -->
+  <div class="flow">
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg></span><div class="tx"><h5>内容消费</h5><p>竖屏前 3 集免费，看完即入坑</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"/></svg></span><div class="tx"><h5>关系沉淀</h5><p>追剧 · 日历 · 选集讨论搭子</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 8h14l-7 12z"/><path d="M8 4h8l1.5 4h-11z"/></svg></span><div class="tx"><h5>付费转化</h5><p>广告免费 → 钻石单集 → 会员</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12a8 8 0 1 1 2.6 5.9M4 12H1m3-6 3 3M20 12a8 8 0 1 1-2.6 5.9"/></svg></span><div class="tx"><h5>续看下一部</h5><p>剧终推荐把出口再交回内容</p></div></div>
+    <div class="hand">
+      <div class="l1">看 → 追 → 聊 → 解锁 → 再看下一部</div>
+      <div class="l2">闭环里每一步，都多一个留在岛上的理由。</div>
+    </div>
+  </div>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <div class="k">FLOATING ISLE · 02 DRAMA</div>
+    <ul>
+      <li>底色 <b>暖黑 #141210</b> + 浅米 App <b>#F7F2E9</b></li>
+      <li>点缀 <b>哑金 #C9A268</b> 只给选中态与解锁标识</li>
+      <li>播放页 <b>满屏画幅 + 上下压暗</b>，图标 <b>黑色圆盘 + 线性白标</b></li>
+      <li>弹窗 <b>遮罩 + 毛玻璃</b>，选集与筛选走半屏抽屉</li>
+      <li>解锁 <b>免费路径永远最显眼</b>，先给理由再要钱</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

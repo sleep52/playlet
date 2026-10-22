@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星屿 · 首页 · 四种视觉方向对比</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--serif:"Songti SC","Noto Serif SC","Source Han Serif SC",Georgia,serif;
+  --sans:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",-apple-system,sans-serif}
+body{background:#0A0A0C;font-family:var(--sans);-webkit-font-smoothing:antialiased;padding:52px 40px 90px}
+
+.head{max-width:1700px;margin:0 auto 40px;color:#F2F2F5}
+.head .eb{font-size:11px;letter-spacing:.24em;color:#6C6C7C;text-transform:uppercase}
+.head h1{font-size:32px;font-weight:600;margin:12px 0 12px;letter-spacing:-.01em}
+.head p{font-size:14px;line-height:1.85;color:#A6A6B4;max-width:840px}
+.diag{margin-top:22px;border-left:2px solid #B4442C;padding:2px 0 2px 16px;max-width:840px}
+.diag b{display:block;font-size:13px;color:#F2F2F5;font-weight:600;margin-bottom:6px}
+.diag span{font-size:13px;line-height:1.8;color:#8A8A96}
+
+.board{display:flex;flex-wrap:wrap;gap:48px 36px;justify-content:center;max-width:2000px;margin:0 auto}
+.unit{width:390px}
+.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;
+  box-shadow:0 30px 70px -28px rgba(0,0,0,.85)}
+.cap{margin-top:20px;color:#EDEDEF}
+.cap .k{font-size:11px;letter-spacing:.16em;color:#8A8A96}
+.cap h3{font-size:17px;font-weight:600;margin:6px 0 4px}
+.cap h3 em{font-style:normal;font-size:12px;font-weight:400;color:#6C6C7C;margin-left:8px}
+.cap .why{font-size:12.5px;line-height:1.75;color:#9A9AA8;margin-top:8px}
+.cap .risk{font-size:12px;line-height:1.7;color:#6C6C7C;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)}
+.cap .risk b{color:#C9A227;font-weight:500}
+
+/* ===== 共用结构 ===== */
+.st{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:500}
+.st svg{opacity:.7}
+.home{position:absolute;inset:44px 0 0;display:flex;flex-direction:column}
+.htop{padding:10px 20px 14px}
+.scr{flex:1;overflow:hidden}
+.sh{padding:18px 20px 0;display:flex;align-items:baseline;justify-content:space-between}
+.sh .t{font-size:15px;font-weight:600}
+.sh small{font-size:11px}
+.rail{display:flex;gap:10px;padding:11px 20px 0}
+.dv{width:110px;flex:none}
+.cv{width:110px;height:150px;position:relative;overflow:hidden}
+.cv .nm{position:absolute;left:9px;bottom:22px;font-size:14px;font-weight:600}
+.cv .ep{position:absolute;left:9px;bottom:8px;font-size:9.5px;opacity:.65}
+.dv .sub{font-size:10.5px;margin-top:7px}
+.lsr{display:flex;gap:10px;padding:11px 20px 0}
+.ls{flex:1;height:96px;padding:11px;position:relative;overflow:hidden}
+.lt{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.06em;padding:2px 5px}
+.lw{position:absolute;left:11px;right:11px;bottom:10px;font-size:12px;line-height:1.4}
+.lw span{display:block;font-size:10px;margin-top:3px;opacity:.6}
+.prs{display:flex;gap:9px;padding:11px 20px 0}
+.pr{width:70px;flex:none;display:grid;justify-items:center;gap:7px;text-align:center}
+.pp{width:52px;height:52px;border-radius:50%;position:relative}
+.pn{font-size:11px}
+.pw{font-size:9.5px;padding:2px 5px;line-height:1.3}
+.tabbar{height:74px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-top:8px}
+.tb{display:grid;justify-items:center;gap:4px;font-size:9.5px}
+.tb svg{width:18px;height:18px}
+
+/* ============ A 米白刊物 ============ */
+.paper{background:#F5F1E9;color:#211A15;font-family:var(--sans)}
+.paper .st,.paper .sh small{color:#8A7E70}
+.paper .st{border-bottom:0}
+.paper .htop{border-bottom:1px solid rgba(33,26,21,.14)}
+.paper .date{font-family:var(--serif);font-size:11px;letter-spacing:.14em;color:#8A7E70;margin-bottom:12px}
+.paper .h1{font-family:var(--serif);font-size:23px;font-weight:400;line-height:1.3;letter-spacing:.01em}
+.paper .h1 b{color:#B4442C;font-weight:400}
+.paper .sh{padding-top:24px}
+.paper .sh .t{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:.06em}
+.paper .sh small{font-size:10.5px;letter-spacing:.04em}
+.paper .dv{width:104px}
+.paper .cv{width:104px;height:146px;border-radius:2px;background:#E3DCCF;border:1px solid rgba(33,26,21,.16)}
+.paper .cv.k1{background:#DED3C4}
+.paper .cv.k2{background:#D8CFC2}
+.paper .cv .nm{font-family:var(--serif);font-size:15px;font-weight:400;letter-spacing:.08em;color:#211A15;left:10px;bottom:auto;top:12px}
+.paper .cv .ep{color:#7A6D5E;left:10px}
+.paper .cv .bar{position:absolute;left:10px;right:10px;bottom:12px;height:2px;background:rgba(33,26,21,.16)}
+.paper .cv .bar i{display:block;height:100%;width:58%;background:#B4442C}
+.paper .dv .sub{color:#8A7E70}
+.paper .ls{background:#EAE3D6;border:1px solid rgba(33,26,21,.14);border-radius:2px}
+.paper .lt{background:#B4442C;color:#F5F1E9}
+.paper .lw{font-family:var(--serif);font-size:13px;color:#211A15}
+.paper .lw span{font-family:var(--sans);color:#8A7E70}
+.paper .pp{background:#DCD2C2;border:1px solid rgba(33,26,21,.2)}
+.paper .pp.b{background:#D3C8B8}.paper .pp.c{background:#C9BFAF}
+.paper .pn{color:#211A15}
+.paper .pw{color:#B4442C;border:1px solid rgba(180,68,44,.35)}
+.paper .tabbar{border-top:1px solid rgba(33,26,21,.16);background:#F0EBE1}
+.paper .tb{color:#9A8D7E}
+.paper .tb.on{color:#B4442C}
+.paper .ava{width:26px;height:26px;border-radius:2px;background:#D8CDBB;border:1px solid rgba(33,26,21,.2)}
+
+/* ============ B 暗房黑金 ============ */
+.cinema{background:#0C0B09;color:#E9E3D6;font-family:var(--serif)}
+.cinema .st{color:#7E7666;border-bottom:1px solid rgba(233,227,214,.1);padding-bottom:12px}
+.cinema .htop{padding:14px 22px 16px}
+.cinema .date{font-size:10px;letter-spacing:.3em;color:#7E7666;margin-bottom:14px;font-family:var(--sans)}
+.cinema .h1{font-size:22px;font-weight:400;line-height:1.35;letter-spacing:.04em}
+.cinema .h1 b{color:#C9A227;font-weight:400}
+.cinema .scr{padding:0 2px}
+.cinema .sh{padding:26px 22px 0}
+.cinema .sh .t{font-size:14px;font-weight:400;letter-spacing:.22em;color:#E9E3D6}
+.cinema .sh small{font-size:10px;letter-spacing:.1em;color:#6E6759;font-family:var(--sans)}
+.cinema .rail{padding:13px 22px 0;gap:12px}
+.cinema .dv{width:106px}
+.cinema .cv{width:106px;height:150px;border-radius:1px;background:#151310;border:1px solid rgba(201,162,39,.16)}
+.cinema .cv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(201,162,39,.09),transparent 55%)}
+.cinema .cv .nm{font-size:15px;letter-spacing:.1em;color:#E9E3D6;left:11px;bottom:auto;top:11px}
+.cinema .cv .ep{color:#8C8270;left:11px;font-family:var(--sans);letter-spacing:.08em}
+.cinema .cv .bar{position:absolute;left:11px;right:11px;bottom:12px;height:1px;background:rgba(233,227,214,.18)}
+.cinema .cv .bar i{display:block;height:100%;width:58%;background:#C9A227}
+.cinema .dv .sub{color:#6E6759;font-family:var(--sans);letter-spacing:.06em}
+.cinema .lsr{padding:13px 22px 0}
+.cinema .ls{background:#12110E;border:1px solid rgba(233,227,214,.1);border-radius:1px}
+.cinema .lt{background:transparent;color:#C9A227;border:1px solid rgba(201,162,39,.4);letter-spacing:.16em}
+.cinema .lw{font-size:14px;letter-spacing:.06em}
+.cinema .lw span{font-family:var(--sans);font-size:9.5px;color:#6E6759;letter-spacing:.1em}
+.cinema .prs{padding:13px 22px 0}
+.cinema .pp{background:#1B1915;border:1px solid rgba(201,162,39,.22)}
+.cinema .pp.b{border-color:rgba(233,227,214,.2)}.cinema .pp.c{border-color:rgba(201,162,39,.14)}
+.cinema .pn{font-family:var(--serif);font-size:12px;letter-spacing:.08em}
+.cinema .pw{font-family:var(--sans);color:#C9A227;border-bottom:1px solid rgba(201,162,39,.3);padding:0 0 2px}
+.cinema .tabbar{border-top:1px solid rgba(233,227,214,.1);background:#0A0908}
+.cinema .tb{color:#6E6759;letter-spacing:.06em}
+.cinema .tb.on{color:#C9A227}
+.cinema .ava{width:24px;height:24px;border-radius:50%;border:1px solid rgba(201,162,39,.35);background:#171512}
+
+/* ============ C 瑞士栅格 ============ */
+.grid{background:#F2F2EF;color:#0B0B0B;font-family:var(--sans)}
+.grid .st{font-size:11px;letter-spacing:.1em;color:#0B0B0B;border-bottom:1.5px solid #0B0B0B;padding-bottom:10px;text-transform:uppercase}
+.grid .htop{padding:12px 18px 0}
+.grid .date{font-size:10px;letter-spacing:.16em;color:#6B6B66;margin-bottom:10px}
+.grid .h1{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-.02em;text-transform:none}
+.grid .h1 b{color:#E8481C}
+.grid .scr{padding:0 18px}
+.grid .sh{padding:22px 0 0;border-top:1.5px solid #0B0B0B;margin-top:18px;height:0;overflow:visible}
+.grid .shwrap{padding-top:22px;border-top:1.5px solid #0B0B0B;margin-top:20px}
+.grid .sh{padding:0;border:0;margin:0;display:flex;align-items:center;gap:10px;height:auto}
+.grid .sh .t{font-size:13px;font-weight:700;letter-spacing:.02em}
+.grid .sh .n{font-size:10px;font-weight:700;color:#E8481C;letter-spacing:.06em}
+.grid .sh small{font-size:10px;color:#6B6B66;margin-left:auto}
+.grid .rail{padding:10px 0 0;gap:8px}
+.grid .dv{width:102px}
+.grid .cv{width:102px;height:142px;border-radius:0;background:#0B0B0B;border:0}
+.grid .cv.k1{background:#1F1F1C}.grid .cv.k2{background:#33332F}
+.grid .cv .nm{color:#fff;font-size:13px;font-weight:700;left:9px;bottom:9px;letter-spacing:.01em}
+.grid .cv .ep{color:rgba(255,255,255,.55);left:9px;bottom:auto;top:9px;font-size:9px;letter-spacing:.1em;font-weight:600}
+.grid .cv .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.2)}
+.grid .cv .bar i{display:block;height:100%;width:58%;background:#E8481C}
+.grid .dv .sub{color:#6B6B66;font-size:10px;font-weight:500}
+.grid .lsr{padding:10px 0 0;gap:8px}
+.grid .ls{background:#E4E4DF;border:0;border-radius:0}
+.grid .lt{background:#E8481C;color:#fff;font-size:9px}
+.grid .lw{font-size:12px;font-weight:700;color:#0B0B0B}
+.grid .lw span{font-weight:400;color:#6B6B66;font-size:9.5px}
+.grid .prs{padding:10px 0 0;gap:8px}
+.grid .pr{width:66px}
+.grid .pp{border-radius:0;background:#0B0B0B;border:0}
+.grid .pp.b{background:#3A3A35}.grid .pp.c{background:#5C5C55}
+.grid .pn{font-weight:600;font-size:10.5px}
+.grid .pw{background:#0B0B0B;color:#fff;font-weight:600;font-size:9px}
+.grid .tabbar{border-top:1.5px solid #0B0B0B;background:#F2F2EF;padding-top:0}
+.grid .tb{color:#8C8C86;gap:0;font-weight:600;letter-spacing:.04em;padding-top:10px}
+.grid .tb.on{color:#0B0B0B;background:#E8481C;height:100%;align-self:stretch;display:grid;place-items:center;gap:4px}
+.grid .ava{width:24px;height:24px;border-radius:0;background:#0B0B0B}
+
+/* ============ D 墨青国风 ============ */
+.ink{background:#0E1512;color:#E7E2D4;font-family:var(--serif)}
+.ink .st{color:#7F8A80;letter-spacing:.1em}
+.ink .htop{padding:14px 20px 16px}
+.ink .date{font-size:10.5px;letter-spacing:.24em;color:#7F8A80;margin-bottom:12px;font-family:var(--sans)}
+.ink .h1{font-size:22px;font-weight:400;line-height:1.4;letter-spacing:.06em}
+.ink .h1 b{color:#C0392B;font-weight:400}
+.ink .sh{padding:24px 20px 0}
+.ink .sh .t{font-size:15px;letter-spacing:.16em;font-weight:400}
+.ink .sh .t::before{content:"";display:inline-block;width:5px;height:5px;background:#C0392B;margin-right:9px;vertical-align:2px}
+.ink .sh small{font-size:10px;color:#6F7A70;letter-spacing:.08em;font-family:var(--sans)}
+.ink .rail{padding:12px 20px 0;gap:11px}
+.ink .dv{width:104px}
+.ink .cv{width:104px;height:150px;border-radius:1px;background:#1A231E;border:1px solid rgba(231,226,212,.12)}
+.ink .cv.k1{background:#1F2A24}.ink .cv.k2{background:#242E27}
+.ink .cv .nm{left:auto;right:12px;bottom:auto;top:12px;font-size:15px;writing-mode:vertical-rl;
+  letter-spacing:.18em;color:#E7E2D4;font-weight:400}
+.ink .cv .ep{left:10px;bottom:10px;color:#7F8A80;font-size:9.5px;letter-spacing:.08em;font-family:var(--sans)}
+.ink .cv .seal{position:absolute;left:10px;top:10px;width:18px;height:18px;background:#C0392B;
+  border-radius:1px;display:grid;place-items:center;font-size:9px;color:#F3EEE2;font-family:var(--serif)}
+.ink .cv .bar{position:absolute;left:10px;right:10px;bottom:26px;height:1px;background:rgba(231,226,212,.18)}
+.ink .cv .bar i{display:block;height:100%;width:58%;background:#8FA89B}
+.ink .dv .sub{color:#6F7A70;font-family:var(--sans);letter-spacing:.04em}
+.ink .lsr{padding:12px 20px 0}
+.ink .ls{background:#18211C;border:1px solid rgba(231,226,212,.1);border-radius:1px}
+.ink .lt{background:#C0392B;color:#F3EEE2;border-radius:1px}
+.ink .lw{font-size:13.5px;letter-spacing:.08em}
+.ink .lw span{font-family:var(--sans);font-size:9.5px;color:#6F7A70;letter-spacing:.06em}
+.ink .prs{padding:12px 20px 0}
+.ink .pp{background:#22302A;border:1px solid rgba(143,168,155,.28);border-radius:50%}
+.ink .pp.b{background:#2A2724;border-color:rgba(192,57,43,.3)}
+.ink .pp.c{background:#1E2A2E;border-color:rgba(143,168,155,.18)}
+.ink .pn{font-size:12px;letter-spacing:.1em}
+.ink .pw{font-family:var(--sans);color:#8FA89B;border:1px solid rgba(143,168,155,.28);border-radius:1px}
+.ink .tabbar{border-top:1px solid rgba(231,226,212,.1);background:#0B110E}
+.ink .tb{color:#6F7A70;letter-spacing:.08em}
+.ink .tb.on{color:#8FA89B}
+.ink .ava{width:24px;height:24px;border-radius:1px;background:#22302A;border:1px solid rgba(143,168,155,.3)}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="eb">Art Direction Study · Home Screen</div>
+  <h1>同一个首页，四种视觉方向</h1>
+  <p>内容与布局完全一致，只换视觉语言。给老板看的是"这个产品长什么样"，所以四版都能一眼读懂功能，差别只在气质。</p>
+  <div class="diag">
+    <b>先说现在那版为什么会"AI 感"</b>
+    <span>近黑底 + 霓虹紫 + 玻璃拟态卡片 + 大圆角 + 发光描边，是通用生成结果的默认组合，任何赛道的 App 套上去都成立，所以没有记忆点。下面四版各自有一个明确出处：印刷刊物、影院暗房、瑞士栅格、水墨印章。</span>
+  </div>
+</header>
+
+<main class="board">
+
+  <!-- A 米白刊物 -->
+  <section class="unit">
+    <div class="phone paper">
+      <div class="st" style="padding:14px 20px 0"><span>9:41</span><span>星屿 · 首页</span><span>100%</span></div>
+      <div class="home">
+        <div class="htop">
+          <div class="date">十月十九日 · 星期一 · 霜降</div>
+          <div style="display:flex;align-items:flex-end;gap:14px">
+            <div class="h1" style="flex:1">今晚接着看<br><b>暗格</b> 第七集</div>
+            <div class="ava"></div>
+          </div>
+        </div>
+        <div class="scr">
+          <div class="sh"><span class="t">接着追</span><small>更新至 24 集</small></div>
+          <div class="rail">
+            <div class="dv"><div class="cv k1"><span class="nm">暗格</span><span class="ep">第 7 集</span><span class="bar"><i></i></span></div><div class="sub">悬疑 · 已追 7 集</div></div>
+            <div class="dv"><div class="cv k2"><span class="nm">长夜将尽</span><span class="ep">全 18 集</span></div><div class="sub">为你推荐</div></div>
+            <div class="dv"><div class="cv"><span class="nm">凤归朝</span><span class="ep">更新至 9 集</span></div><div class="sub">古风 · 同城在看</div></div>
+          </div>
+          <div class="sh"><span class="t">正在直播</span><small>看剧的人也在看</small></div>
+          <div class="lsr">
+            <div class="ls"><span class="lt">直播中</span><div class="lw">《暗格》主演 林照<span>聊拍摄现场 · 4,213 人</span></div></div>
+            <div class="ls"><span class="lt">直播中</span><div class="lw">阿岚 · 深夜点歌<span>你的关注 · 1,096 人</span></div></div>
+          </div>
+          <div class="sh"><span class="t">可能聊得来</span><small>性格星球 + 兴趣标签</small></div>
+          <div class="prs">
+            <div class="pr"><div class="pp"></div><div class="pn">小舟</div><div class="pw">同追暗格</div></div>
+            <div class="pr"><div class="pp b"></div><div class="pn">Echo</div><div class="pw">同星球</div></div>
+            <div class="pr"><div class="pp c"></div><div class="pn">十七月</div><div class="pw">古风短剧</div></div>
+            <div class="pr"><div class="pp"></div><div class="pn">雾岛</div><div class="pw">都爱熬夜</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 9.5l5 2.5-5 2.5z"/></svg>短剧</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/></svg>星球</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 6v12M6 12h12"/></svg>发布</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">
+      <div class="k">DIRECTION A</div>
+      <h3>米白刊物 <em>宋体标题 + 砖红 + 直角</em></h3>
+      <p class="why">把 App 当一本影视月刊做：日期抬头、宋体剧名、大面积纸色留白。在一堆深色娱乐产品里反而最跳，且和你们已有的汇报视觉是同一套语言，放进 PPT 不违和。</p>
+      <p class="risk"><b>代价：</b>气质偏"慢"，直播/打赏的冲动感会弱一些，需要靠砖红的面积来补。</p>
+    </div>
+  </section>
+
+  <!-- B 暗房黑金 -->
+  <section class="unit">
+    <div class="phone cinema">
+      <div class="st" style="padding:14px 22px 0"><span>9:41</span><span>STAR ISLE</span><span>100%</span></div>
+      <div class="home">
+        <div class="htop">
+          <div class="date">OCT 19 · 今晚 22:00 更新</div>
+          <div style="display:flex;align-items:flex-end;gap:14px">
+            <div class="h1" style="flex:1">暗房里的<br>第 <b>七</b> 集</div>
+            <div class="ava"></div>
+          </div>
+        </div>
+        <div class="scr">
+          <div class="sh"><span class="t">接着追</span><small>EP.07 / 24</small></div>
+          <div class="rail">
+            <div class="dv"><div class="cv"><span class="nm">暗格</span><span class="ep">悬疑</span><span class="bar"><i></i></span></div><div class="sub">已追 7 集</div></div>
+            <div class="dv"><div class="cv"><span class="nm">长夜将尽</span><span class="ep">剧情</span></div><div class="sub">为你推荐</div></div>
+            <div class="dv"><div class="cv"><span class="nm">凤归朝</span><span class="ep">古风</span></div><div class="sub">同城在看</div></div>
+          </div>
+          <div class="sh"><span class="t">正在直播</span><small>LIVE NOW</small></div>
+          <div class="lsr">
+            <div class="ls"><span class="lt">LIVE</span><div class="lw">《暗格》主演 林照<span>4,213 人正在看</span></div></div>
+            <div class="ls"><span class="lt">LIVE</span><div class="lw">阿岚 · 深夜点歌<span>1,096 人正在看</span></div></div>
+          </div>
+          <div class="sh"><span class="t">可能聊得来</span><small>MATCHED</small></div>
+          <div class="prs">
+            <div class="pr"><div class="pp"></div><div class="pn">小舟</div><div class="pw">同追暗格</div></div>
+            <div class="pr"><div class="pp b"></div><div class="pn">Echo</div><div class="pw">同星球</div></div>
+            <div class="pr"><div class="pp c"></div><div class="pn">十七月</div><div class="pw">古风短剧</div></div>
+            <div class="pr"><div class="pp"></div><div class="pn">雾岛</div><div class="pw">都爱熬夜</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 9.5l5 2.5-5 2.5z"/></svg>短剧</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/></svg>星球</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 6v12M6 12h12"/></svg>发布</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">
+      <div class="k">DIRECTION B</div>
+      <h3>暗房黑金 <em>暖黑 + 哑金 + 字距</em></h3>
+      <p class="why">还是深色，但把霓虹换成哑金、把发光换成细线，读起来像影院散场后的那盏灯。既保住短剧和直播的沉浸感，又比紫色贵一档，最适合"给老板看变现能力"这一屏。</p>
+      <p class="risk"><b>代价：</b>金色面积一旦失控就变婚庆风，必须严格只用在数字、细线和标签描边上。</p>
+    </div>
+  </section>
+
+  <!-- C 瑞士栅格 -->
+  <section class="unit">
+    <div class="phone grid">
+      <div class="st" style="padding:14px 18px 0"><span>9:41</span><span>星屿 / 首页</span><span>100%</span></div>
+      <div class="home">
+        <div class="htop">
+          <div class="date">10.19 MON · 更新 3 部</div>
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div class="h1" style="flex:1">今晚<br>看<b>暗格</b>07</div>
+            <div class="ava"></div>
+          </div>
+        </div>
+        <div class="scr">
+          <div class="shwrap"><div class="sh"><span class="n">01</span><span class="t">接着追</span><small>24 集全</small></div></div>
+          <div class="rail">
+            <div class="dv"><div class="cv"><span class="ep">EP 07</span><span class="nm">暗格</span><span class="bar"><i></i></span></div><div class="sub">悬疑 · 追 7 集</div></div>
+            <div class="dv"><div class="cv k1"><span class="ep">18 集</span><span class="nm">长夜将尽</span></div><div class="sub">为你推荐</div></div>
+            <div class="dv"><div class="cv k2"><span class="ep">EP 09</span><span class="nm">凤归朝</span></div><div class="sub">古风 · 同城</div></div>
+          </div>
+          <div class="shwrap"><div class="sh"><span class="n">02</span><span class="t">正在直播</span><small>看剧的人也在看</small></div></div>
+          <div class="lsr">
+            <div class="ls"><span class="lt">LIVE</span><div class="lw">《暗格》主演 林照<span>4,213 人在看</span></div></div>
+            <div class="ls"><span class="lt">LIVE</span><div class="lw">阿岚 · 深夜点歌<span>你的关注 · 1,096</span></div></div>
+          </div>
+          <div class="shwrap"><div class="sh"><span class="n">03</span><span class="t">可能聊得来</span><small>性格 + 兴趣</small></div></div>
+          <div class="prs">
+            <div class="pr"><div class="pp"></div><div class="pn">小舟</div><div class="pw">同追暗格</div></div>
+            <div class="pr"><div class="pp b"></div><div class="pn">Echo</div><div class="pw">同星球</div></div>
+            <div class="pr"><div class="pp c"></div><div class="pn">十七月</div><div class="pw">古风短剧</div></div>
+            <div class="pr"><div class="pp"></div><div class="pn">雾岛</div><div class="pw">都爱熬夜</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="0"/><path d="M9 9.5l5 2.5-5 2.5z"/></svg>短剧</div>
+          <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/></svg>星球</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 6v12M6 12h12"/></svg>发布</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">
+      <div class="k">DIRECTION C</div>
+      <h3>瑞士栅格 <em>黑白 + 单一信号橙 + 硬分隔线</em></h3>
+      <p class="why">零圆角、零阴影、1.5px 黑线分区、01/02/03 编号，把功能层级直接写成版式。懂设计的人会觉得"这团队专业"，老板通常会被这种"信息很干净"的秩序感说服。</p>
+      <p class="risk"><b>代价：</b>最不像娱乐 App，年轻用户可能觉得冷；直播打赏的情绪浓度要靠内容文案补。</p>
+    </div>
+  </section>
+
+  <!-- D 墨青国风 -->
+  <section class="unit">
+    <div class="phone ink">
+      <div class="st" style="padding:14px 20px 0"><span>9:41</span><span>星屿</span><span>100%</span></div>
+      <div class="home">
+        <div class="htop">
+          <div class="date">十月十九 · 霜降 · 宜追剧</div>
+          <div style="display:flex;align-items:flex-end;gap:14px">
+            <div class="h1" style="flex:1">夜色正好<br>续看 <b>暗格</b></div>
+            <div class="ava"></div>
+          </div>
+        </div>
+        <div class="scr">
+          <div class="sh"><span class="t">接着追</span><small>更新至 24 集</small></div>
+          <div class="rail">
+            <div class="dv"><div class="cv"><span class="seal">追</span><span class="nm">暗格</span><span class="bar"><i></i></span><span class="ep">第 7 集</span></div><div class="sub">悬疑 · 已追 7 集</div></div>
+            <div class="dv"><div class="cv k1"><span class="seal">荐</span><span class="nm">长夜将尽</span><span class="ep">全 18 集</span></div><div class="sub">为你推荐</div></div>
+            <div class="dv"><div class="cv k2"><span class="seal">古</span><span class="nm">凤归朝</span><span class="ep">更新至 9 集</span></div><div class="sub">古风 · 同城在看</div></div>
+          </div>
+          <div class="sh"><span class="t">正在直播</span><small>看剧的人也在看</small></div>
+          <div class="lsr">
+            <div class="ls"><span class="lt">直播</span><div class="lw">《暗格》主演 林照<span>聊拍摄现场 · 4,213 人</span></div></div>
+            <div class="ls"><span class="lt">直播</span><div class="lw">阿岚 · 深夜点歌<span>你的关注 · 1,096 人</span></div></div>
+          </div>
+          <div class="sh"><span class="t">可能聊得来</span><small>性格星球 + 兴趣标签</small></div>
+          <div class="prs">
+            <div class="pr"><div class="pp"></div><div class="pn">小舟</div><div class="pw">同追暗格</div></div>
+            <div class="pr"><div class="pp b"></div><div class="pn">Echo</div><div class="pw">同星球</div></div>
+            <div class="pr"><div class="pp c"></div><div class="pn">十七月</div><div class="pw">古风短剧</div></div>
+            <div class="pr"><div class="pp"></div><div class="pn">雾岛</div><div class="pw">都爱熬夜</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 9.5l5 2.5-5 2.5z"/></svg>短剧</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/></svg>星球</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 6v12M6 12h12"/></svg>发布</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</div>
+          <div class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">
+      <div class="k">DIRECTION D</div>
+      <h3>墨青印章 <em>墨绿 + 竖排剧名 + 朱印角标</em></h3>
+      <p class="why">产品里有古风短剧这条线，国风视觉是最省力的差异化：竖排剧名 + 一枚朱红印章，截图发出去别人一眼就知道是你们的产品，不会和任何同行撞脸。</p>
+      <p class="risk"><b>代价：</b>题材绑定重，现代/悬疑剧和直播板块会略显违和，适合做成"古风频道专属皮肤"而不是全局。</p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

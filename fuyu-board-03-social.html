@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>浮屿 · 03 社交与关系沉淀</title>
+<link rel="stylesheet" href="fuyu-kit.css">
+<style>
+/* ---- 本板专用：只补 kit 里没有的社交组件，颜色一律走 kit token ---- */
+
+/* kit 的深色底原子放进 .ph.dark 时的浅色兜底 */
+.ph.dark .disc span{color:rgba(242,234,220,.72)}
+.row.lt .ic{color:var(--app-ink)}
+
+/* 聊天流：kit 的 .chat 是 grid 但未写列轨道，这里补上防止撑破手机壳 */
+.chat{grid-template-columns:minmax(0,1fr);align-content:start;overflow:hidden}
+.msg .bd{min-width:0;max-width:214px}
+.msg .who{font-size:9px;color:var(--app-mute);letter-spacing:.06em;margin-bottom:4px}
+.msg .at{display:inline-block;background:var(--gold-bg);border:1px solid var(--gold-dim);color:var(--app-ink);
+  border-radius:4px;padding:0 4px;font-weight:600}
+.msg .bb.qt{padding-left:9px;border-left:2px solid var(--gold-dim)}
+.msg .ref{display:flex;gap:7px;align-items:center;margin-top:7px;padding-top:7px;border-top:1px solid var(--app-line)}
+.msg .ref i{width:24px;height:32px;border-radius:5px;background-size:cover;background-position:center;flex:none}
+.msg .ref div{min-width:0}
+.msg .ref b{display:block;font-size:9.5px;font-weight:600;letter-spacing:.04em}
+.msg .ref p{font-size:8.5px;color:var(--app-mute);margin-top:2px;letter-spacing:.03em}
+.msg .bb.gv{display:flex;align-items:center;gap:8px}
+.msg .bb.gv i{width:26px;height:26px;border-radius:50%;border:1px solid var(--gold-dim);color:var(--gold);
+  display:grid;place-items:center;flex:none;font-style:normal}
+.msg .bb.gv div{min-width:0}
+.msg .bb.gv b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.04em}
+.msg .bb.gv p{font-size:8.5px;color:var(--ic3);margin-top:2px;letter-spacing:.04em}
+
+/* 输入栏 */
+.ib{margin-top:auto;flex:none;display:flex;align-items:center;gap:8px;padding:9px 12px 12px;
+  border-top:1px solid var(--app-line);background:#fff}
+.ib .f{flex:1;min-width:0;height:34px;border-radius:999px;background:var(--app);border:1px solid var(--app-line);
+  display:flex;align-items:center;padding:0 13px;font-size:10.5px;color:rgba(26,23,20,.32);letter-spacing:.05em;
+  white-space:nowrap;overflow:hidden}
+
+/* 匹配星球 */
+.mt{flex:1;min-height:0;display:flex;flex-direction:column;padding:2px 16px 14px}
+.mt-h{display:flex;align-items:center;gap:9px}
+.mt-h b{font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:.12em}
+.mt-h s{text-decoration:none;font-size:9.5px;color:var(--ic3);letter-spacing:.1em}
+.mt-h .cx{margin-left:auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--ic2);flex:none}
+.mt-f{display:flex;gap:6px;margin-top:12px;overflow:hidden}
+.mt-f .chip{white-space:nowrap}
+.cand{margin-top:12px;flex:1;min-height:0;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.cand .pic{position:absolute;inset:0;background-size:cover;background-position:center 18%}
+.cand .sc{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,10,9,.52) 0%,rgba(11,10,9,.04) 28%,rgba(11,10,9,.94) 74%)}
+.cand .fr{position:absolute;top:11px;left:11px;right:11px;z-index:2;display:flex;align-items:center;gap:6px}
+.cand .bt{position:absolute;left:13px;right:13px;bottom:13px;z-index:2}
+.cand .bt h5{font-size:19px;font-weight:600;letter-spacing:.08em}
+.cand .bt .mn{font-size:9.5px;color:var(--ic2);letter-spacing:.06em;margin-top:6px}
+.cand .dramarow{display:flex;gap:8px;align-items:center;margin-top:11px;padding:8px 9px;border-radius:11px;
+  background:rgba(11,10,9,.52);border:1px solid var(--line)}
+.cand .dramarow i{width:26px;height:34px;border-radius:5px;background-size:cover;background-position:center;flex:none}
+.cand .dramarow div{min-width:0;flex:1}
+.cand .dramarow b{display:block;font-size:10.5px;font-weight:500;letter-spacing:.05em}
+.cand .dramarow p{font-size:8.5px;color:var(--ic3);margin-top:3px;letter-spacing:.03em}
+.freq{display:flex;align-items:center;gap:9px;margin-top:11px}
+.freq span{font-size:9px;color:var(--ic3);letter-spacing:.08em;flex:none}
+.freq .prg{flex:1}
+.freq em{font-style:normal;font-size:10.5px;color:var(--gold);font-variant-numeric:tabular-nums;flex:none}
+.mact{display:flex;justify-content:center;align-items:flex-end;gap:24px;margin-top:15px}
+.mact .a{display:grid;justify-items:center;gap:8px}
+.mact .a .d{border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;
+  box-shadow:inset 0 0 0 1px rgba(242,234,220,.12)}
+.mact .a.sm .d{width:46px;height:46px}
+.mact .a.big .d{width:60px;height:60px;box-shadow:inset 0 0 0 1px rgba(201,162,104,.42)}
+.mact .a span{font-size:9.5px;color:rgba(242,234,220,.66);letter-spacing:.06em}
+.mleft{margin-top:13px;text-align:center;font-size:9.5px;color:var(--ic3);letter-spacing:.08em}
+.mleft b{color:var(--gold);font-weight:500}
+
+/* 匹配成功弹窗内部 */
+.pair{display:flex;justify-content:center;margin-top:14px}
+.pair i{width:54px;height:54px;border-radius:50%;background-size:cover;background-position:center 18%;
+  border:1.5px solid var(--c2);margin-left:-10px}
+.pair i:first-child{margin-left:0}
+.pair .ln{width:26px;height:1px;border-top:1px dashed var(--gold-dim);align-self:center;margin:0 2px}
+.dlg .tags{display:flex;justify-content:center;gap:5px;margin-top:13px;flex-wrap:nowrap}
+.dlg .tags .chip{font-size:9.5px;padding:3px 7px;white-space:nowrap}
+
+/* 说明卡（与板1同一套，kit 未收录） */
+.info-card{border:1px solid var(--line);border-radius:14px;background:var(--c2);padding:18px;height:660px;flex:none;
+  display:flex;flex-direction:column}
+.info-card h5{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:.1em}
+.info-card .l{font-size:10px;letter-spacing:.16em;color:var(--gold);margin-bottom:10px}
+.info-card ol{list-style:none;display:grid;gap:13px;margin-top:18px;counter-reset:s}
+.info-card ol li{counter-increment:s;display:flex;gap:10px;font-size:10.5px;line-height:1.65;color:var(--ic2);letter-spacing:.03em}
+.info-card ol li::before{content:counter(s,decimal-leading-zero);font-family:var(--serif);font-size:11px;
+  color:var(--gold);flex:none;padding-top:1px}
+.info-card ol li b{display:block;color:var(--ic);font-weight:500;font-size:11px;margin-bottom:3px;letter-spacing:.05em}
+.info-card .end{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-family:var(--hand);
+  font-size:17px;line-height:1.7;letter-spacing:.06em;color:rgba(242,234,220,.86)}
+.info-card .end i{font-style:normal;color:var(--gold)}
+
+/* 消息中心 */
+.wallet .w span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.fr-bar{margin:2px 14px 0;display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:11px;
+  background:var(--disc);color:var(--cream);font-size:10.5px;letter-spacing:.05em}
+.fr-bar .st{display:flex;flex:none}
+.fr-bar .st i{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--disc);margin-left:-7px;
+  background-size:cover;background-position:center 18%}
+.fr-bar .st i:first-child{margin-left:0}
+.fr-bar s{margin-left:auto;text-decoration:none;color:var(--gold);font-size:9.5px;white-space:nowrap;letter-spacing:.06em}
+.cl{display:grid;grid-template-columns:minmax(0,1fr);padding:0 14px;margin-top:4px}
+.cv{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--app-line)}
+.cv:last-child{border-bottom:0}
+.cv .av{width:42px;height:42px;border-radius:50%;background-size:cover;background-position:center 18%;flex:none;
+  border:1px solid var(--app-line)}
+.cv .av.g{border-radius:13px;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);
+  gap:1px;overflow:hidden;padding:0;background:#fff}
+.cv .av.g i{border-radius:0;background-size:cover;background-position:center 20%}
+.cv .av.sys{display:grid;place-items:center;background:var(--disc);color:var(--cream);border-color:var(--disc)}
+.cv .tx{flex:1;min-width:0}
+.cv .tx b{display:block;font-size:12px;font-weight:600;letter-spacing:.05em;color:var(--app-ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv .tx p{font-size:9.5px;color:var(--app-mute);margin-top:4px;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv .rt{margin-left:auto;display:grid;justify-items:end;gap:7px;flex:none}
+.cv .rt span{font-size:9px;color:rgba(26,23,20,.34);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.un{min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--gold);color:var(--ck);
+  font-size:9px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.un.mute{background:var(--app);color:var(--app-mute);font-weight:400}
+
+/* 群组列表 */
+.gt{display:flex;align-items:baseline;gap:9px;padding:8px 14px 0}
+.gt b{font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:.12em;color:var(--app-ink)}
+.gt s{margin-left:auto;text-decoration:none;font-size:9.5px;color:var(--app-mute);letter-spacing:.06em}
+.tagroll{display:flex;gap:7px;padding:2px 14px 0;overflow:hidden}
+.tagroll .chip{white-space:nowrap}
+.gcl{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;padding:0 14px}
+.gc{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:#fff;border:1px solid var(--app-line)}
+.gc .st{display:flex;flex:none}
+.gc .st i{width:27px;height:27px;border-radius:9px;border:1.5px solid #fff;background-size:cover;
+  background-position:center 20%;margin-left:-9px}
+.gc .st i:first-child{margin-left:0}
+.gc .tx{flex:1;min-width:0}
+.gc .tx b{display:block;font-size:12px;font-weight:600;letter-spacing:.05em;color:var(--app-ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc .tx p{font-size:9.5px;color:var(--app-mute);margin-top:4px;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc .tx em{display:block;font-style:normal;font-size:9px;color:rgba(26,23,20,.46);margin-top:4px;letter-spacing:.03em}
+.gc .btn{flex:none;align-self:center;height:38px;width:52px;border-radius:9px;font-size:10px;padding:0}
+
+/* 群公告条 */
+.gnt{margin:0 14px;display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:11px;
+  background:var(--app);border:1px solid var(--app-line);font-size:9.5px;line-height:1.5;color:rgba(26,23,20,.62);
+  letter-spacing:.03em}
+.gnt i{width:22px;height:22px;border-radius:7px;background:var(--disc);color:var(--cream);display:grid;
+  place-items:center;flex:none}
+.gnt b{color:var(--app-ink);font-weight:600;letter-spacing:.06em}
+.gnt s{margin-left:auto;text-decoration:none;color:var(--gold);font-size:9px;white-space:nowrap;letter-spacing:.05em}
+.a-top .pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;letter-spacing:.05em;color:var(--app-mute);
+  border:1px solid var(--app-line);border-radius:5px;padding:2px 5px}
+.a-top .ic2{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:var(--app-ink);flex:none}
+
+/* 瞬间广场 */
+.pzwrap{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:2px 12px 0;overflow:hidden}
+.pzcol{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;align-content:start}
+.mo{border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--app-line)}
+.mo .im{position:relative;background-size:cover;background-position:center 26%}
+.mo .im:not(.todo)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;
+  background:linear-gradient(180deg,rgba(11,10,9,0),rgba(11,10,9,.55))}
+.mo .im .tg{position:absolute;left:7px;bottom:6px;z-index:2;font-size:8.5px;letter-spacing:.05em;color:#fff;
+  background:rgba(11,10,9,.46);border:1px solid rgba(242,234,220,.18);border-radius:5px;padding:2px 6px}
+.mo .bd{padding:8px 9px 9px}
+.mo .bd p{font-size:10px;line-height:1.55;color:rgba(26,23,20,.72);letter-spacing:.02em}
+.mo .ft{display:flex;align-items:center;gap:6px;margin-top:8px}
+.mo .ft i{width:16px;height:16px;border-radius:50%;background-size:cover;background-position:center 18%;flex:none}
+.mo .ft span{font-size:9px;color:var(--app-mute);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mo .ft s{margin-left:auto;text-decoration:none;font-size:9px;color:rgba(26,23,20,.44);display:flex;
+  align-items:center;gap:3px;font-variant-numeric:tabular-nums}
+
+/* 发布瞬间抽屉 */
+.pub-ta{min-height:56px;border-radius:12px;background:var(--app);border:1px solid var(--app-line);
+  padding:9px 11px;font-size:10.5px;line-height:1.6;color:rgba(26,23,20,.68);letter-spacing:.03em}
+.pub-ta .cur{display:inline-block;width:1px;height:11px;background:var(--gold);vertical-align:-1px}
+.p9{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}
+.p9 .s{height:62px;border-radius:9px;background-size:cover;background-position:center 26%;position:relative}
+.p9 .s.has:not(.todo)::after{content:"";position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;
+  background:rgba(11,10,9,.62);border:1px solid rgba(242,234,220,.3);
+  -webkit-mask:linear-gradient(#000,#000);mask:linear-gradient(#000,#000)}
+.p9 .s.has .x{position:absolute;top:2px;right:5px;z-index:3;font-size:11px;color:#fff;line-height:14px}
+.p9 .s.add{border:1px dashed rgba(26,23,20,.22);background:var(--app);display:grid;place-items:center;
+  color:rgba(26,23,20,.3);font-size:16px}
+.prow{display:flex;align-items:center;gap:9px;padding:8px 0;border-top:1px solid var(--app-line);
+  font-size:10.5px;color:rgba(26,23,20,.6);letter-spacing:.04em}
+.prow i{width:24px;height:24px;border-radius:8px;background:var(--disc);color:var(--cream);display:grid;
+  place-items:center;flex:none;font-style:normal}
+.prow b{color:var(--app-ink);font-weight:500}
+.prow s{margin-left:auto;text-decoration:none;color:var(--app-mute);font-size:9.5px;letter-spacing:.04em}
+.spark{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:11px;background:var(--app);
+  border:1px solid var(--app-line);font-size:9.5px;color:rgba(26,23,20,.62);letter-spacing:.04em}
+.spark i{width:22px;height:22px;border-radius:7px;background:var(--disc);color:var(--cream);display:grid;
+  place-items:center;flex:none}
+.spark b{color:var(--app-ink);font-weight:600;letter-spacing:.05em}
+.spark s{margin-left:auto;text-decoration:none;font-size:9px;color:var(--gold);white-space:nowrap;letter-spacing:.05em}
+.stp{display:flex;align-items:center;gap:10px;margin-top:12px}
+.stp .lb{font-size:10px;color:var(--app-mute);letter-spacing:.05em}
+.stp .lb b{color:var(--app-ink);font-weight:600}
+.stp .n{margin-left:auto;display:flex;align-items:center;border:1px solid var(--app-line);border-radius:999px;background:#fff}
+.stp .n i{width:26px;height:26px;display:grid;place-items:center;font-style:normal;color:var(--app-ink);font-size:12px}
+.stp .n b{width:26px;text-align:center;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.gift{gap:7px}
+</style>
+</head>
+<body>
+
+<div class="board">
+
+  <!-- 板头 -->
+  <div class="hd">
+    <div>
+      <div class="no">FLOATING ISLE · 03</div>
+      <h1>看完这部剧，有人可聊</h1>
+      <div class="sub">匹配 · 一对一 · 送花 · 消息中心 · 兴趣群组 · 群聊 · 瞬间广场 · 发布瞬间</div>
+    </div>
+    <div class="r">
+      <div>关系目标 <b>看完剧 24 小时内产生第一次对话</b></div>
+      <div>关键指标 <b>首聊率 · 火花续接率 · 群内发言渗透</b></div>
+      <div>视觉 <b>深色星球起手，浅米聊天落地，哑金只给确权</b></div>
+    </div>
+  </div>
+
+  <!-- 第一排 -->
+  <div class="band grid g5">
+
+    <!-- 01 匹配星球 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="art" style="position:absolute;inset:0;background:radial-gradient(120% 66% at 50% 0%,#241F17 0%,#0B0A09 62%)"></div>
+        <div class="sb" style="position:relative;z-index:3"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body" style="z-index:2">
+          <div class="mt">
+            <div class="mt-h">
+              <b>匹配星球</b><s>星辰型 · 在线 1,284</s>
+              <span class="cx"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M7 12h10M10 17h4"/></svg></span>
+            </div>
+            <div class="mt-f">
+              <span class="chip on">同频度 ≥ 80</span><span class="chip">共同标签 3 个</span><span class="chip">距离 5 km 内</span>
+            </div>
+            <div class="cand">
+              <div class="pic i8"></div>
+              <div class="sc"></div>
+              <div class="fr">
+                <span class="badge solid">同频 86%</span>
+                <span class="badge">表达型 · 温柔</span>
+                <span class="badge" style="margin-left:auto">2.4 km</span>
+              </div>
+              <div class="bt">
+                <h5>小鹿酱 · 22 岁</h5>
+                <div class="mn">深夜在线 · 常看悬疑反转 · 浮屿 47 天</div>
+                <div class="dramarow">
+                  <i class="i2"></i>
+                  <div><b>你们都在追《暗格》</b><p>TA 看到第 7 集 · 你停在第 6 集</p></div>
+                  <span style="flex:none;font-size:9px;color:var(--gold);letter-spacing:.06em">聊这段</span>
+                </div>
+                <div class="chips" style="margin-top:9px">
+                  <span class="chip"># 暗格同好</span><span class="chip"># 深夜 emo</span><span class="chip"># 古风</span>
+                </div>
+                <div class="freq">
+                  <span>同频度</span>
+                  <div class="prg"><i style="width:86%"></i></div>
+                  <em>86</em>
+                </div>
+              </div>
+            </div>
+            <div class="mact">
+              <div class="a sm"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg></span><span>跳过</span></div>
+              <div class="a big"><span class="d"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v11H9l-5 4z"/><path d="M8 11h8M8 8h5"/></svg></span><span>打招呼</span></div>
+              <div class="a sm"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4l2.4 5.2 5.6.7-4.1 3.9 1.1 5.6L12 16.8 7 19.3l1.1-5.6L4 9.9l5.6-.7z"/></svg></span><span>超级喜欢</span></div>
+            </div>
+            <div class="mleft">今日剩余 <b>3</b> 次免费匹配 · 明天 00:00 补满</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>01 · 匹配星球</b>候选卡第一屏给的是共同追的剧，不是长相；筛选只有三条</div>
+    </div>
+
+    <!-- 02 匹配成功弹窗 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="art" style="position:absolute;inset:0;background:radial-gradient(120% 66% at 50% 0%,#241F17 0%,#0B0A09 62%)"></div>
+        <div class="sb" style="position:relative;z-index:3"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body" style="z-index:2">
+          <div class="mt">
+            <div class="mt-h"><b>匹配星球</b><s>星辰型 · 在线 1,284</s></div>
+            <div class="mt-f"><span class="chip on">同频度 ≥ 80</span><span class="chip">共同标签 3 个</span></div>
+            <div class="cand">
+              <div class="pic i8"></div>
+              <div class="sc"></div>
+              <div class="bt">
+                <h5>小鹿酱 · 22 岁</h5>
+                <div class="mn">深夜在线 · 常看悬疑反转</div>
+              </div>
+            </div>
+            <div class="mact">
+              <div class="a sm"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg></span><span>跳过</span></div>
+              <div class="a big"><span class="d"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v11H9l-5 4z"/></svg></span><span>打招呼</span></div>
+              <div class="a sm"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4l2.4 5.2 5.6.7-4.1 3.9 1.1 5.6L12 16.8 7 19.3l1.1-5.6L4 9.9l5.6-.7z"/></svg></span><span>超级喜欢</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ovl">
+          <div class="dlg dk">
+            <div class="h">你们同频 86%</div>
+            <div class="pair"><i class="i9"></i><span class="ln"></span><i class="i8"></i></div>
+            <div class="tags">
+              <span class="chip on"># 暗格同好</span><span class="chip on"># 深夜 emo</span><span class="chip on"># 古风</span>
+            </div>
+            <p>小鹿酱也右滑了你<br>先聊这部剧，再聊别的</p>
+            <div class="btns">
+              <div class="btn gold">打个招呼</div>
+              <div class="btn ghost">先看看 TA 主页</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>02 · 匹配成功</b>双方互相右滑后触发；关闭前只有这两个去处，不插广告</div>
+    </div>
+
+    <!-- 03 一对一聊天 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top">
+            <span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <h4>小鹿酱</h4>
+            <span class="pill"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4l2.4 5.2 5.6.7-4.1 3.9 1.1 5.6L12 16.8 7 19.3l1.1-5.6L4 9.9l5.6-.7z"/></svg>同频 86%</span>
+            <span class="rt">火花 3 天</span>
+          </div>
+          <div class="chat">
+            <div class="msg sys"><div class="bb">今天 15:12 · 你们因《暗格》认识</div></div>
+            <div class="msg ta">
+              <span class="av i8"></span>
+              <div class="bd"><div class="bb">你看到第几集了！先别剧透我</div><div class="tm">15:14</div></div>
+            </div>
+            <div class="msg me">
+              <span class="av i9"></span>
+              <div class="bd"><div class="bb">刚看完 6，感觉在铺垫，你撑住</div><div class="tm">15:15</div></div>
+            </div>
+            <div class="msg ta">
+              <span class="av i8"></span>
+              <div class="card">
+                <div class="im i2"></div>
+                <div>
+                  <b>暗格 · 第 7 集</b>
+                  <p>第 7 集有个反转，看完来找我</p>
+                  <p style="color:var(--gold);margin-top:6px">悬疑榜第 1 · 24 集全</p>
+                </div>
+              </div>
+            </div>
+            <div class="msg me">
+              <span class="av i9"></span>
+              <div class="bd"><div class="bb">看完了……那个抽屉里的钥匙是假的，编剧真敢写</div><div class="tm">18:36</div></div>
+            </div>
+            <div class="msg me">
+              <span class="av i9"></span>
+              <div class="bd">
+                <div class="bb gv">
+                  <i><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3"/></svg></i>
+                  <div><b>烟花 × 2</b><p>庆祝我们聊到同一集</p></div>
+                </div>
+                <div class="tm">18:37 · 已送达</div>
+              </div>
+            </div>
+            <div class="msg ta">
+              <span class="av i8"></span>
+              <div class="bd"><div class="bb">那我拉你进暗格群，今晚八点直播陪看</div><div class="tm">18:41</div></div>
+            </div>
+          </div>
+          <div class="ib">
+            <span class="k" style="width:34px;height:34px;border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.6" r="3.2"/><path d="M12 11.8V21M9.4 21h5.2M6.6 10.6c1.7 0 3-1 3.5-2.2M17.4 10.6c-1.7 0-3-1-3.5-2.2M5 14.5c1.6.6 2.7.4 3.6-.2M19 14.5c-1.6.6-2.7.4-3.6-.2"/></svg></span>
+            <div class="f">说点什么，接着聊《暗格》</div>
+            <span style="width:34px;height:34px;border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M9 10.2h.01M15 10.2h.01M8.6 14.4a4.4 4.4 0 0 0 6.8 0"/></svg></span>
+            <span style="width:34px;height:34px;border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>03 · 一对一聊天</b>首条系统消息写明"因哪部剧认识"，剧分享卡是最省事的开场白</div>
+    </div>
+
+    <!-- 04 送花抽屉 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top">
+            <span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <h4>小鹿酱</h4><span class="rt">同频 86%</span>
+          </div>
+          <div class="chat">
+            <div class="msg ta"><span class="av i8"></span><div class="bd"><div class="bb">你看到第几集了！先别剧透我</div></div></div>
+            <div class="msg me"><span class="av i9"></span><div class="bd"><div class="bb">刚看完 6，感觉在铺垫，你撑住</div></div></div>
+          </div>
+        </div>
+        <div class="ovl bottom">
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh"><b>送花与虚拟礼物</b><s>送给 小鹿酱</s></div>
+            <div class="spark">
+              <i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3c1.6 3.2.4 4.8-.8 6.4C9.6 11.4 9 12.8 9 14a3.2 3.2 0 0 0 6.4.3c.2-1-.2-2-.6-2.7 2 1 3.2 2.8 3.2 4.9A6 6 0 1 1 8.4 9.6C10.6 7.6 12.6 5.4 12 3z"/></svg></i>
+              <span>今日互赠可续火花 · 已连 <b>3</b> 天</span>
+              <s>火花规则</s>
+            </div>
+            <div class="gift lt" style="margin-top:11px">
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="9" r="3.2"/><path d="M12 12.2V20M9.6 20h4.8M7 11c1.7 0 3-1 3.2-2.2M17 11c-1.7 0-3-1-3.2-2.2"/></svg></span>小花<i>1 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.4 8h9.2l-1.1 12H8.5zM10 8V4.4h4V8"/></svg></span>奶茶<i>5 钻石</i></div>
+              <div class="g on"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3"/></svg></span>烟花<i>10 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5.4"/><ellipse cx="12" cy="12" rx="10" ry="3.2"/></svg></span>星球<i>99 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h16v12H4zM4 8l2-4h12l2 4M12 4v16"/></svg></span>礼盒<i>30 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg></span>玫瑰<i>52 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.6 3.6A8 8 0 1 0 20.4 14 6.4 6.4 0 0 1 15.6 3.6z"/></svg></span>月亮<i>128 钻石</i></div>
+              <div class="g"><span class="b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l6 6-6 12L6 9z"/><path d="M6 9h12"/></svg></span>限量头像<i>需抽</i></div>
+            </div>
+            <div class="stp">
+              <div class="lb">数量 · 单价 <b>10</b> 钻石</div>
+              <div class="n"><i>−</i><b>2</b><i>+</i></div>
+            </div>
+            <div class="kv lt" style="margin-top:10px"><span>钻石余额</span><b>486</b></div>
+            <div class="btn wide gold" style="margin-top:11px">赠送 · 消耗 20 钻石</div>
+            <div style="text-align:center;font-size:8.5px;color:rgba(26,23,20,.36);letter-spacing:.05em;margin-top:9px">虚拟商品一经赠送不可退款 · 未成年人模式已关闭赠送</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>04 · 送花与虚拟礼物</b>聊天页点送花图标唤起，底部半屏抽屉，不打断会话</div>
+    </div>
+
+    <!-- 05 消息中心 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab">
+            <span class="on">会话</span><span>群组</span><span>系统</span><span>互动</span>
+            <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span>
+          </div>
+          <div class="fr-bar">
+            <span class="st"><i class="i6"></i><i class="i7"></i><i class="i4"></i></span>
+            3 位新朋友想认识你
+            <s>去通过 ›</s>
+          </div>
+          <div class="cl">
+            <div class="cv">
+              <span class="av i8"></span>
+              <div class="tx"><b>小鹿酱</b><p>今晚八点暗格群直播陪看，一起来</p></div>
+              <div class="rt"><span>18:42</span><span class="un">2</span></div>
+            </div>
+            <div class="cv">
+              <span class="av g"><i class="i8"></i><i class="i9"></i><i class="i6"></i><i class="i7"></i></span>
+              <div class="tx"><b>暗格追剧小分队</b><p>林不晚：第 7 集那个反转我要吹爆</p></div>
+              <div class="rt"><span>17:20</span><span class="un">12</span></div>
+            </div>
+            <div class="cv">
+              <span class="av i9"></span>
+              <div class="tx"><b>清风</b><p>[剧分享] 他从暮色赶来 · 第 3 集</p></div>
+              <div class="rt"><span>昨天</span><span class="un mute">置顶</span></div>
+            </div>
+            <div class="cv">
+              <span class="av sys"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l7 3.5v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9v-5z"/><path d="M9.2 11.8l2 2 3.8-4"/></svg></span>
+              <div class="tx"><b>浮屿小助手</b><p>你的区块链限量头像 #0427 已通过审核</p></div>
+              <div class="rt"><span>昨天</span><span class="un">1</span></div>
+            </div>
+            <div class="cv">
+              <span class="av g"><i class="i7"></i><i class="i4"></i><i class="i6"></i><i class="i9"></i></span>
+              <div class="tx"><b>深夜 emo 收容所</b><p>南音：有人在吗，今天有点睡不着</p></div>
+              <div class="rt"><span>周二</span><span class="un mute">免打扰</span></div>
+            </div>
+          </div>
+          <div class="wallet" style="margin:12px 14px 0">
+            <h6>今天还没聊过的人 · 按同频度</h6>
+            <div class="w">
+              <div><span class="av i6" style="width:34px;height:34px;border-radius:50%;background-size:cover;background-position:center 18%;border:1px solid var(--app-line)"></span><span>苏折夏 · 81</span></div>
+              <div><span class="av i4" style="width:34px;height:34px;border-radius:50%;background-size:cover;background-position:center 18%;border:1px solid var(--app-line)"></span><span>阿柴 · 78</span></div>
+              <div><span class="av i7" style="width:34px;height:34px;border-radius:50%;background-size:cover;background-position:center 18%;border:1px solid var(--app-line)"></span><span>南音 · 74</span></div>
+            </div>
+          </div>
+          <div class="a-nav">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>05 · 消息中心</b>新朋友入口永远在会话之上，未读用哑金计数而不是红点轰炸</div>
+    </div>
+  </div>
+
+  <!-- 第二排 -->
+  <div class="band tight grid g5" style="padding-top:6px">
+
+    <!-- 06 兴趣群组列表 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="gt"><b>兴趣群组</b><s>创建群 ›</s></div>
+          <div style="padding:12px 14px 0"><div class="fld"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>搜群名、搜剧名、搜标签</div></div>
+          <div style="padding:11px 14px 0">
+            <div class="seg lt"><span>我的群 4</span><span class="on">推荐</span></div>
+          </div>
+          <div class="tagroll" style="margin-top:12px">
+            <span class="chip lt on">全部</span><span class="chip lt">#悬疑反转</span><span class="chip lt">#古风</span>
+            <span class="chip lt">#连麦听歌</span><span class="chip lt">#树洞</span><span class="chip lt">#追剧搭子</span>
+          </div>
+          <div class="a-sec" style="padding:10px 14px 0"><h4>按共同标签推荐</h4><small>今天 214 个新群</small></div>
+          <div class="gcl" style="margin-top:9px">
+            <div class="gc">
+              <span class="st"><i class="i8"></i><i class="i9"></i><i class="i6"></i><i class="i7"></i></span>
+              <div class="tx"><b>暗格追剧小分队</b><p>每晚 21:00 更新陪看 · 不许剧透</p><em>28 人 · 今日活跃 128</em></div>
+              <div class="btn sm">加入</div>
+            </div>
+            <div class="gc">
+              <span class="st"><i class="i6"></i><i class="i3"></i><i class="i8"></i></span>
+              <div class="tx"><b>汉乐古风社</b><p>汉服外拍、古风剧、手工簪子</p><em>156 人 · 今日活跃 64</em></div>
+              <div class="btn sm">加入</div>
+            </div>
+            <div class="gc">
+              <span class="st"><i class="i7"></i><i class="i4"></i><i class="i9"></i></span>
+              <div class="tx"><b>深夜 emo 收容所</b><p>22:00 后开放 · 只聊天不评判</p><em>412 人 · 此刻在线 96</em></div>
+              <div class="btn sm">加入</div>
+            </div>
+            <div class="gc">
+              <span class="st"><i class="i1"></i><i class="i8"></i><i class="i2"></i></span>
+              <div class="tx"><b>下饭剧搭子招募</b><p>吃饭时找人同时看一部，看完互删</p><em>73 人 · 今日活跃 210</em></div>
+              <div class="btn sm">加入</div>
+            </div>
+            <div class="gc">
+              <span class="st"><i class="i7"></i><i class="i9"></i><i class="i8"></i></span>
+              <div class="tx"><b>连麦听歌房</b><p>南音每晚十点开播 · 点歌不用排队</p><em>89 人 · 此刻在线 41</em></div>
+              <div class="btn sm">加入</div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:9.5px;color:var(--app-mute);letter-spacing:.08em;margin-top:14px">按标签进入 · 共 42 个群 ›</div>
+        </div>
+      </div>
+      <div class="cap"><b>06 · 兴趣群组列表</b>群从标签和剧名进来，不靠扫码；活跃人数写进卡片第一行</div>
+    </div>
+
+    <!-- 07 群聊 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-top">
+            <span class="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 6l-6 6 6 6"/></svg></span>
+            <h4>暗格追剧小分队</h4>
+            <span class="pill">28 人</span>
+            <span class="rt" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.4 9.2a4 4 0 0 1 0 5.6"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/></svg>
+            </span>
+          </div>
+          <div class="gnt">
+            <i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.4 9.2a4 4 0 0 1 0 5.6"/></svg></i>
+            <span><b>群公告</b> 今晚 21:30 直播陪看第 7 集，未看的成员别刷屏</span>
+            <s>查看</s>
+          </div>
+          <div class="chat" style="gap:12px">
+            <div class="msg ta">
+              <span class="av i8"></span>
+              <div class="bd"><div class="who">林不晚</div>
+                <div class="bb">第 7 集那个抽屉你们注意到没有</div>
+              </div>
+            </div>
+            <div class="msg ta">
+              <span class="av i9"></span>
+              <div class="bd"><div class="who">阿柴</div>
+                <div class="bb"><span class="at">@夜航星</span> 你刚进群，第 7 集千万别看评论区</div>
+              </div>
+            </div>
+            <div class="msg ta">
+              <span class="av i6"></span>
+              <div class="bd"><div class="who">苏折夏</div>
+                <div class="bb qt">这段我暂停了三遍才看懂
+                  <div class="ref"><i class="i2"></i><div><b>《暗格》第 7 集</b><p>悬疑榜第 1 · 群话题 132 条</p></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="msg ta">
+              <span class="av i7"></span>
+              <div class="bd"><div class="who">南音</div>
+                <div class="bb">明晚陪看坐我旁边，长评交给你</div>
+              </div>
+            </div>
+            <div class="msg me">
+              <span class="av i9"></span>
+              <div class="bd"><div class="bb">看完了，我这就去写</div></div>
+            </div>
+          </div>
+          <div class="ib">
+            <div class="f">说点什么…</div>
+            <span style="width:34px;height:34px;border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.6" r="3.2"/><path d="M12 11.8V20M9.6 20h4.8M7 11c1.7 0 3-1 3.2-2.2M17 11c-1.7 0-3-1-3.2-2.2"/></svg></span>
+            <span style="width:34px;height:34px;border-radius:50%;background:var(--disc);color:var(--cream);display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></span>
+          </div>
+          <div class="toast">已屏蔽该成员，可在设置里恢复</div>
+        </div>
+      </div>
+      <div class="cap"><b>07 · 群聊</b>剧话题引用卡让新人一眼接上上下文；屏蔽即时生效并给恢复路径</div>
+    </div>
+
+    <!-- 08 瞬间广场 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab">
+            <span>关注</span><span class="on">推荐</span><span>同城</span><span>话题</span>
+            <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 4L7 20M17 4l-2 16M5 9h15M4 15h15"/></svg></span>
+          </div>
+          <div class="pzwrap">
+            <div class="pzcol">
+              <div class="mo">
+                <div class="im i2" style="height:118px"><span class="tg"># 暗格第 7 集反转</span></div>
+                <div class="bd">
+                  <p>看到钥匙那段我直接坐起来了，编剧把第 2 集的伏笔全收了。</p>
+                  <div class="ft"><i class="i8"></i><span>林不晚</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>1.2 万</s></div>
+                </div>
+              </div>
+              <div class="mo">
+                <div class="im i6" style="height:96px"><span class="tg"># 古风</span></div>
+                <div class="bd">
+                  <p>汉服社周末外拍，还缺两个打灯的。</p>
+                  <div class="ft"><i class="i6"></i><span>苏折夏</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>328</s></div>
+                </div>
+              </div>
+              <div class="mo">
+                <div class="im todo lt" data-t="待补图 · 瞬间配图" style="height:104px"></div>
+                <div class="bd">
+                  <p>同城 · 凌晨还开着的面馆。</p>
+                  <div class="ft"><i class="i9"></i><span>清风</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>96</s></div>
+                </div>
+              </div>
+            </div>
+            <div class="pzcol">
+              <div class="mo">
+                <div class="im i1" style="height:100px"><span class="tg"># 他从暮色赶来</span></div>
+                <div class="bd">
+                  <p>男主这段眼神我能吹一年。</p>
+                  <div class="ft"><i class="i7"></i><span>南音</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>2411</s></div>
+                </div>
+              </div>
+              <div class="mo">
+                <div class="im i4" style="height:126px"><span class="tg"># 悬疑</span></div>
+                <div class="bd">
+                  <p>雾港的色调真的绝，百叶窗那段光影想截下来当头像。</p>
+                  <div class="ft"><i class="i4"></i><span>阿柴</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>758</s></div>
+                </div>
+              </div>
+              <div class="mo">
+                <div class="im i5" style="height:88px"><span class="tg"># 暗格</span></div>
+                <div class="bd">
+                  <p>第 7 集这张剧照我截了十遍。</p>
+                  <div class="ft"><i class="i8"></i><span>小鹿酱</span><s><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg>402</s></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="a-nav">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>08 · 瞬间广场</b>双列瀑布流，每张卡都带话题与剧名，看完剧的人在这里继续说</div>
+    </div>
+
+    <!-- 09 发布瞬间抽屉 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab"><span>关注</span><span class="on">推荐</span><span>同城</span><span>话题</span></div>
+          <div class="pzwrap">
+            <div class="pzcol">
+              <div class="mo"><div class="im i2" style="height:118px"></div></div>
+              <div class="mo"><div class="im i6" style="height:96px"></div></div>
+            </div>
+            <div class="pzcol">
+              <div class="mo"><div class="im i1" style="height:100px"></div></div>
+              <div class="mo"><div class="im i4" style="height:126px"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ovl bottom">
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh"><b>发布瞬间</b><s>存草稿</s></div>
+            <div class="pub-ta">第 7 集那个反转我真的要吹爆，钥匙是假的，抽屉里那张纸条才是主线。<span class="cur"></span></div>
+            <div class="p9">
+              <div class="s has i2"><span class="x">×</span></div>
+              <div class="s add">+</div><div class="s add">+</div>
+              <div class="s add">+</div><div class="s add">+</div><div class="s add">+</div>
+              <div class="s add">+</div><div class="s add">+</div><div class="s add">+</div>
+            </div>
+            <div class="chips" style="margin-top:9px">
+              <span class="chip lt on"># 暗格第 7 集反转</span><span class="chip lt on"># 悬疑</span><span class="chip lt">+ 添加话题</span>
+            </div>
+            <div class="seg lt" style="margin-top:9px"><span class="on">公开</span><span>同星球</span><span>仅好友</span></div>
+            <div style="margin-top:6px">
+              <div class="prow"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="2"/></svg></i><span>定位 · <b>杭州 · 滨江</b></span><s>修改</s></div>
+              <div class="prow"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg></i><span>关联一部剧 · <b>《暗格》第 7 集</b></span><s>换成别的</s></div>
+            </div>
+            <div class="btn wide" style="margin-top:10px">发布</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>09 · 发布瞬间</b>底部半屏抽屉；"关联一部剧"是必填引导，让内容天然带话题入口</div>
+    </div>
+
+    <!-- 说明卡 -->
+    <div class="scr">
+      <div class="info-card">
+        <div class="l">PRINCIPLES</div>
+        <h5>社交侧的三条设计口径</h5>
+        <ol>
+          <li><div><b>关系必须从一部剧开始，不从长相开始</b>匹配卡首屏给的是"你们都在追《暗格》"，照片只是背景；打招呼的默认话术由剧集与观看进度生成，删掉"在吗""发张照片看看"。聊天页第一条系统消息写明"因哪部剧认识"，让每一次对话都有出处。</div></li>
+          <li><div><b>免费互动次数每天给，付费只加速不卡死</b>每天 3 次免费匹配、互赠续火花不收费；钻石只买礼物、特效与限量头像，买不到"能不能聊"。所有付费点都长在关系已经成立之后——先有搭子，再谈消费。</div></li>
+          <li><div><b>陌生人先给共同点，再给私聊</b>先落进同一个群、同一条瞬间的评论区，有过一次真实互动之后，私聊入口才亮起来。群里的 @ 提醒与剧话题引用卡，是新人的接话扶手；关系一旦沉淀，火花天数与群话题热度就是每天回访的理由，比推送更管用。</div></li>
+        </ol>
+        <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--line)">
+          <div style="font-size:10px;letter-spacing:.16em;color:var(--gold);margin-bottom:6px">口径要验证的四个数</div>
+          <div class="kv"><span>匹配后 24h 内首聊率</span><b>42%</b></div>
+          <div class="kv"><span>火花 7 日续接率</span><b>31%</b></div>
+          <div class="kv"><span>群内发言渗透</span><b>58%</b></div>
+          <div class="kv"><span>社交带来的次留增量</span><b>+9pt</b></div>
+        </div>
+        <div class="end">内容把人带来，<br>关系把人留下，<br><i>付费是留下的副产品。</i></div>
+      </div>
+      <div class="cap"><b>设计口径</b>社交不是功能堆叠，是一条从"看完"走到"明天再来"的路径</div>
+    </div>
+  </div>
+
+  <!-- 流程带 -->
+  <div class="flow">
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg></span><div class="tx"><h5>看完一集</h5><p>进度与情绪最热的那一刻</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="3"/><path d="M3 19c1.2-2.9 3.2-4.4 6-4.4M16 12h5M18.5 9.5V15"/></svg></span><div class="tx"><h5>匹配同频</h5><p>用剧和标签换一次开场</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v11H9l-5 4z"/><path d="M8 11h8"/></svg></span><div class="tx"><h5>聊起来 · 送花</h5><p>火花与礼物把关系固化</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8.5" cy="8.5" r="2.6"/><circle cx="15.5" cy="15.5" r="2.6"/><path d="M4 20c.8-2.4 2.4-3.7 4.5-3.7M20 4c-.8 2.4-2.4 3.7-4.5 3.7"/></svg></span><div class="tx"><h5>群与瞬间</h5><p>沉淀成可被再次打开的关系</p></div></div>
+    <div class="hand">
+      <div class="l1">看完 → 有人聊 → 有群可回 → 有瞬间可发</div>
+      <div class="l2">社交做深一层，第二天的短剧才有观众。</div>
+    </div>
+  </div>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <div class="k">FLOATING ISLE · 03 SOCIAL</div>
+    <ul>
+      <li>底色 <b>暖黑 #141210</b> + 浅米 App <b>#F7F2E9</b></li>
+      <li>点缀 <b>哑金 #C9A268</b> 只给同频度、选中态与未读计数</li>
+      <li>标题 <b>华文行楷手写</b>，正文 <b>细字重 + 大字距</b></li>
+      <li>弹窗 <b>遮罩 + 毛玻璃</b>，半屏抽屉承载送花与发布</li>
+      <li>图标 <b>黑色圆盘 + 线性白标</b>，头像只用真实素材位</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>浮屿 · 01 启动与冷启动</title>
+<link rel="stylesheet" href="fuyu-kit.css">
+<style>
+/* ---- 本板专用 ---- */
+.grain::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,10,.55) 0%,rgba(8,8,10,.15) 34%,rgba(8,8,10,.9) 100%)}
+
+/* Splash */
+.sp{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.sp h2{font-family:var(--hand);font-size:56px;letter-spacing:.16em;font-weight:400}
+.sp .en{font-size:9.5px;letter-spacing:.5em;color:rgba(242,234,220,.5);text-indent:.5em}
+.sp .sl{font-family:var(--hand);font-size:17px;letter-spacing:.08em;color:rgba(242,234,220,.86);margin-top:6px}
+.sp .skip{position:absolute;top:46px;right:14px;font-size:9.5px;letter-spacing:.1em;color:rgba(242,234,220,.5);
+  border:1px solid rgba(242,234,220,.2);border-radius:999px;padding:4px 11px}
+.sp .ver{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:8.5px;letter-spacing:.24em;
+  color:rgba(242,234,220,.32)}
+.sp .ld{position:absolute;bottom:56px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.sp .ld i{width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.5}
+.sp .ld i:nth-child(2){opacity:.8}
+.sp .ld i:nth-child(3){opacity:1}
+
+/* 登录 */
+.lg{padding:26px 22px 0;display:flex;flex-direction:column;flex:1}
+.lg .mark{font-family:var(--hand);font-size:34px;letter-spacing:.12em;color:var(--app-ink)}
+.lg .mk-s{font-size:10px;letter-spacing:.24em;color:var(--app-mute);margin-top:8px}
+.lg .f{margin-top:26px;display:grid;gap:11px}
+.lg .agree{display:flex;align-items:flex-start;gap:7px;margin-top:16px;font-size:8.5px;line-height:1.6;color:var(--app-mute)}
+.lg .cbx{width:11px;height:11px;border-radius:3px;border:1px solid rgba(26,23,20,.28);flex:none;margin-top:1px}
+.lg .cbx.on{background:var(--disc);border-color:var(--disc)}
+.lg .cbx.on::after{content:"";display:block;width:3px;height:6px;border:1.4px solid var(--cream);
+  border-top:0;border-left:0;transform:rotate(42deg) translate(1px,-1px)}
+.lg .alt{margin-top:auto;padding-bottom:14px}
+.lg .alt .ln{display:flex;align-items:center;gap:10px;font-size:9px;letter-spacing:.14em;color:rgba(26,23,20,.3);margin-bottom:16px}
+.lg .alt .ln hr{flex:1;border:0;border-top:1px solid var(--app-line)}
+.lg .ch{display:flex;justify-content:center;gap:22px}
+.lg .ch i{width:40px;height:40px;border-radius:50%;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;font-style:normal}
+.lg .num{text-align:center;font-family:var(--serif);font-size:26px;letter-spacing:.14em;color:var(--app-ink);margin:22px 0 6px}
+.lg .num-s{text-align:center;font-size:9px;letter-spacing:.14em;color:var(--app-mute)}
+.lg.in-sheet{padding:12px 4px 0}
+.lg.in-sheet .num{margin:12px 0 5px}
+
+/* 性格测试 */
+.qt{padding:0 20px;flex:1;display:flex;flex-direction:column}
+.qt .step-n{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}
+.qt .step-n b{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:.06em}
+.qt .step-n s{text-decoration:none;font-size:9.5px;letter-spacing:.14em;color:var(--app-mute)}
+.qt .q{font-size:14px;font-weight:600;line-height:1.6;letter-spacing:.04em;margin-top:14px}
+.qt .q small{display:block;font-size:9.5px;font-weight:400;color:var(--app-mute);margin-top:7px;letter-spacing:.04em}
+.qt .op{display:grid;gap:9px;margin-top:20px}
+.qt .o{display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:12px;background:#fff;
+  border:1px solid var(--app-line);font-size:11px;letter-spacing:.04em;color:rgba(26,23,20,.72)}
+.qt .o.on{border-color:var(--app-ink);color:var(--app-ink);font-weight:600}
+.qt .o .k{width:19px;height:19px;border-radius:50%;border:1px solid rgba(26,23,20,.2);display:grid;place-items:center;
+  font-size:8.5px;color:var(--app-mute);flex:none}
+.qt .o.on .k{background:var(--disc);border-color:var(--disc);color:var(--cream)}
+.qt .nav{margin-top:auto;padding:16px 0 18px;display:flex;align-items:center;gap:12px}
+.qt .nav .bk{font-size:10px;letter-spacing:.1em;color:var(--app-mute)}
+
+/* 结果 · 星球 */
+.rs{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
+  padding:38px 20px 22px;text-align:center}
+.rs .k{font-size:9.5px;letter-spacing:.3em;color:rgba(242,234,220,.5);text-indent:.3em}
+.rs h3{font-family:var(--hand);font-size:38px;letter-spacing:.12em;font-weight:400;margin-top:10px}
+.rs .orb{margin:12px 0 2px}
+.rs .ds{font-size:10.5px;line-height:1.85;color:rgba(242,234,220,.72);letter-spacing:.04em;margin-top:6px}
+.rs .dim{display:grid;gap:7px;width:100%;margin-top:13px;text-align:left}
+.rs .dim div{display:flex;align-items:center;gap:9px;font-size:9.5px;color:var(--ic2);letter-spacing:.06em}
+.rs .dim span{width:38px;flex:none;color:var(--ic3)}
+.rs .dim .prg{flex:1}
+.rs .dim em{font-style:normal;width:26px;text-align:right;flex:none;color:var(--gold);font-variant-numeric:tabular-nums}
+.rs .go{margin-top:auto;padding-top:14px;width:100%}
+.rs .sim{display:flex;justify-content:center;gap:-6px;margin-top:12px}
+.rs .sim i{width:26px;height:26px;border-radius:50%;border:1.5px solid #0B0A09;background-size:cover;
+  background-position:center;margin-left:-7px}
+.rs .sim i:first-child{margin-left:0}
+.rs .sim-t{font-size:9px;letter-spacing:.1em;color:rgba(242,234,220,.5);margin-top:9px}
+.rs .peek{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-top:16px}
+.rs .peek .pz{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--c3)}
+.rs .peek .pz i{display:block;height:72px;background-size:cover;background-position:center 24%}
+.rs .peek .pz s{display:block;padding:5px 6px 6px;text-decoration:none;font-size:8.5px;letter-spacing:.04em;
+  color:rgba(242,234,220,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs .peek-h{width:100%;display:flex;align-items:center;margin-top:16px}
+.rs .peek-h b{font-size:10px;font-weight:500;letter-spacing:.14em;color:rgba(242,234,220,.66)}
+.rs .peek-h s{margin-left:auto;text-decoration:none;font-size:9px;letter-spacing:.1em;color:var(--gold)}
+
+/* 兴趣标签 */
+.tg{padding:0 18px;flex:1;display:flex;flex-direction:column}
+.tg .h{margin:14px 0 4px}
+.tg .h b{font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:.08em;display:block}
+.tg .h p{font-size:9.5px;color:var(--app-mute);margin-top:7px;letter-spacing:.04em}
+.tg .grp{margin-top:16px}
+.tg .grp .gl{font-size:9px;letter-spacing:.16em;color:rgba(26,23,20,.34);margin-bottom:9px}
+.tg .grp .chips{gap:7px}
+.tg .grp .chip{font-size:10.5px;padding:6px 11px;border-radius:8px}
+.tg .cnt{margin-top:auto;padding:14px 0 16px;font-size:9.5px;color:var(--app-mute);letter-spacing:.06em;
+  display:flex;align-items:center}
+.tg .cnt b{color:var(--app-ink);font-weight:600}
+.tg .cnt .btn{margin-left:auto}
+.tg .pick{display:flex;align-items:center;gap:10px;margin-top:16px;padding:11px 12px;border-radius:12px;
+  border:1px dashed rgba(26,23,20,.18);background:rgba(26,23,20,.025)}
+.tg .pick .d{width:26px;height:26px;border-radius:50%;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;flex:none}
+.tg .pick .tx{min-width:0}
+.tg .pick .tx b{display:block;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--app-ink)}
+.tg .pick .tx p{font-size:9px;line-height:1.55;color:var(--app-mute);margin-top:3px;letter-spacing:.02em}
+.tg .pick s{margin-left:auto;text-decoration:none;font-size:9.5px;color:var(--gold);letter-spacing:.04em;white-space:nowrap}
+
+/* 新用户首页提示条 */
+.newbie{margin:10px 14px 0;padding:9px 11px;border-radius:11px;background:var(--disc);color:var(--cream);
+  display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.04em}
+.newbie .bd{width:19px;height:19px;border-radius:6px;background:var(--gold);color:var(--ck);display:grid;place-items:center;flex:none}
+.newbie s{margin-left:auto;text-decoration:none;color:var(--gold);font-size:9.5px;white-space:nowrap}
+
+/* 首充礼包弹窗内容 */
+.gift-list{display:grid;gap:7px;margin-top:13px}
+.gift-list div{display:flex;align-items:center;gap:9px;background:var(--app);border-radius:9px;padding:8px 10px;
+  font-size:10px;color:rgba(26,23,20,.66);letter-spacing:.04em}
+.gift-list i{width:20px;height:20px;border-radius:6px;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;font-style:normal;flex:none}
+.gift-list b{margin-left:auto;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+.dlg .price{display:flex;align-items:baseline;justify-content:center;gap:5px;margin-top:12px}
+.dlg .price em{font-style:normal;font-size:11px;color:var(--gold)}
+.dlg .price b{font-family:var(--serif);font-size:30px;font-weight:400;color:var(--app-ink);letter-spacing:.02em}
+.dlg .price s{text-decoration:none;font-size:9.5px;color:rgba(26,23,20,.34);text-decoration:line-through}
+.dlg .cd{margin-top:9px;font-size:9px;letter-spacing:.1em;color:rgba(26,23,20,.4)}
+
+/* 通知授权弹窗 */
+.perm{width:214px;border-radius:16px;background:#fff;padding:20px 16px 14px;text-align:center;
+  box-shadow:0 22px 44px -18px rgba(0,0,0,.5)}
+.perm .ico{width:44px;height:44px;border-radius:11px;background:var(--disc);color:var(--cream);
+  display:grid;place-items:center;margin:0 auto 12px}
+.perm h6{font-size:12.5px;font-weight:600;color:var(--app-ink);letter-spacing:.04em}
+.perm p{font-size:10px;line-height:1.7;color:var(--app-mute);margin-top:8px;letter-spacing:.02em}
+.perm .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.perm .btns .btn{height:32px;font-size:11px}
+.perm .btns .no{background:transparent;border:1px solid var(--app-line);color:var(--app-mute);font-weight:400}
+
+/* 说明卡 */
+.info-card{border:1px solid var(--line);border-radius:14px;background:var(--c2);padding:18px;height:660px;
+  display:flex;flex-direction:column}
+.info-card h5{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:.1em}
+.info-card .l{font-size:10px;letter-spacing:.16em;color:var(--gold);margin-bottom:10px}
+.info-card ol{list-style:none;display:grid;gap:13px;margin-top:18px;counter-reset:s}
+.info-card ol li{counter-increment:s;display:flex;gap:10px;font-size:10.5px;line-height:1.65;color:var(--ic2);letter-spacing:.03em}
+.info-card ol li::before{content:counter(s,decimal-leading-zero);font-family:var(--serif);font-size:11px;
+  color:var(--gold);flex:none;padding-top:1px}
+.info-card ol li b{display:block;color:var(--ic);font-weight:500;font-size:11px;margin-bottom:3px;letter-spacing:.05em}
+.info-card .end{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-family:var(--hand);
+  font-size:17px;line-height:1.7;letter-spacing:.06em;color:rgba(242,234,220,.86)}
+.info-card .end i{font-style:normal;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="board">
+
+  <!-- 板头 -->
+  <div class="hd">
+    <div>
+      <div class="no">FLOATING ISLE · 01</div>
+      <h1>先认识你，再给你世界</h1>
+      <div class="sub">启动 · 登录 · 性格测试 · 星球分配 · 兴趣标签 · 新用户首页</div>
+    </div>
+    <div class="r">
+      <div>冷启动目标 <b>5–8 题测试 → 星球 → 标签 → 首页</b></div>
+      <div>关键指标 <b>首次匹配完成率 · 首日三场景触达</b></div>
+      <div>视觉 <b>沉浸深色起，浅米底落地</b></div>
+    </div>
+  </div>
+
+  <!-- 第一排 -->
+  <div class="band grid g5">
+
+    <!-- 1 Splash -->
+    <div class="scr">
+      <div class="ph dark grain">
+        <div class="art" style="position:absolute;inset:0;background:url(assets/brand-hero.png) center 22%/cover"></div>
+        <div class="shade"></div>
+        <div class="sb" style="position:relative;z-index:3"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="sp">
+          <div class="skip">跳过 3s</div>
+          <h2>浮屿</h2>
+          <div class="en">FLOATING ISLE</div>
+          <div class="sl">在这里，遇见有趣的灵魂。</div>
+          <div class="ld"><i></i><i></i><i></i></div>
+          <div class="ver">VERSION 1.0.0 · 短剧 社交 直播 头像</div>
+        </div>
+      </div>
+      <div class="cap"><b>01 · 启动页</b>品牌手写标语压暗房照片，3 秒自动流转</div>
+    </div>
+
+    <!-- 2 登录 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="lg">
+            <div>
+              <div class="mark">浮屿</div>
+              <div class="mk-s">遇见有趣的灵魂</div>
+            </div>
+            <div class="f">
+              <div class="fld"><span class="k">+86</span>138 8888 5201</div>
+              <div class="fld"><span class="k">验证码</span><span class="cur"></span><span style="margin-left:auto;color:var(--gold);letter-spacing:.06em">获取验证码</span></div>
+              <div class="btn wide">登录</div>
+            </div>
+            <div class="agree">
+              <span class="cbx on"></span>
+              <span>已阅读并同意 <b style="font-weight:500">《用户协议》</b>与<b style="font-weight:500">《隐私政策》</b>，未成年人将由监护人授权使用</span>
+            </div>
+            <div class="alt">
+              <div class="ln"><hr>其他方式<hr></div>
+              <div class="ch">
+                <i><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8.5 15.5A6.5 6.5 0 1 1 15 9.5c.6 0 1.2.1 1.8.2"/><path d="M17 13.5a4 4 0 1 1-2.6 7.1L12 21l.4-1.9A4 4 0 0 1 17 13.5z"/></svg></i>
+                <i><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8c-1 0-2-.2-2.9-.5L7 19l1-3.1A7.9 7.9 0 0 1 4 12z"/><circle cx="9.5" cy="11" r="1"/><circle cx="14.5" cy="11" r="1"/></svg></i>
+                <i><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 8c-2 0-3.5-1.2-3.5-3S10 2 12 2s3.5 1.2 3.5 3S14 8 12 8zM6 22l2.5-6L6 10h2.5L12 15l3.5-5H18l-2.5 6L18 22h-2.5L12 16.5 8.5 22z"/></svg></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>02 · 登录</b>手机号验证码为主，第三方登录降为次要入口</div>
+    </div>
+
+    <!-- 3 一键登录面板 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="lg">
+            <div><div class="mark">浮屿</div><div class="mk-s">遇见有趣的灵魂</div></div>
+            <div class="f">
+              <div class="fld"><span class="k">+86</span>138 8888 5201</div>
+              <div class="fld"><span class="k">验证码</span>— — — — — —</div>
+              <div class="btn wide">登录</div>
+            </div>
+          </div>
+        </div>
+        <div class="ovl bottom">
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sh"><b>本机号码一键登录</b><s>中国移动</s></div>
+            <div class="lg in-sheet"><div class="num">138****5201</div><div class="num-s">已验证本机号码 · 无需输入验证码</div></div>
+            <div class="btn wide" style="margin-top:14px">一键登录</div>
+            <div class="btn wide no" style="margin-top:9px;height:34px;background:transparent;border:1px solid var(--app-line);color:var(--app-mute);font-weight:400;font-size:10.5px">使用其他号码登录</div>
+            <div style="display:flex;justify-content:center;gap:14px;margin-top:13px;font-size:8.5px;color:rgba(26,23,20,.34);letter-spacing:.06em">
+              <span>《用户协议》</span><span>《隐私政策》</span><span>《运营商服务条款》</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>03 · 一键登录面板</b>运营商取号授权，底部半屏抽屉，减少输入成本</div>
+    </div>
+
+    <!-- 4 性格测试 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="qt">
+            <div class="step-n"><b>03</b><s>/ 共 8 题 · 约 40 秒</s></div>
+            <div class="prg lt" style="margin-top:8px"><i style="width:37.5%"></i></div>
+            <div class="q">下班回到住处，你更想做的第一件事是？
+              <small>没有对错，选你最可能的那个</small>
+            </div>
+            <div class="op">
+              <div class="o"><span class="k">A</span>打开一部短剧，谁也别来找我</div>
+              <div class="o on"><span class="k">B</span>翻翻群聊，看看今天他们在吵什么</div>
+              <div class="o"><span class="k">C</span>发一条瞬间，等有人来评论</div>
+              <div class="o"><span class="k">D</span>进个直播间挂着，听点人声</div>
+            </div>
+            <div class="nav">
+              <span class="bk">‹ 上一题</span>
+              <div class="btn" style="margin-left:auto;width:118px;height:36px;font-size:11px">下一题</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>04 · 性格测试</b>8 道情境题，全部来自真实使用场景，答完即出星球</div>
+    </div>
+
+    <!-- 5 结果 · 星球 -->
+    <div class="scr">
+      <div class="ph dark">
+        <div class="art" style="position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,#241F17 0%,#0B0A09 62%)"></div>
+        <div class="sb" style="position:relative;z-index:3"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="rs">
+          <div class="k">你的性格星球</div>
+          <h3>星辰型</h3>
+          <svg class="orb" width="128" height="128" viewBox="0 0 100 100" fill="none">
+            <g stroke="rgba(242,234,220,.13)">
+              <path d="M50 8 L86 34 L72 78 L28 78 L14 34 Z"/>
+              <path d="M50 24 L72 40 L63 66 L37 66 L28 40 Z"/>
+              <path d="M50 40 L59 46 L56 57 L44 57 L41 46 Z"/>
+              <path d="M50 50 L50 8M50 50 L86 34M50 50 L72 78M50 50 L28 78M50 50 L14 34"/>
+            </g>
+            <path d="M50 16 L79 38 L61 71 L32 62 L22 36 Z" fill="rgba(201,162,104,.2)" stroke="#C9A268" stroke-width="1.2"/>
+            <g fill="#C9A268"><circle cx="50" cy="16" r="2.4"/><circle cx="79" cy="38" r="2.4"/><circle cx="61" cy="71" r="2.4"/><circle cx="32" cy="62" r="2.4"/><circle cx="22" cy="36" r="2.4"/></g>
+          </svg>
+          <div class="ds">温柔、理性、爱讲故事。<br>你在人群里不吵，但别人愿意跟你说心里话。</div>
+          <div class="dim">
+            <div><span>温柔</span><div class="prg"><i style="width:86%"></i></div><em>86</em></div>
+            <div><span>理性</span><div class="prg"><i style="width:74%"></i></div><em>74</em></div>
+            <div><span>浪漫</span><div class="prg"><i style="width:58%"></i></div><em>58</em></div>
+            <div><span>表达</span><div class="prg"><i style="width:41%"></i></div><em>41</em></div>
+            <div><span>冒险</span><div class="prg"><i style="width:28%"></i></div><em>28</em></div>
+          </div>
+          <div class="sim">
+            <i class="i8"></i><i class="i9"></i><i class="i6"></i><i class="i5"></i>
+          </div>
+          <div class="sim-t">星球上已有 12,480 人 · 4 位与你高度同频</div>
+          <div class="peek-h"><b>你的星球今晚在追</b><s>查看全部 ›</s></div>
+          <div class="peek">
+            <div class="pz"><i class="i1"></i><s>他从暮色赶来</s></div>
+            <div class="pz"><i class="i2"></i><s>暗格</s></div>
+            <div class="pz"><i class="i3"></i><s>汉乐</s></div>
+          </div>
+          <div class="go"><div class="btn wide">进入我的星球</div></div>
+        </div>
+      </div>
+      <div class="cap"><b>05 · 星球分配</b>五维雷达 + 同频人数，把抽象标签变成可归属的"地方"</div>
+    </div>
+  </div>
+
+  <!-- 第二排 -->
+  <div class="band tight grid g5" style="padding-top:6px">
+
+    <!-- 6 兴趣标签 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="tg">
+            <div class="h"><b>挑几个你感兴趣的话题</b><p>至少选 3 个，首页和匹配都按这个来</p></div>
+            <div class="grp">
+              <div class="gl">短剧口味</div>
+              <div class="chips">
+                <span class="chip lt on">都市恋爱</span><span class="chip lt">悬疑反转</span>
+                <span class="chip lt on">古风</span><span class="chip lt">甜宠</span><span class="chip lt">复仇</span>
+              </div>
+            </div>
+            <div class="grp">
+              <div class="gl">兴趣圈子</div>
+              <div class="chips">
+                <span class="chip lt on">二次元</span><span class="chip lt">旅行</span>
+                <span class="chip lt">美食</span><span class="chip lt on">深夜emo</span><span class="chip lt">摄影</span>
+              </div>
+            </div>
+            <div class="grp">
+              <div class="gl">聊天偏好</div>
+              <div class="chips">
+                <span class="chip lt on">追剧搭子</span><span class="chip lt">连麦听歌</span>
+                <span class="chip lt">游戏队友</span><span class="chip lt">树洞倾诉</span>
+              </div>
+            </div>
+            <div class="grp">
+              <div class="gl">此刻心情</div>
+              <div class="chips">
+                <span class="chip lt on">下饭</span><span class="chip lt">解压</span>
+                <span class="chip lt on">上头</span><span class="chip lt">治愈</span><span class="chip lt">烧脑</span>
+              </div>
+            </div>
+            <div class="pick">
+              <span class="d"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="15" cy="15" r="1.2" fill="currentColor"/><circle cx="15" cy="9" r="1.2" fill="currentColor"/><circle cx="9" cy="15" r="1.2" fill="currentColor"/></svg></span>
+              <div class="tx"><b>懒得挑？帮你选</b><p>按当下最热的组合先选 5 个，进首页随时能改</p></div>
+              <s>换一组</s>
+            </div>
+            <div class="cnt"><span>已选 <b>5</b> 个</span><div class="btn sm">下一步</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>06 · 兴趣标签</b>三组分类降低选择成本，直接喂给推荐与匹配算法</div>
+    </div>
+
+    <!-- 7 通知授权 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="tg">
+            <div class="h"><b>挑几个你感兴趣的话题</b><p>至少选 3 个，首页和匹配都按这个来</p></div>
+            <div class="grp">
+              <div class="gl">短剧口味</div>
+              <div class="chips"><span class="chip lt on">都市恋爱</span><span class="chip lt">悬疑反转</span><span class="chip lt on">古风</span></div>
+            </div>
+            <div class="grp">
+              <div class="gl">兴趣圈子</div>
+              <div class="chips"><span class="chip lt on">二次元</span><span class="chip lt">旅行</span><span class="chip lt">美食</span></div>
+            </div>
+            <div class="grp">
+              <div class="gl">聊天偏好</div>
+              <div class="chips"><span class="chip lt on">追剧搭子</span><span class="chip lt">连麦听歌</span><span class="chip lt">游戏队友</span></div>
+            </div>
+            <div class="grp">
+              <div class="gl">此刻心情</div>
+              <div class="chips"><span class="chip lt on">下饭</span><span class="chip lt">解压</span><span class="chip lt on">上头</span></div>
+            </div>
+            <div class="pick">
+              <span class="d"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="15" cy="15" r="1.2" fill="currentColor"/></svg></span>
+              <div class="tx"><b>懒得挑？帮你选</b><p>按当下最热的组合先选 5 个</p></div>
+              <s>换一组</s>
+            </div>
+          </div>
+          <div class="ovl">
+            <div class="perm">
+              <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M18 15V10a6 6 0 1 0-12 0v5l-2 3h16zM10 21h4"/></svg></div>
+              <h6>允许"浮屿"发送通知？</h6>
+              <p>关注的主播开播、群聊新消息、追的剧更新时提醒你</p>
+              <div class="btns">
+                <div class="btn no">暂不</div>
+                <div class="btn">允许</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>07 · 通知授权</b>放在标签之后而非启动时，先给理由再要权限</div>
+    </div>
+
+    <!-- 8 新用户首页 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab"><span class="on">推荐</span><span>短剧</span><span>直播</span><span>关注</span>
+            <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg></span>
+          </div>
+          <div class="newbie">
+            <span class="bd"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18h16M6 14l-2-7 5 3 3-6 3 6 5-3-2 7z"/></svg></span>
+            星辰型 · 已按你的 5 个标签重排首页
+            <s>查看我的星球 ›</s>
+          </div>
+          <div class="a-hero" style="margin-top:11px">
+            <span class="tag">都市 · 16 集全</span>
+            <div class="sub">根据你的"都市恋爱"推荐</div>
+            <div class="t">他从暮色<br>里赶来</div>
+            <div class="pl"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l12 7-12 7z"/></svg></div>
+          </div>
+          <div class="discs">
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg></span>短剧</div>
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="3"/><path d="M3 19c1.2-2.9 3.2-4.4 6-4.4M16 12h5M18.5 9.5V15"/></svg></span>匹配</div>
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h11v9H4zM15 9l5-2.5v8L15 12"/></svg></span>直播</div>
+            <div class="disc"><span class="av i8"></span>AI 头像</div>
+          </div>
+          <div class="a-sec"><h4>可能聊得来</h4><small>同追《暗格》</small></div>
+          <div class="a-live">
+            <div class="lc"><i class="i8"></i><b>小鹿酱</b><s>同星球</s></div>
+            <div class="lc"><i class="i9"></i><b>清风</b><s>3 个共同标签</s></div>
+          </div>
+          <div class="a-nav">
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>发现</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v10H8l-4 3z"/></svg>消息</i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg>我的</i>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b>08 · 新用户首页</b>第一天就把三件事摆上桌：有剧看、有人聊、有直播进</div>
+    </div>
+
+    <!-- 9 首充礼包 -->
+    <div class="scr">
+      <div class="ph light">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+          <div class="a-tab"><span class="on">推荐</span><span>短剧</span><span>直播</span><span>关注</span></div>
+          <div class="a-hero" style="margin-top:2px">
+            <span class="tag">都市 · 16 集全</span>
+            <div class="t">他从暮色<br>里赶来</div>
+          </div>
+          <div class="discs">
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg></span>短剧</div>
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="3"/><path d="M3 19c1.2-2.9 3.2-4.4 6-4.4"/></svg></span>匹配</div>
+            <div class="disc"><span class="d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h11v9H4zM15 9l5-2.5v8L15 12"/></svg></span>直播</div>
+            <div class="disc"><span class="av i8"></span>AI 头像</div>
+          </div>
+          <div class="ovl">
+            <div class="dlg">
+              <div class="h">新人专属</div>
+              <h6 style="margin-top:6px">首充 1 元 · 得 320 钻石</h6>
+              <div class="price"><em>¥</em><b>1.00</b><s>原价 ¥30.00</s></div>
+              <div class="gift-list">
+                <div><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 8h14l-7 12z"/></svg></i>钻石 300 + 赠 20<b>320</b></div>
+                <div><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg></i>限定头像 · 试用 7 天<b>1 张</b></div>
+                <div><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h16v12H4zM4 8l2-4h12l2 4M12 4v16"/></svg></i>直播间特效气泡<b>已解锁</b></div>
+              </div>
+              <div class="cd">仅今日有效 · 23:41:07 后恢复原价</div>
+              <div class="btns">
+                <div class="btn gold">立即抢购</div>
+                <div class="btn ghost" style="border-color:var(--app-line);color:var(--app-mute)">以后再说</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><b><span class="t">弹窗</span>09 · 新人首充礼包</b>第 2 天首次进首页才弹，避开冷启动流失窗口</div>
+    </div>
+
+    <!-- 说明卡 -->
+    <div class="scr">
+      <div class="info-card">
+        <div class="l">FUNNEL</div>
+        <h5>冷启动漏斗</h5>
+        <ol>
+          <li><div><b>广告 / 好友邀请落地</b>直达启动页，不插屏</div></li>
+          <li><div><b>一键登录</b>运营商取号优先，砍掉验证码步骤</div></li>
+          <li><div><b>8 题性格测试</b>答完即得星球，中途可跳过</div></li>
+          <li><div><b>星球归属</b>用同频人数把结果变成留下来的理由</div></li>
+          <li><div><b>3 个兴趣标签</b>最低门槛，标签直接决定首屏</div></li>
+          <li><div><b>通知授权</b>放在价值兑现之后，通过率更高</div></li>
+          <li><div><b>首页三场景</b>短剧 / 匹配 / 直播同屏给到</div></li>
+        </ol>
+        <div class="end">内容吸引他来第一次，<br>社交让他<i>留下来每一天</i>。</div>
+      </div>
+      <div class="cap"><b>设计口径</b>每一步只做一个动作，任何一步都能跳过后重新补</div>
+    </div>
+  </div>
+
+  <!-- 流程带 -->
+  <div class="flow">
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v12M8 11l4 4 4-4M5 19h14"/></svg></span><div class="tx"><h5>下载进入</h5><p>广告与邀请链接直达</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 11V7a3 3 0 0 1 6 0v4M6 11h12v10H6z"/></svg></span><div class="tx"><h5>一键登录</h5><p>取号授权，不输验证码</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8z"/></svg></span><div class="tx"><h5>性格测试</h5><p>8 题情境选择</p></div></div>
+    <svg class="arrow" width="26" height="12" viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h23M18 1l5 5-5 5"/></svg>
+    <div class="step"><span class="d"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span><div class="tx"><h5>进入星球</h5><p>拿到身份与同频的人</p></div></div>
+    <div class="hand">
+      <div class="l1">测性格 → 分星球 → 选标签 → 首页即同频</div>
+      <div class="l2">冷启动不求多，只求他第一天就把三件事做完。</div>
+    </div>
+  </div>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <div class="k">FLOATING ISLE · 01 ONBOARDING</div>
+    <ul>
+      <li>底色 <b>暖黑 #141210</b> + 浅米 App <b>#F7F2E9</b></li>
+      <li>点缀 <b>哑金 #C9A268</b> 只给选中态与确权标识</li>
+      <li>标题 <b>华文行楷手写</b>，正文 <b>细字重 + 大字距</b></li>
+      <li>弹窗 <b>遮罩 + 毛玻璃</b>，半屏抽屉承载操作</li>
+      <li>入口图标 <b>黑色圆盘 + 线性白标</b></li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星屿 · App UI · 核心五屏</title>
+<style>
+:root{
+  --bg:#07070B;
+  --stage:#040407;
+  --phone:#0C0C12;
+  --surface:#15151D;
+  --surface-2:#1C1C26;
+  --hair:rgba(255,255,255,.08);
+  --hair-strong:rgba(255,255,255,.14);
+  --ink:#F3F3F7;
+  --ink-2:#A6A6B4;
+  --ink-3:#6C6C7C;
+  --accent:#7C5CFF;
+  --accent-soft:rgba(124,92,255,.14);
+  --live:#FF3B5C;
+  --gold:#E9C46A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--stage);color:var(--ink);
+  font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased}
+body{padding:56px 48px 96px}
+
+/* ---------- 页头 ---------- */
+.doc-head{max-width:1500px;margin:0 auto 44px}
+.doc-eyebrow{font-size:12px;letter-spacing:.22em;color:var(--ink-3);text-transform:uppercase}
+.doc-title{font-size:34px;font-weight:600;letter-spacing:-.01em;margin:14px 0 12px}
+.doc-title span{color:var(--accent)}
+.doc-lede{font-size:14px;line-height:1.85;color:var(--ink-2);max-width:760px}
+.rules{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.rule{font-size:12px;color:var(--ink-2);border:1px solid var(--hair);
+  border-radius:999px;padding:7px 14px;background:rgba(255,255,255,.02)}
+.rule b{color:var(--ink);font-weight:500}
+
+/* ---------- 画布 ---------- */
+.board{display:flex;flex-wrap:wrap;gap:52px 44px;justify-content:center;max-width:2400px;margin:0 auto}
+.unit{width:390px}
+.shot{position:relative}
+.phone{width:390px;height:844px;background:var(--phone);border:1px solid var(--hair-strong);
+  border-radius:46px;overflow:hidden;position:relative;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 10px rgba(255,255,255,.02)}
+.cap{margin-top:22px;padding-top:16px;border-top:1px solid var(--hair)}
+.cap-idx{font-size:11px;letter-spacing:.18em;color:var(--accent)}
+.cap-name{font-size:17px;font-weight:600;margin:7px 0 8px}
+.cap-note{font-size:12.5px;line-height:1.75;color:var(--ink-3)}
+
+/* ---------- 通用零件 ---------- */
+.status{height:46px;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 26px 8px;font-size:12.5px;font-weight:500;color:var(--ink);letter-spacing:.02em}
+.status .dots{display:flex;gap:5px;align-items:center;opacity:.85}
+.status .batt{width:20px;height:10px;border:1px solid currentColor;border-radius:2.5px;position:relative;opacity:.8}
+.status .batt::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+.pad{padding:0 20px}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase}
+.sec-title{font-size:15px;font-weight:600;letter-spacing:.01em}
+.bar{flex:1;height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.nav-top{display:flex;align-items:center;gap:14px;height:48px}
+.icon-btn{width:30px;height:30px;display:grid;place-items:center;color:var(--ink-2);
+  border:1px solid transparent;border-radius:9px;cursor:default}
+svg{display:block}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:78px;
+  border-top:1px solid var(--hair);background:rgba(9,9,14,.94);
+  display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding-top:11px}
+.tab{display:grid;justify-items:center;gap:5px;font-size:10px;color:var(--ink-3)}
+.tab.on{color:var(--ink)}
+.tab .dot{position:relative}
+.tab .badge{position:absolute;top:-4px;right:-7px;min-width:15px;height:15px;border-radius:8px;
+  background:var(--live);color:#fff;font-size:9px;display:grid;place-items:center;
+  font-weight:600;padding:0 3px;border:2px solid #09090E}
+.tab-fab{width:34px;height:26px;display:grid;place-items:center;border-radius:9px;
+  background:var(--accent);color:#fff}
+
+/* ---------- 屏1 性格测试 ---------- */
+.test{position:absolute;inset:46px 0 0;display:flex;flex-direction:column}
+.q-head{display:flex;align-items:center;gap:12px;padding:8px 20px 0}
+.q-count{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.orb{width:100%;height:190px;position:relative;display:grid;place-items:center;margin:6px 0 2px}
+.orb::before{content:"";width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle at 38% 34%,rgba(124,92,255,.5),rgba(124,92,255,.05) 62%)}
+.orb::after{content:"";position:absolute;width:126px;height:126px;border-radius:50%;
+  border:1px solid rgba(124,92,255,.4);border-top-color:rgba(124,92,255,.06)}
+.orb b{position:relative;font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.7)}
+.q-title{font-size:25px;line-height:1.38;font-weight:600;padding:0 20px;margin:14px 0 4px;letter-spacing:-.01em}
+.q-sub{font-size:12.5px;color:var(--ink-3);padding:0 20px;margin-bottom:20px}
+.opts{display:grid;gap:9px;padding:0 20px}
+.opt{display:flex;align-items:center;gap:13px;padding:16px 16px;background:var(--surface);
+  border:1px solid var(--hair);border-radius:14px;font-size:14.5px;color:var(--ink-2)}
+.opt i{width:19px;height:19px;border-radius:50%;border:1px solid var(--hair-strong);flex:none}
+.opt.sel{border-color:rgba(124,92,255,.55);background:var(--accent-soft);color:var(--ink)}
+.opt.sel i{border-color:var(--accent);background:var(--accent);position:relative}
+.opt.sel i::after{content:"";position:absolute;left:5px;top:6px;width:6px;height:3px;
+  border-left:1.6px solid #fff;border-bottom:1.6px solid #fff;transform:rotate(-45deg)}
+.q-foot{margin-top:auto;padding:18px 20px 30px;border-top:1px solid var(--hair)}
+.btn-primary{height:50px;border-radius:14px;background:var(--accent);color:#fff;font-size:15px;
+  font-weight:600;display:grid;place-items:center;letter-spacing:.02em}
+.q-foot p{text-align:center;font-size:11.5px;color:var(--ink-3);margin-top:12px}
+
+/* ---------- 屏2 首页 ---------- */
+.home{position:absolute;inset:46px 0 78px;display:flex;flex-direction:column;overflow:hidden}
+.home-top{display:flex;align-items:center;gap:12px;padding:6px 20px 14px}
+.search{flex:1;height:34px;border-radius:11px;background:var(--surface);border:1px solid var(--hair);
+  display:flex;align-items:center;gap:8px;padding:0 12px;font-size:12.5px;color:var(--ink-3)}
+.avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--hair-strong);
+  background:linear-gradient(135deg,#3A2E6E,#6B5AA6);position:relative}
+.avatar.cert::after{content:"";position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;
+  border-radius:50%;background:var(--accent);border:1.5px solid var(--phone);
+  box-shadow:0 0 0 1px rgba(124,92,255,.35)}
+.scroll{flex:1;overflow:hidden;padding-bottom:8px}
+.rail{display:flex;gap:11px;padding:12px 20px 4px}
+.rail:last-child{padding-bottom:0}
+.drama{width:112px;flex:none}
+.drama .cover{width:112px;height:150px;border-radius:12px;border:1px solid var(--hair);
+  position:relative;overflow:hidden;background:#1A1A24}
+.drama .cover b{position:absolute;left:10px;bottom:26px;font-size:14px;font-weight:600;letter-spacing:.04em}
+.drama .cover em{position:absolute;left:10px;bottom:10px;font-style:normal;font-size:10px;color:rgba(255,255,255,.62)}
+.drama .resume{position:absolute;left:8px;right:8px;top:8px;height:2px;background:rgba(255,255,255,.22);border-radius:2px}
+.drama .resume i{display:block;width:62%;height:100%;background:var(--accent);border-radius:2px}
+.drama .tagline{font-size:11px;color:var(--ink-3);margin-top:8px;line-height:1.4}
+.c1{background:radial-gradient(circle at 70% 20%,rgba(124,92,255,.55),transparent 60%),#15121F}
+.c2{background:radial-gradient(circle at 30% 80%,rgba(255,59,92,.34),transparent 58%),#191216}
+.c3{background:radial-gradient(circle at 50% 10%,rgba(233,196,106,.3),transparent 60%),#17161A}
+.livestream{display:flex;gap:11px;padding:12px 20px 4px}
+.ls{flex:1;height:98px;border-radius:14px;border:1px solid var(--hair);position:relative;
+  overflow:hidden;padding:12px;background:#121219}
+.ls .live-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;
+  color:#fff;background:var(--live);border-radius:5px;padding:2px 6px}
+.ls .live-tag::before{content:"";width:5px;height:5px;border-radius:50%;background:#fff}
+.ls .who{position:absolute;left:12px;right:12px;bottom:11px;font-size:12.5px;line-height:1.4}
+.ls .who span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:3px}
+.ls .frame{position:absolute;inset:0;background:radial-gradient(circle at 76% 30%,rgba(124,92,255,.4),transparent 58%)}
+.peers{display:flex;gap:9px;padding:12px 20px 4px}
+.peer{width:72px;flex:none;display:grid;justify-items:center;gap:8px;text-align:center}
+.peer .pic{width:56px;height:56px;border-radius:50%;border:1px solid var(--hair-strong);
+  background:linear-gradient(140deg,#2B2440,#4A3C72);position:relative}
+.peer .pic.g{background:linear-gradient(140deg,#3A2A34,#72405A)}
+.peer .pic.b{background:linear-gradient(140deg,#22333A,#3D6072)}
+.peer .pic .cert{position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--phone)}
+.peer .nm{font-size:11.5px;color:var(--ink);line-height:1.3}
+.peer .why{font-size:10px;color:var(--accent);background:var(--accent-soft);
+  border-radius:5px;padding:2px 6px;line-height:1.4}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;padding:20px 20px 0}
+.sec-head small{font-size:11.5px;color:var(--ink-3)}
+
+/* ---------- 屏3 短剧播放 ---------- */
+.player{position:absolute;inset:0;background:#000}
+.player .frame{position:absolute;inset:0;
+  background:radial-gradient(circle at 46% 34%,rgba(124,92,255,.34),transparent 58%),
+  linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 26%,rgba(0,0,0,.72) 68%,#08080C 100%)}
+.top-float{position:absolute;top:52px;left:16px;right:16px;display:flex;align-items:center;gap:10px}
+.crumb{display:flex;align-items:center;gap:7px;font-size:12.5px;color:rgba(255,255,255,.82)}
+.host-pill{margin-left:auto;display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;
+  border-radius:999px;background:rgba(255,59,92,.16);border:1px solid rgba(255,59,92,.5);
+  font-size:11.5px;color:#fff;font-weight:500}
+.host-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--live);
+  box-shadow:0 0 0 3px rgba(255,59,92,.22)}
+.rail-right{position:absolute;right:14px;bottom:250px;display:grid;gap:20px;justify-items:center}
+.act{display:grid;justify-items:center;gap:5px;font-size:10.5px;color:rgba(255,255,255,.86)}
+.act .ring{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06)}
+.ep-card{position:absolute;left:16px;right:78px;bottom:158px}
+.ep-card h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.ep-card p{font-size:12px;line-height:1.6;color:rgba(255,255,255,.6);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.progress{position:absolute;left:16px;right:16px;bottom:132px}
+.progress .bar{background:rgba(255,255,255,.18);height:3px}
+.progress .bar i{position:relative}
+.progress .bar i::after{content:"";position:absolute;right:-4px;top:-2.5px;width:8px;height:8px;
+  border-radius:50%;background:#fff}
+.progress .times{display:flex;justify-content:space-between;font-size:10px;
+  color:rgba(255,255,255,.5);margin-top:7px;font-variant-numeric:tabular-nums}
+.match-hint{position:absolute;left:16px;right:16px;bottom:74px;display:flex;align-items:center;gap:10px;
+  height:56px;padding:0 8px 0 10px;border-radius:14px;background:rgba(21,21,29,.92);
+  border:1px solid rgba(124,92,255,.42)}
+.match-hint .stack{display:flex;flex:none}
+.match-hint .stack i{width:26px;height:26px;border-radius:50%;border:1.5px solid #121218;
+  background:linear-gradient(140deg,#4A3C72,#7C5CFF);margin-left:-8px}
+.match-hint .stack i:first-child{margin-left:0;background:linear-gradient(140deg,#72405A,#B0607C)}
+.match-hint div{flex:1;font-size:11px;line-height:1.45;color:var(--ink-2);min-width:0}
+.match-hint div b{display:block;font-size:12.5px;color:var(--ink);font-weight:600;margin-bottom:1px}
+.match-hint .go{flex:none;height:30px;padding:0 12px;border-radius:9px;background:var(--accent);color:#fff;
+  font-size:11.5px;font-weight:600;display:grid;place-items:center;white-space:nowrap}
+.input-fake{position:absolute;left:16px;right:16px;bottom:22px;height:38px;border-radius:12px;
+  border:1px solid var(--hair-strong);background:rgba(255,255,255,.05);display:flex;
+  align-items:center;padding:0 14px;font-size:12.5px;color:rgba(255,255,255,.42);gap:9px}
+.input-fake .swipe{margin-left:auto;font-size:10.5px;color:rgba(255,255,255,.4)}
+
+/* ---------- 屏4 聊天 ---------- */
+.chat{position:absolute;inset:46px 0 0;display:flex;flex-direction:column}
+.chat-head{display:flex;align-items:center;gap:11px;padding:8px 16px 14px;
+  border-bottom:1px solid var(--hair)}
+.chat-head .pic{width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,#72405A,#B0607C);
+  border:1px solid var(--hair-strong);position:relative}
+.chat-head .pic .cert{position:absolute;right:0;bottom:0;width:10px;height:10px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--phone)}
+.chat-head .who{flex:1}
+.chat-head .who b{font-size:14.5px;font-weight:600;display:block}
+.chat-head .who span{font-size:11px;color:var(--accent)}
+.follow{height:28px;padding:0 12px;border-radius:8px;border:1px solid var(--accent);
+  color:var(--accent);font-size:11.5px;font-weight:600;display:grid;place-items:center}
+.msgs{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.sysline{align-self:center;font-size:10.5px;color:var(--ink-3);background:var(--surface);
+  border:1px solid var(--hair);border-radius:999px;padding:5px 12px;text-align:center;line-height:1.5}
+.sysline b{color:var(--accent);font-weight:500}
+.row{display:flex;gap:9px;align-items:flex-end}
+.row.me{flex-direction:row-reverse}
+.row .pic{width:28px;height:28px;border-radius:50%;flex:none;background:linear-gradient(140deg,#72405A,#B0607C)}
+.row.me .pic{background:linear-gradient(140deg,#2B2440,#4A3C72)}
+.bubble{max-width:236px;padding:11px 13px;border-radius:15px;font-size:13.5px;line-height:1.62;
+  background:var(--surface);border:1px solid var(--hair);color:var(--ink)}
+.row.me .bubble{background:var(--accent);border-color:transparent;color:#fff}
+.time{align-self:center;font-size:10px;color:var(--ink-3);margin:2px 0}
+.share-card{max-width:250px;border-radius:15px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--hair)}
+.share-card .thumb{height:64px;background:radial-gradient(circle at 72% 26%,rgba(124,92,255,.55),transparent 60%),#15121F;
+  display:flex;align-items:flex-end;padding:10px 12px;font-size:13px;font-weight:600}
+.share-card .meta{padding:10px 12px;font-size:11px;color:var(--ink-3);line-height:1.5}
+.share-card .meta b{display:block;font-size:12px;color:var(--ink-2);font-weight:500;margin-bottom:3px}
+.chips{display:flex;gap:8px;padding:0 16px 12px;overflow:hidden}
+.chip{height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--hair);
+  background:var(--surface);font-size:11.5px;color:var(--ink-2);display:grid;place-items:center;white-space:nowrap}
+.chip.hot{border-color:rgba(124,92,255,.45);color:var(--accent);background:var(--accent-soft)}
+.composer{padding:0 16px 26px;display:flex;align-items:center;gap:10px}
+.field{flex:1;height:42px;border-radius:13px;background:var(--surface);border:1px solid var(--hair);
+  display:flex;align-items:center;padding:0 14px;font-size:13px;color:var(--ink-3)}
+.plus{width:42px;height:42px;border-radius:13px;border:1px solid var(--hair);display:grid;
+  place-items:center;color:var(--ink-2)}
+
+/* ---------- 屏5 直播间 ---------- */
+.live{position:absolute;inset:0;background:#05050A}
+.live .stage{position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 30%,rgba(124,92,255,.4),transparent 60%),
+  radial-gradient(ellipse 60% 30% at 42% 58%,rgba(255,255,255,.06),transparent 70%),
+  radial-gradient(circle at 82% 74%,rgba(255,59,92,.18),transparent 55%),#0A0A12}
+.live .scrim{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,0) 24%,rgba(0,0,0,.1) 46%,rgba(5,5,10,.9) 74%)}
+.live-top{position:absolute;top:52px;left:14px;right:14px;display:flex;align-items:flex-start;gap:9px}
+.hostcard{display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;border-radius:999px;
+  background:rgba(12,12,18,.8);border:1px solid var(--hair-strong)}
+.hostcard .pic{width:32px;height:32px;border-radius:50%;position:relative;
+  background:linear-gradient(140deg,#3A2E6E,#7C5CFF);border:1px solid rgba(124,92,255,.5)}
+.hostcard .pic .cert{position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;
+  background:var(--accent);border:2px solid #0C0C12}
+.hostcard b{display:block;font-size:12.5px;font-weight:600}
+.hostcard span{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--gold)}
+.hostcard small{display:block;font-size:10.5px;color:var(--ink-3)}
+.viewers{display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;
+  background:rgba(12,12,18,.8);border:1px solid var(--hair);font-size:11.5px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.close{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(12,12,18,.8);border:1px solid var(--hair);color:var(--ink-2)}
+.board-card{position:absolute;top:106px;left:14px;width:178px;border-radius:13px;
+  background:rgba(12,12,18,.78);border:1px solid var(--hair);padding:10px 11px}
+.board-card .hd{display:flex;align-items:center;justify-content:space-between;
+  font-size:10.5px;color:var(--ink-3);margin-bottom:9px}
+.board-card .hd b{color:var(--ink-2);font-weight:500}
+.rk{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-2);margin-bottom:7px}
+.rk:last-child{margin-bottom:0}
+.rk i{width:17px;height:17px;border-radius:5px;display:grid;place-items:center;font-style:normal;
+  font-size:9.5px;font-weight:700;color:#0C0C12;background:var(--gold);flex:none}
+.rk i.s{background:#C9CDD8}.rk i.b{background:#C08455;color:#fff}
+.rk .g{width:16px;height:16px;border-radius:50%;background:linear-gradient(140deg,#4A3C72,#7C5CFF);flex:none}
+.rk span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.rk em{font-style:normal;color:var(--ink-3);font-size:10.5px;font-variant-numeric:tabular-nums;flex:none}
+.danmaku{position:absolute;left:14px;right:78px;bottom:382px;display:flex;flex-direction:column;gap:8px}
+.dm{align-self:flex-start;max-width:100%;padding:7px 11px;border-radius:12px;
+  background:rgba(12,12,18,.66);font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.88)}
+.dm b{color:var(--accent);font-weight:500;margin-right:5px}
+.dm.gift{border:1px solid rgba(233,196,106,.4);background:rgba(233,196,106,.1);color:var(--gold)}
+.dm.guard{border:1px solid rgba(124,92,255,.45);background:rgba(124,92,255,.14)}
+.dm .gd{font-size:9.5px;color:#fff;background:var(--accent);border-radius:4px;padding:1px 5px;margin-right:6px}
+.actions{position:absolute;right:14px;bottom:382px;display:grid;gap:13px;justify-items:center}
+.actions .a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:rgba(14,14,20,.97);
+  border-top:1px solid var(--hair-strong);border-radius:22px 22px 0 0;padding:14px 16px 24px}
+.sheet .grab{width:34px;height:3px;border-radius:2px;background:var(--hair-strong);margin:0 auto 12px}
+.fx{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;
+  border:1px solid rgba(233,196,106,.34);background:rgba(233,196,106,.07);margin-bottom:14px}
+.fx .spark{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;
+  background:rgba(233,196,106,.16);color:var(--gold)}
+.fx div{flex:1;min-width:0;font-size:10.5px;color:var(--ink-2);line-height:1.5}
+.fx div b{display:block;font-size:12px;color:var(--gold);font-weight:600}
+.fx .on{font-size:10.5px;color:var(--ink-3);white-space:nowrap;flex:none}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gift{border:1px solid var(--hair);background:var(--surface);border-radius:12px;
+  padding:9px 4px 8px;display:grid;justify-items:center;gap:6px}
+.gift .ic{width:26px;height:26px;display:grid;place-items:center;color:var(--ink-2)}
+.gift span{font-size:10.5px;color:var(--ink-2)}
+.gift em{font-style:normal;font-size:10px;color:var(--accent);font-variant-numeric:tabular-nums}
+.gift.sel{border-color:rgba(124,92,255,.6);background:var(--accent-soft)}
+.gift.sel .ic{color:var(--accent)}
+.send{margin-top:14px;display:flex;align-items:center;gap:11px}
+.qty{height:44px;min-width:74px;border-radius:12px;border:1px solid var(--hair);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;color:var(--ink-2);
+  padding:0 12px;font-variant-numeric:tabular-nums}
+.send .btn-primary{flex:1;border-radius:12px;font-size:14px;display:flex;align-items:center;
+  justify-content:center;gap:8px}
+.send .btn-primary s{text-decoration:none;opacity:.75;font-weight:500;font-size:12.5px}
+</style>
+</head>
+<body>
+
+<header class="doc-head">
+  <div class="doc-eyebrow">Product UI · Core Flow</div>
+  <h1 class="doc-title">星屿 <span>短剧 × 兴趣社交 × 娱乐直播</span> · 核心五屏</h1>
+  <p class="doc-lede">
+    按产品思路文档落地的界面方案。五屏串起完整闭环：性格测试建立身份 → 首页把短剧、社交、直播三件事同屏给出 →
+    短剧播放页向直播与社交分流 → 一对一聊天沉淀关系 → 直播间完成付费。
+  </p>
+  <div class="rules">
+    <div class="rule"><b>点缀色唯一</b> 主色 #7C5CFF，红色只用于 LIVE 状态</div>
+    <div class="rule"><b>发丝边</b> 1px / 8% 白色描边，不用投影堆叠</div>
+    <div class="rule"><b>图标线性</b> 无彩色圆盘图标</div>
+    <div class="rule"><b>390 × 844</b> 标准机型栅格</div>
+  </div>
+</header>
+
+<main class="board">
+
+  <!-- ============ 屏 1 性格测试 ============ -->
+  <section class="unit">
+    <div class="shot"><div class="phone">
+      <div class="status"><span>9:41</span><span class="dots"><i style="width:15px;height:9px;border:1px solid currentColor;border-radius:2px;position:relative"></i><span class="batt"></span></span></div>
+      <div class="test">
+        <div class="q-head">
+          <span class="icon-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></span>
+          <span class="q-count">3 / 7</span>
+          <span class="bar"><i style="width:43%"></i></span>
+        </div>
+        <div class="orb"><b>性格星球</b></div>
+        <h2 class="q-title">周末的晚上，<br>你更想怎么过？</h2>
+        <p class="q-sub">凭直觉选，测完把你放进合适的星球</p>
+        <div class="opts">
+          <div class="opt"><i></i>一个人刷完一整部剧</div>
+          <div class="opt sel"><i></i>找熟人语音到凌晨</div>
+          <div class="opt"><i></i>去没去过的地方逛逛</div>
+          <div class="opt"><i></i>在家开着直播当背景音</div>
+        </div>
+        <div class="q-foot">
+          <div class="btn-primary">下一题</div>
+          <p>5–8 题 · 随时可跳过，跳过后按热门标签推荐</p>
+        </div>
+      </div>
+    </div></div>
+    <div class="cap">
+      <div class="cap-idx">SCREEN 01</div>
+      <div class="cap-name">性格测试 · 冷启动</div>
+      <p class="cap-note">新用户在首页之前必须先"被归类"。进度条 + 单一问题 + 大标题，减少跳出；星球光晕只做一次，避免全程铺渐变。</p>
+    </div>
+  </section>
+
+  <!-- ============ 屏 2 首页 ============ -->
+  <section class="unit">
+    <div class="shot"><div class="phone">
+      <div class="status"><span>9:41</span><span class="dots"><span class="batt"></span></span></div>
+      <div class="home">
+        <div class="home-top">
+          <div class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/></svg>搜索短剧 · 主播 · 星球</div>
+          <div class="avatar cert"></div>
+        </div>
+        <div class="scroll">
+          <div class="sec-head"><span class="sec-title">接着追</span><small>《暗格》看到第 7 集</small></div>
+          <div class="rail">
+            <div class="drama"><div class="cover c1"><span class="resume"><i></i></span><b>暗格</b><em>更新至 24 集</em></div><div class="tagline">悬疑 · 已追 7 集</div></div>
+            <div class="drama"><div class="cover c2"><b>长夜将尽</b><em>全 18 集</em></div><div class="tagline">为你推荐</div></div>
+            <div class="drama"><div class="cover c3"><b>凤归朝</b><em>更新至 9 集</em></div><div class="tagline">古风 · 同城在看</div></div>
+          </div>
+          <div class="sec-head"><span class="sec-title">正在直播</span><small>看剧的人也在看</small></div>
+          <div class="livestream">
+            <div class="ls"><div class="frame"></div><span class="live-tag">LIVE</span>
+              <div class="who">《暗格》主演 林照<span>聊拍摄现场 · 4,213 人在看</span></div></div>
+            <div class="ls"><span class="live-tag">LIVE</span>
+              <div class="who">阿岚 · 深夜点歌<span>你的关注 · 1,096 人在看</span></div></div>
+          </div>
+          <div class="sec-head"><span class="sec-title">可能聊得来</span><small>基于性格星球 + 兴趣标签</small></div>
+          <div class="peers">
+            <div class="peer"><div class="pic g"></div><div class="nm">小舟</div><div class="why">同追《暗格》</div></div>
+            <div class="peer"><div class="pic"><span class="cert"></span></div><div class="nm">Echo</div><div class="why">同星球</div></div>
+            <div class="peer"><div class="pic b"></div><div class="nm">十七月</div><div class="why">古风短剧</div></div>
+            <div class="peer"><div class="pic"></div><div class="nm">雾岛</div><div class="why">都爱熬夜</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="dot"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M9 9.5l5 2.5-5 2.5z"/></svg></span>短剧</div>
+          <div class="tab on"><span class="dot"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/></svg></span>星球</div>
+          <div class="tab"><span class="tab-fab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v12M6 12h12"/></svg></span></div>
+          <div class="tab"><span class="dot"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16v10H8l-4 3z"/></svg><span class="badge">3</span></span>消息</div>
+          <div class="tab"><span class="dot"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="9" r="3.4"/><path d="M5 20c1.4-3.3 4-5 7-5s5.6 1.7 7 5"/></svg></span>我的</div>
+        </div>
+      </div>
+    </div></div>
+    <div class="cap">
+      <div class="cap-idx">SCREEN 02</div>
+      <div class="cap-name">首页 · 三板块同屏</div>
+      <p class="cap-note">"内容吸引来 / 关系留下来 / 场景能滑过去"在一屏内落地：追剧位是第一眼，直播位紧随，匹配位兜住社交。三个板块互不争抢，靠滚动顺序完成导流。</p>
+    </div>
+  </section>
+
+  <!-- ============ 屏 3 短剧播放页 ============ -->
+  <section class="unit">
+    <div class="shot"><div class="phone">
+      <div class="player">
+        <div class="frame"></div>
+        <div class="status" style="position:absolute;left:0;right:0;top:0;color:rgba(255,255,255,.9)"><span>9:43</span><span class="dots"><span class="batt"></span></span></div>
+        <div class="top-float">
+          <span class="crumb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg>短剧 · 暗格</span>
+          <div class="host-pill">主演林照正在直播</div>
+        </div>
+        <div class="rail-right">
+          <div class="act"><span class="ring"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg></span>2.4万</div>
+          <div class="act"><span class="ring"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v11H9l-5 4z"/></svg></span>3,108</div>
+          <div class="act"><span class="ring"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4h4v16H6zM14 4h4v10h-4z"/></svg></span>选集</div>
+          <div class="act"><span class="ring"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v10M8 8l4-4 4 4M5 19h14"/></svg></span>分享</div>
+        </div>
+        <div class="ep-card">
+          <h3>第 7 集 · 抽屉里的第二把钥匙</h3>
+          <p>沈砚在旧宅找到一只上锁的木格，钥匙孔的形状，和他口袋里那把完全不同。而楼上传来脚步声。</p>
+        </div>
+        <div class="progress">
+          <div class="bar"><i style="width:62%"></i></div>
+          <div class="times"><span>02:11</span><span>剩余 01:19 · 自动播放下一集</span><span>03:30</span></div>
+        </div>
+        <div class="match-hint">
+          <div class="stack"><i></i><i></i><i></i></div>
+          <div><b>小舟 也在追这部剧</b>也停在第 7 集 · 聊聊剧情</div>
+          <div class="go">去聊聊</div>
+        </div>
+        <div class="input-fake">说点什么…<span class="swipe">向左滑进直播间 · 上滑看更多</span></div>
+      </div>
+    </div></div>
+    <div class="cap">
+      <div class="cap-idx">SCREEN 03</div>
+      <div class="cap-name">短剧播放页 · 引流枢纽</div>
+      <p class="cap-note">播放页不赚钱，它是分流器。右上"主演正在直播"往变现导，底部同剧匹配条往社交导，两条入口互不遮挡画面主体。</p>
+    </div>
+  </section>
+
+  <!-- ============ 屏 4 一对一聊天 ============ -->
+  <section class="unit">
+    <div class="shot"><div class="phone">
+      <div class="status"><span>9:52</span><span class="dots"><span class="batt"></span></span></div>
+      <div class="chat">
+        <div class="chat-head">
+          <span class="icon-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></span>
+          <div class="pic"><span class="cert"></span></div>
+          <div class="who"><b>小舟</b><span>共同兴趣 3 个 · 夜猫星球</span></div>
+          <div class="follow">已关注</div>
+          <span class="icon-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18" cy="12" r="1.3"/></svg></span>
+        </div>
+        <div class="msgs">
+          <div class="sysline">你们都在追 <b>《暗格》</b>，聊聊剧情试试</div>
+          <div class="time">21:47</div>
+          <div class="row"><div class="pic"></div><div class="bubble">你看到第七集了吗！那把钥匙根本不是同一个锁的</div></div>
+          <div class="row me"><div class="pic"></div><div class="bubble">看到了，我猜是继母藏的，第二集她手上那个特写太刻意了</div></div>
+          <div class="row"><div class="pic"></div><div class="bubble">操，你这么一说我立刻回去重看</div></div>
+          <div class="row me"><div class="pic"></div>
+            <div class="share-card">
+              <div class="thumb">暗格</div>
+              <div class="meta"><b>第 2 集 · 旧宅的木格</b>我在这里加了时间标记，从这里看</div>
+            </div>
+          </div>
+          <div class="row"><div class="pic"></div><div class="bubble">等等我，一起追。主演今晚在直播诶</div></div>
+        </div>
+        <div class="chips">
+          <div class="chip hot">一起进直播间</div>
+          <div class="chip">猜凶手</div>
+          <div class="chip">换个话题</div>
+        </div>
+        <div class="composer">
+          <div class="field">发消息…</div>
+          <div class="plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 6v12M6 12h12"/></svg></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="cap">
+      <div class="cap-idx">SCREEN 04</div>
+      <div class="cap-name">一对一聊天 · 关系沉淀</div>
+      <p class="cap-note">系统只递话题、不代聊。剧集时间标记可以直接甩进对话，把"看剧"变成"一起看剧"；底部快捷 chip 给冷场兜底，同时留一条进直播的路。</p>
+    </div>
+  </section>
+
+  <!-- ============ 屏 5 直播间 ============ -->
+  <section class="unit">
+    <div class="shot"><div class="phone">
+      <div class="live">
+        <div class="stage"></div><div class="scrim"></div>
+        <div class="status" style="position:absolute;left:0;right:0;top:0;color:rgba(255,255,255,.92)"><span>22:06</span><span class="dots"><span class="batt"></span></span></div>
+        <div class="live-top">
+          <div class="hostcard"><div class="pic"><span class="cert"></span></div>
+            <div><b>林照</b><span>★ 限量认证头像 · No.037</span></div>
+            <small>+1,204</small>
+          </div>
+          <div class="viewers"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.4"/></svg>4,213</div>
+          <div class="close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+        </div>
+        <div class="board-card">
+          <div class="hd"><b>本场贡献榜</b><span>刷新</span></div>
+          <div class="rk"><i>1</i><span class="g"></span><span>夜行客</span><em>32,400</em></div>
+          <div class="rk"><i class="s">2</i><span class="g"></span><span>小舟</span><em>18,900</em></div>
+          <div class="rk"><i class="b">3</i><span class="g"></span><span>Echo</span><em>9,600</em></div>
+        </div>
+        <div class="danmaku">
+          <div class="dm"><b>雾岛：</b>这个灯光绝了</div>
+          <div class="dm guard"><span class="gd">守护者</span><b>夜行客：</b>主播讲讲第七集那场戏</div>
+          <div class="dm"><b>阿茶：</b>来了来了，追剧追到这儿了</div>
+          <div class="dm gift">送出「星轨流星」×1，触发全屏特效</div>
+        </div>
+        <div class="actions">
+          <div class="a"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v10M8 8l4-4 4 4M5 19h14"/></svg></div>
+          <div class="a"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9a6 6 0 0 1 12 0v4a2 2 0 0 1-2 2h-1v-5h3M4 11h3v4H6a2 2 0 0 1-2-2z"/></svg></div>
+          <div class="a"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M9 4h6"/></svg></div>
+        </div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="fx"><div class="spark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg></div>
+            <div><b>星轨流星 · 全屏特效</b>全场可见 · 附横幅 30 秒</div><span class="on">已选</span></div>
+          <div class="grid">
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"/></svg></span><span>心动</span><em>52</em></div>
+            <div class="gift sel"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg></span><span>星轨流星</span><em>520</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 9h14l-1 10H6zM9 9a3 3 0 0 1 6 0"/></svg></span><span>礼盒</span><em>99</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18h12L12 5z"/></svg></span><span>皇冠</span><em>1,999</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="6" width="16" height="12" rx="3"/><path d="M12 10v4M10 12h4"/></svg></span><span>星币</span><em>10</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><path d="M12 8v4l3 2"/></svg></span><span>慢时钟</span><em>300</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16M12 4l8 8-8 8"/></svg></span><span>顺风</span><em>66</em></div>
+            <div class="gift"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V8m5 11V4m5 15v-8m5 8V6"/></svg></span><span>热度</span><em>20</em></div>
+          </div>
+          <div class="send">
+            <div class="qty"><span>−</span>1<span>+</span></div>
+            <div class="btn-primary">送 出<s>· 余额 5,840</s></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <div class="cap">
+      <div class="cap-idx">SCREEN 05</div>
+      <div class="cap-name">直播间 · 变现主场景</div>
+      <p class="cap-note">主播卡直接暴露"限量认证头像 · No.037"，让付费身份被看见，点头像即跳商城；贡献榜与守护者可复用；礼物面板默认带全屏特效预览，把单次打赏的社交回报写清楚。</p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
