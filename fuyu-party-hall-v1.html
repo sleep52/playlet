@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浮屿 · 08 派对大厅 · 环轨版 v1</title>
+<link rel="stylesheet" href="fuyu-kit.css">
+<style>
+/* ============================================================
+   08 派对大厅 · 环轨改版
+   颜色 / 字体 / 组件全部走 fuyu-kit.css token，只补这一屏的构图
+   ============================================================ */
+
+/* ---------- 展台 ---------- */
+.stage{min-height:100vh;display:grid;grid-template-columns:minmax(0,470px) auto;
+  gap:86px;align-items:center;justify-content:center;max-width:1220px;margin:0 auto;padding:64px 56px;
+  background:
+    radial-gradient(78% 58% at 16% 6%,var(--gold-bg),rgba(0,0,0,0) 62%),
+    radial-gradient(70% 60% at 92% 96%,var(--gold-bg),rgba(0,0,0,0) 60%),
+    var(--c)}
+
+.intro .eb{font-size:10.5px;letter-spacing:.34em;color:var(--gold)}
+.intro h1{font-family:var(--serif);font-size:46px;font-weight:400;letter-spacing:.16em;margin-top:20px;line-height:1.15}
+.intro .tagline{font-family:var(--hand);font-size:25px;letter-spacing:.06em;color:var(--ic2);margin-top:14px}
+.intro .lead{margin-top:24px;font-size:12.5px;line-height:2.05;color:var(--ic2);letter-spacing:.05em}
+.intro .lead b{color:var(--gold);font-weight:500}
+
+.pts{margin-top:32px;display:grid;gap:17px}
+.pt{display:flex;gap:14px}
+.pt .no{font-family:var(--serif);font-size:11px;color:var(--gold);padding-top:2px;flex:none;letter-spacing:.06em}
+.pt b{display:block;font-size:12px;font-weight:500;letter-spacing:.09em;color:var(--ic)}
+.pt s{display:block;text-decoration:none;font-size:10.5px;line-height:1.85;color:var(--ic3);letter-spacing:.04em;margin-top:4px}
+
+.tokens{display:flex;align-items:center;gap:9px;margin-top:34px}
+.tokens i{width:24px;height:24px;border-radius:50%;border:1px solid var(--line2);flex:none}
+.tokens i:nth-child(1){background:var(--c)}
+.tokens i:nth-child(2){background:var(--cream)}
+.tokens i:nth-child(3){background:var(--gold)}
+.tokens i:nth-child(4){background:var(--app)}
+.tokens s{text-decoration:none;font-size:9.5px;color:var(--ic3);letter-spacing:.1em;margin-left:4px;line-height:1.6}
+
+.foot-note{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-size:9.5px;color:var(--ic3);
+  letter-spacing:.08em;line-height:1.95}
+.foot-note b{color:var(--gold);font-weight:500}
+
+/* ---------- 机身 ---------- */
+.deck{display:flex;flex-direction:column;align-items:center;gap:16px}
+.shell{padding:10px;border-radius:56px;
+  background:linear-gradient(155deg,var(--c3),var(--ck) 40%,var(--c2));
+  box-shadow:0 70px 120px -46px #000,0 24px 50px -30px #000,0 0 0 1px var(--line),
+             inset 0 0 0 1px var(--line)}
+.cap8{font-size:10px;color:var(--ic3);letter-spacing:.1em}
+.cap8 b{color:var(--gold);font-weight:500;letter-spacing:.14em}
+
+/* 手机：沿用 kit 的 .ph.dark，只放大到 392 × 838 */
+.ph.p8{width:392px;height:838px;border-radius:46px;overflow:hidden}
+.p8 .sb{height:40px;padding:0 20px;font-size:10px;letter-spacing:.06em}
+.p8 .body{top:40px}
+
+/* ---------- 屏头 ---------- */
+.hd8{flex:none;display:flex;align-items:flex-end;gap:10px;padding:12px 18px 0}
+.hd8 .eb8{font-size:8px;letter-spacing:.3em;color:var(--gold)}
+.hd8 h2{font-family:var(--serif);font-size:25px;font-weight:400;letter-spacing:.15em;color:var(--cream);margin-top:6px}
+.hd8 .s8{font-size:9px;color:var(--ic3);letter-spacing:.09em;margin-top:6px}
+.hd8 .ic8{margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--ic2);flex:none;margin-bottom:3px}
+
+/* ---------- 星球环 ---------- */
+.hero{position:relative;height:306px;flex:none;margin-top:1px;overflow:hidden;
+  background:radial-gradient(62% 52% at 50% 49%,var(--gold-bg),rgba(0,0,0,0) 72%)}
+
+.hero .live{position:absolute;top:13px;left:18px;z-index:6;display:flex;align-items:center;gap:6px;
+  font-size:8.5px;letter-spacing:.12em;color:var(--ic2)}
+.hero .live i{width:5px;height:5px;border-radius:50%;background:var(--gold);flex:none;
+  box-shadow:0 0 8px var(--gold-dim);animation:blink 2.4s ease-in-out infinite}
+.hero .legend{position:absolute;top:13px;right:18px;z-index:6;font-size:8px;letter-spacing:.16em;color:var(--ic3)}
+.hero .legend b{color:var(--gold);font-weight:500}
+
+.halo{position:absolute;left:50%;top:50%;width:262px;height:262px;border-radius:50%;
+  background:radial-gradient(circle,var(--gold-dim),var(--gold-bg) 46%,rgba(0,0,0,0) 70%);
+  transform:translate(-50%,-50%);filter:blur(6px);animation:breathe 7s ease-in-out infinite}
+
+.ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none}
+.rA{width:348px;height:348px;border:0;opacity:.8;
+  background:repeating-conic-gradient(from 0deg,var(--gold-dim) 0deg .65deg,rgba(0,0,0,0) .65deg 12deg);
+  -webkit-mask:radial-gradient(circle,rgba(0,0,0,0) 172px,#000 173px,#000 174px,rgba(0,0,0,0) 175px);
+  mask:radial-gradient(circle,rgba(0,0,0,0) 172px,#000 173px,#000 174px,rgba(0,0,0,0) 175px)}
+.rB{width:268px;height:268px;border:1px dashed var(--gold-dim);opacity:.9}
+.rC{width:196px;height:196px;border:1px solid var(--line2)}
+.tilt{width:322px;height:322px;border:1px solid var(--line);
+  transform:translate(-50%,-50%) rotate(-17deg) scaleY(.355)}
+
+.sweep{position:absolute;left:50%;top:50%;width:348px;height:348px;border-radius:50%;pointer-events:none;opacity:.32;
+  background:conic-gradient(from 0deg,var(--gold),rgba(0,0,0,0) 24%);
+  -webkit-mask:radial-gradient(circle,rgba(0,0,0,0) 68px,#000 71px,#000 170px,rgba(0,0,0,0) 172px);
+  mask:radial-gradient(circle,rgba(0,0,0,0) 68px,#000 71px,#000 170px,rgba(0,0,0,0) 172px);
+  transform:translate(-50%,-50%);animation:sweep 23s linear infinite}
+
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--cream);
+  animation:twinkle 4.6s ease-in-out infinite}
+.stars i:nth-child(1){left:56px;top:78px;animation-delay:-.4s}
+.stars i:nth-child(2){left:314px;top:64px;animation-delay:-1.6s;width:1.5px;height:1.5px}
+.stars i:nth-child(3){left:342px;top:151px;animation-delay:-2.8s}
+.stars i:nth-child(4){left:44px;top:196px;animation-delay:-1.1s;width:1.5px;height:1.5px}
+.stars i:nth-child(5){left:120px;top:44px;animation-delay:-3.4s}
+.stars i:nth-child(6){left:270px;top:232px;animation-delay:-.9s;width:1.5px;height:1.5px}
+.stars i:nth-child(7){left:196px;top:268px;animation-delay:-2.1s}
+.stars i:nth-child(8){left:78px;top:262px;animation-delay:-3.8s;width:1.5px;height:1.5px}
+.stars i:nth-child(9){left:330px;top:246px;animation-delay:-2.4s}
+
+/* 星球本体 */
+.planet{position:absolute;left:50%;top:50%;width:130px;height:130px;border-radius:50%;
+  transform:translate(-50%,-50%);z-index:3;overflow:hidden;cursor:default;
+  background:
+    radial-gradient(circle at 34% 27%,var(--cream) 0%,rgba(242,234,220,.94) 13%,var(--gold) 50%,
+      rgba(201,162,104,.7) 70%,rgba(26,23,20,.92) 100%),
+    var(--ck2);
+  box-shadow:inset -16px -20px 36px rgba(26,23,20,.6),inset 9px 11px 24px rgba(242,234,220,.26),
+             0 0 46px var(--gold-dim),0 0 0 1px var(--line2);
+  transition:transform .5s var(--ease)}
+.planet.pop{animation:pop .55s var(--ease)}
+.planet .pb{position:absolute;left:-6%;right:-6%;border-radius:50%;pointer-events:none;
+  border-top:1px solid rgba(26,23,20,.28)}
+.planet .pb.b1{top:31%;height:34%;transform:rotate(-9deg)}
+.planet .pb.b2{top:53%;height:30%;transform:rotate(-12deg);border-top-color:rgba(26,23,20,.2)}
+.planet .pb.b3{top:72%;height:26%;transform:rotate(-7deg);border-top-color:rgba(26,23,20,.14)}
+.planet .shine{position:absolute;left:16%;top:12%;width:44px;height:30px;border-radius:50%;
+  background:radial-gradient(circle,rgba(242,234,220,.72),rgba(242,234,220,0) 70%);filter:blur(2px)}
+.pl-tx{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:3px;text-align:center}
+.pl-tx b{font-family:var(--serif);font-size:17px;font-weight:400;letter-spacing:.1em;color:var(--ck);line-height:1.2}
+.pl-tx s{text-decoration:none;font-size:8px;letter-spacing:.1em;color:rgba(26,23,20,.58);font-variant-numeric:tabular-nums}
+
+/* 轨道与玩家 */
+.orbit{position:absolute;left:50%;top:50%;border-radius:50%;z-index:2;pointer-events:none;
+  transform:translate(-50%,-50%)}
+.orbit.oB{width:268px;height:268px;animation:spin 46s linear infinite}
+.orbit.oC{width:196px;height:196px;animation:spinR 31s linear infinite}
+.orbit .av{position:absolute;left:50%;top:-10px;width:20px;height:20px;border-radius:50%;
+  transform:translateX(-50%);background-size:cover;background-position:center 20%;
+  border:1px solid var(--gold-dim);box-shadow:0 0 12px var(--gold-dim),0 0 0 2px var(--disc)}
+.orbit .av.b{top:auto;bottom:-10px}
+.orbit .av.c{width:17px;height:17px;top:-8px;border-color:var(--ic2);box-shadow:0 0 10px var(--line2)}
+
+/* ---------- 分段 / 玩法入口 ---------- */
+.segwrap{padding:8px 16px 0;flex:none}
+.segwrap .seg span{font-size:9.5px;padding:6px 0}
+
+.games{display:grid;gap:9px;padding:11px 16px 0;flex:none}
+.gm{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;cursor:pointer;
+  background:var(--disc);border:1px solid var(--line);
+  transition:background .3s var(--ease),border-color .3s var(--ease),transform .3s var(--ease);
+  outline:none}
+.gm:hover{transform:translateY(-1px);border-color:var(--gold-dim)}
+.gm.on{background:var(--gold-bg);border-color:var(--gold-dim)}
+.gm:focus-visible{box-shadow:0 0 0 2px var(--gold-dim)}
+.gm .ic{width:38px;height:38px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:var(--c3);border:1px solid var(--line);color:var(--gold)}
+.gm.on .ic{border-color:var(--gold-dim);background:var(--gold-bg)}
+.gm .tx{flex:1;min-width:0}
+.gm .tx b{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;letter-spacing:.05em;color:var(--ic);
+  white-space:nowrap;overflow:hidden}
+.gm .tx b em{font-style:normal;font-size:7.5px;letter-spacing:.1em;color:var(--ck);background:var(--gold);
+  border-radius:4px;padding:1px 5px;flex:none;font-weight:600}
+.gm .tx p{font-size:9px;color:var(--ic3);letter-spacing:.04em;margin-top:4px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.gm .vs{display:flex;align-items:center;gap:5px;margin-top:6px}
+.gm .vs .bar{flex:1;height:2px;border-radius:2px;background:var(--line);overflow:hidden;display:flex}
+.gm .vs .bar i{display:block;height:100%;background:var(--gold)}
+.gm .vs .bar i+ i{background:var(--ic2)}
+.gm .vs s{text-decoration:none;font-size:8px;letter-spacing:.04em;color:var(--ic3);flex:none;
+  font-variant-numeric:tabular-nums}
+.gm .btn{flex:none;width:52px;height:30px;padding:0;font-size:9.5px;letter-spacing:.06em}
+.gm.on .btn.ghost{background:var(--gold);border-color:var(--gold);color:var(--ck);font-weight:600;
+  height:30px;width:52px;padding:0;font-size:9.5px}
+.gm .btn.ghost{height:30px;width:52px;padding:0;font-size:9.5px;font-weight:400}
+
+/* ---------- 更多玩法 ---------- */
+.more{padding:13px 16px 0;flex:none}
+.more .mh{display:flex;align-items:baseline;justify-content:space-between}
+.more .mh b{font-family:var(--serif);font-size:12.5px;font-weight:400;letter-spacing:.14em;color:var(--ic)}
+.more .mh s{text-decoration:none;font-size:8.5px;color:var(--gold);letter-spacing:.06em}
+.more .chips8{display:flex;gap:6px;margin-top:8px;flex-wrap:nowrap;overflow:hidden}
+.more .chip{font-size:9.5px;padding:3px 8px;letter-spacing:.04em;white-space:nowrap}
+
+/* ---------- 底部导航（深色兜底） ---------- */
+.p8 .a-nav{background:transparent;border-top:1px solid var(--line);margin-top:auto;height:56px}
+.p8 .a-nav i{color:var(--ic3);font-size:8.5px;gap:5px}
+.p8 .a-nav i.on{color:var(--cream)}
+.p8 .a-nav .plus8{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--gold);color:var(--ck);box-shadow:0 6px 18px -6px var(--gold-dim)}
+
+/* toast（沿用 kit 的 .toast，位置按本屏调） */
+.p8 .toast{bottom:118px;font-size:10px;letter-spacing:.05em;opacity:0;transform:translate(-50%,8px);
+  transition:opacity .28s,transform .28s;pointer-events:none;max-width:300px;white-space:normal;text-align:center;
+  line-height:1.6}
+.p8 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- 动效 ---------- */
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes spinR{to{transform:translate(-50%,-50%) rotate(-360deg)}}
+@keyframes breathe{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:.8;transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes sweep{from{transform:translate(-50%,-50%) rotate(0)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes twinkle{0%,100%{opacity:.12}50%{opacity:.85}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(1)}
+  45%{transform:translate(-50%,-50%) scale(1.055)}100%{transform:translate(-50%,-50%) scale(1)}}
+
+@media (prefers-reduced-motion:reduce){
+  .orbit,.sweep,.halo,.stars i,.hero .live i,.planet.pop{animation:none!important}
+}
+
+/* ---------- 窄屏 ---------- */
+@media (max-width:1000px){
+  .stage{grid-template-columns:1fr;justify-items:center;gap:52px;padding:52px 26px 68px}
+  .intro{max-width:470px;text-align:left}
+  .intro h1{font-size:38px}
+}
+</style>
+</head>
+<body>
+
+<main class="stage">
+
+  <!-- 左：改版说明 -->
+  <section class="intro">
+    <div class="eb">08 / PARTY HALL · 环轨版 V1</div>
+    <h1>派对大厅</h1>
+    <div class="tagline">把「加群」换成「开一桌」</div>
+
+    <p class="lead">
+      原来的 08 屏是一列<b>兴趣群组</b>：追剧、旅行、美食，靠人数和话题拉人进来。
+      这一版把入口整段换成<b>小游戏</b>——剧本杀、情感电台、男女对抗匹配，
+      并把整屏的主体交给一颗<b>带环的星球</b>：环上是此刻在线的玩家，圆心是今晚正在开的局。
+    </p>
+
+    <div class="pts">
+      <div class="pt"><span class="no">01</span><div>
+        <b>环轨即大厅</b><s>同心轨道 + 刻度环 + 扫描光，玩家头像沿轨道缓慢公转，不用列表也能读出「这里有人」。</s></div></div>
+      <div class="pt"><span class="no">02</span><div>
+        <b>玩法即入口</b><s>剧本杀 / 情感 / 男女对抗三张桌卡直接可点，点哪张，圆心星球就换成哪一桌的实时状态。</s></div></div>
+      <div class="pt"><span class="no">03</span><div>
+        <b>一屏读完</b><s>标题、环、热桌、更多玩法、底栏，五段信息在 392 × 838 内收口，不改动任何现有页面。</s></div></div>
+    </div>
+
+    <div class="tokens">
+      <i></i><i></i><i></i><i></i>
+      <s>配色与字体全部取自<br>fuyu-kit.css · 未新增色值</s>
+    </div>
+
+    <div class="foot-note">
+      预览文件 <b>fuyu-party-hall-v1.html</b> · 直接双击打开<br>
+      改动位置：index.html 的 <b>08 派对大厅（#s08）</b> · 原文件未做任何修改
+    </div>
+  </section>
+
+  <!-- 右：手机预览 -->
+  <div class="deck">
+    <div class="shell">
+      <div class="ph dark p8">
+        <div class="sb"><span>9:41</span><span class="r">5G<span class="bt"></span></span></div>
+        <div class="body">
+
+          <div class="hd8">
+            <div>
+              <div class="eb8">08 / PARTY HALL</div>
+              <h2>派对大厅</h2>
+              <div class="s8">今夜 5 场局在环上开桌</div>
+            </div>
+            <span class="ic8">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.5-4.5"/>
+              </svg>
+            </span>
+          </div>
+
+          <!-- 星球环 -->
+          <div class="hero">
+            <span class="live"><i></i>此刻 1,284 人在环上</span>
+            <span class="legend"><b>LIVE</b> · 环轨</span>
+
+            <div class="halo"></div>
+            <div class="ring rA"></div>
+            <div class="ring rB"></div>
+            <div class="ring rC"></div>
+            <div class="ring tilt"></div>
+            <div class="sweep"></div>
+
+            <div class="orbit oB">
+              <span class="av i8"></span>
+              <span class="av b i9"></span>
+            </div>
+            <div class="orbit oC">
+              <span class="av c" style="background-image:url(assets/p-a.jpg)"></span>
+            </div>
+
+            <div class="planet" id="planet">
+              <span class="pb b1"></span>
+              <span class="pb b2"></span>
+              <span class="pb b3"></span>
+              <span class="shine"></span>
+              <div class="pl-tx">
+                <b id="plName">剧本杀</b>
+                <s id="plMeta">12 桌在开</s>
+              </div>
+            </div>
+
+            <div class="stars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="segwrap">
+            <div class="seg"><span class="on">今晚热桌</span><span>我的局 2</span><span>本周榜</span></div>
+          </div>
+
+          <div class="games">
+            <div class="gm on" data-g="剧本杀" data-m="12 桌在开" data-tip="剧本杀 · 暗格 07" tabindex="0" role="button">
+              <span class="ic">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l5 5"/><path d="M8.5 10.5h4"/>
+                </svg>
+              </span>
+              <div class="tx">
+                <b>剧本杀 · 暗格 07 <em>最热</em></b>
+                <p>今晚 20:30 开本 · 还差 2 人 · 悬疑本</p>
+              </div>
+              <span class="btn sm ghost">进入</span>
+            </div>
+
+            <div class="gm" data-g="情感" data-m="8 场连麦" data-tip="情感电台 · 深夜树洞" tabindex="0" role="button">
+              <span class="ic">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <path d="M12 20.3S4 15.2 4 9.9A4.4 4.4 0 0112 6.6a4.4 4.4 0 018 3.3c0 5.3-8 10.4-8 10.4z"/>
+                </svg>
+              </span>
+              <div class="tx">
+                <b>情感电台 · 深夜树洞</b>
+                <p>连麦 21 位 · 22:00 主题「说不出的话」</p>
+              </div>
+              <span class="btn sm ghost">听听</span>
+            </div>
+
+            <div class="gm" data-g="男女对抗" data-m="17 人匹配中" data-tip="男女对抗 · 心动阵营" tabindex="0" role="button">
+              <span class="ic">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <path d="M4.5 4.5l9 9M19.5 4.5l-9 9"/><path d="M4.5 19.5l4.2-.9.9-4.2M19.5 19.5l-4.2-.9-.9-4.2"/>
+                </svg>
+              </span>
+              <div class="tx">
+                <b>男女对抗 · 心动阵营</b>
+                <div class="vs">
+                  <span class="bar"><i style="width:53%"></i><i style="width:47%"></i></span>
+                  <s>男 18 · 女 16</s>
+                </div>
+              </div>
+              <span class="btn sm ghost">加入</span>
+            </div>
+          </div>
+
+          <div class="more">
+            <div class="mh"><b>更多玩法</b><s>本周新增 4 个 ›</s></div>
+            <div class="chips8">
+              <span class="chip">你画我猜</span><span class="chip">听歌猜剧</span>
+              <span class="chip">狼人局</span><span class="chip">谁是卧底</span>
+            </div>
+          </div>
+
+          <div class="a-nav">
+            <i>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页
+            </i>
+            <i>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧
+            </i>
+            <i><span class="plus8"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></i>
+            <i class="on">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16v11H8l-4 3z"/></svg>消息
+            </i>
+            <i>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"/></svg>我的
+            </i>
+          </div>
+
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+    <div class="cap8"><b>08 · 派对大厅 / 环轨版</b> · 点击桌卡，圆心星球会跟着换场</div>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  const planet = document.getElementById('planet');
+  const plName = document.getElementById('plName');
+  const plMeta = document.getElementById('plMeta');
+  const toast  = document.getElementById('toast');
+  let timer = null;
+
+  function say(msg){
+    toast.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('on'), 1900);
+  }
+
+  document.querySelectorAll('.gm').forEach(card => {
+    function pick(){
+      document.querySelectorAll('.gm').forEach(c => c.classList.remove('on'));
+      card.classList.add('on');
+      plName.textContent = card.dataset.g;
+      plMeta.textContent = card.dataset.m;
+      planet.classList.remove('pop');
+      void planet.offsetWidth;
+      planet.classList.add('pop');
+      say('已切到「' + card.dataset.tip + '」');
+    }
+    card.addEventListener('click', pick);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
