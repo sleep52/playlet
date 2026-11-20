@@ -19,7 +19,8 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 /* ================= 左：屏序索引 ================= */
 .rail{width:262px;flex:none;display:flex;flex-direction:column}
 .rail .lg{display:flex;align-items:center;gap:12px}
-.rail .lg svg{width:34px;margin-top: -5px;height:34px;flex:none;filter:drop-shadow(0 5px 14px rgba(108,92,231,.6))}
+.rail .lg img{width:46px;height:26px;margin-top:-2px;flex:none;object-fit:contain;
+  filter:drop-shadow(0 2px 5px rgba(120,105,240,.38))}
 .rail .lg .mk{display:flex;align-items:center;gap:9px}
 .rail .lg .mk b.xl{display:block;font-family:"Segoe UI Black","Segoe UI","Helvetica Neue",Arial,sans-serif;
   font-size:22px;font-weight:900;font-style:italic;line-height:1;letter-spacing:-.012em;color:#fff;
@@ -96,7 +97,10 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 .i24{--im:url(assets/ai-guofeng.png)} .i25{--im:url(assets/a3.jpg)} .i26{--im:url(assets/a1.jpg)}
 .i27{--im:url(assets/ai-clay.png)} .i28{--im:url(assets/ai-film.png)} .i29{--im:url(assets/ai-dark.png)} .i30{--im:url(assets/ai-ink.png)}
 /* 31-33 限量头像作品 */
-.i31{--im:url(assets/nft-1.png)} .i32{--im:url(assets/nft-2.png)} .i33{--im:url(assets/nft-3.png)}
+.i31{--im:url(assets/nft-l2.jpg)} .i32{--im:url(assets/nft-2.png)} .i33{--im:url(assets/nft-l1.jpg)}
+/* 34-50 用户上传的 AI 头像（已去水印） */
+.ai01{--im:url(assets/ai-01.jpg)} .ai02{--im:url(assets/ai-02.jpg)} .ai03{--im:url(assets/ai-03.jpg)} .ai04{--im:url(assets/ai-04.jpg)} .ai05{--im:url(assets/ai-05.jpg)} .ai06{--im:url(assets/ai-06.jpg)} .ai07{--im:url(assets/ai-07.jpg)} .ai08{--im:url(assets/ai-08.jpg)} .ai09{--im:url(assets/ai-09.jpg)} .ai10{--im:url(assets/ai-10.jpg)} .ai11{--im:url(assets/ai-11.jpg)} .ai12{--im:url(assets/ai-12.jpg)} .ai13{--im:url(assets/ai-13.jpg)} .ai14{--im:url(assets/ai-14.jpg)} .ai15{--im:url(assets/ai-15.jpg)} .ai16{--im:url(assets/ai-16.jpg)} .ai17{--im:url(assets/ai-17.jpg)}
+.ai18{--im:url(assets/ai-18.jpg)}
 /* 34-39 动态/瞬间配图 */
 .i34{--im:url(assets/p-d.jpg)} .i35{--im:url(assets/bg-splash.jpg)} .i36{--im:url(assets/moment-3.png)}
 .i37{--im:url(assets/moment-4.png)} .i38{--im:url(assets/moment-5.png)} .i39{--im:url(assets/moment-6.png)}
@@ -173,17 +177,15 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 
 /* —— 星徽 + 字标：一颗星、一行中文、一行英文、一句 slogan —— */
 .s01 .brand{margin-top:126px;display:flex;flex-direction:column;align-items:center;position:relative}
-.s01 .brand svg{width:46px;height:46px;position:relative;z-index:2;
-  filter:drop-shadow(0 8px 26px rgba(140,120,255,.9))}
-.s01 .brand svg path{stroke-dasharray:220;stroke-dashoffset:220;fill:#fff;fill-opacity:0;stroke:#fff}
-.s01.on .brand svg path{animation:dash 1.5s .25s var(--ease) forwards, fillin .7s 1.35s forwards}
-.s01 .brand::before{content:"";position:absolute;left:50%;top:0;width:280px;height:190px;transform:translateX(-50%);
-  border-radius:50%;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 22%,rgba(150,128,255,.32),rgba(108,86,215,.1) 46%,rgba(108,86,215,0) 72%);
-  filter:blur(8px)}
-.s01 .brand h2{margin:22px 0 0;font-family:"Songti SC","Source Han Serif SC","Noto Serif SC","STSong",SimSun,serif;
-  font-size:48px;font-weight:700;line-height:1;letter-spacing:.16em;padding-left:.16em;
+.s01 .brand video{width:145px;height:auto;display:block;margin-bottom:10px;pointer-events:none;
+  filter:drop-shadow(0 6px 20px rgba(140,120,255,.5))}
+.s01 .brand h2{margin:0;display:flex;align-items:center;justify-content:center;gap:11px;
+  font-family:"Songti SC","Source Han Serif SC","Noto Serif SC","STSong",SimSun,serif;
+  font-size:48px;font-weight:700;line-height:1;
   color:#fff;text-shadow:0 0 36px rgba(178,152,255,.55),0 3px 20px rgba(18,8,44,.55)}
+.s01 .brand h2 img{width:54px;height:30px;flex:none;object-fit:contain;margin-top:9px;
+  filter:drop-shadow(0 6px 18px rgba(140,120,255,.5))}
+.s01 .brand h2 span{letter-spacing:.16em;padding-left:.16em}
 .s01 .brand .en{margin-top:12px;font-size:9.5px;font-weight:300;line-height:1;letter-spacing:.62em;padding-left:.62em;
   color:#C6B5ED;text-shadow:0 0 14px rgba(140,110,230,.5)}
 .s01 .brand .hr{width:26px;height:1px;margin-top:19px;
@@ -1326,9 +1328,25 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 .s27 .wal .cell{flex:1}
 .s27 .wal .cell b{display:block;font-size:22px;font-weight:700;font-family:"DIN Alternate",monospace;letter-spacing:.02em;line-height:1}
 .s27 .wal .cell s{text-decoration:none;display:block;font-size:10px;color:rgba(242,234,220,.44);margin-top:8px;letter-spacing:.04em}
-.s27 .wal .cell.re{background:rgba(255,255,255,.05);border-radius:14px;padding:9px 0;text-align:center}
-.s27 .wal .go2{height:34px;padding:0 18px;border-radius:999px;display:grid;place-items:center;font-size:12.5px;font-weight:700;
-  background:linear-gradient(135deg,#F0D8A8,#C9A96A);color:#191510;cursor:pointer}
+.s27 .wal .acts{display:flex;gap:9px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(242,234,220,.1)}
+.s27 .wal .go2{flex:1;height:38px;border-radius:12px;display:grid;place-items:center;font-size:12.5px;font-weight:600;cursor:pointer;
+  color:#E6D7BA;background:rgba(242,234,220,.06);border:1px solid rgba(242,234,220,.2);transition:background .2s,border-color .2s}
+.s27 .wal .go2:active{background:rgba(242,234,220,.12)}
+.s27 .wal .go2.fill{background:linear-gradient(135deg,#F0D8A8,#C9A96A);border-color:transparent;color:#191510;font-weight:700;
+  box-shadow:0 8px 18px -10px rgba(201,169,106,.85)}
+.s27 .wcash{display:flex;align-items:center;gap:13px;margin-top:10px;padding:16px 16px 16px 18px;border-radius:20px;
+  background:#fff;box-shadow:0 10px 26px -18px rgba(20,18,40,.4);cursor:pointer}
+.s27 .wcash>div{min-width:0;flex:1}
+.s27 .wcash h6{font-size:10.5px;letter-spacing:.16em;color:rgba(17,17,20,.42);font-weight:500}
+.s27 .wcash .amt{display:flex;align-items:baseline;gap:4px;margin-top:8px}
+.s27 .wcash .amt em{font-style:normal;font-size:12px;font-weight:600;color:rgba(17,17,20,.5)}
+.s27 .wcash .amt b{font-size:24px;font-weight:800;font-family:"DIN Alternate",monospace;line-height:1;letter-spacing:.01em}
+.s27 .wcash s{display:block;text-decoration:none;font-size:10px;color:rgba(17,17,20,.38);margin-top:8px}
+.s27 .wcash s i{font-style:normal;font-family:"DIN Alternate",monospace;font-weight:600;color:rgba(17,17,20,.52)}
+.s27 .wcash .go3{flex:none;height:38px;padding:0 20px;border-radius:12px;display:grid;place-items:center;
+  font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6C5CE7,#9B8AFF);
+  box-shadow:0 8px 18px -10px rgba(108,92,231,.8)}
+.s27 .flowhd{font-size:10px;letter-spacing:.18em;color:rgba(17,17,20,.34);margin:20px 2px 2px}
 .s27 .seg{display:flex;gap:4px;margin:16px 0 0;padding:4px;border-radius:13px;background:#fff;
   box-shadow:0 2px 10px -6px rgba(0,0,0,.14)}
 .s27 .seg b{flex:1;text-align:center;font-size:12.5px;font-weight:500;color:rgba(17,17,20,.46);padding:9px 0;border-radius:10px;cursor:pointer;transition:.24s}
@@ -1999,7 +2017,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 .guide .box .v{font-size:11px;color:rgba(255,255,255,.5)}
 .guide .box .k{background:rgba(255,255,255,.08);color:rgba(255,255,255,.55);font-size:9px;font-weight:400}
 
-/* —— 品牌字「潮流」：楷体星域 + 粗斜体 Meetu —— */
+/* —— 品牌字「潮流」：楷体星域 + 粗斜体 MeetU —— */
 :root{--ff-brand:"Kaiti SC",KaiTi,"STKaiti","BiauKai",serif;
   --ff-latin:"PingFang SC","Microsoft YaHei Light","Microsoft YaHei","Helvetica Neue",sans-serif}
 .xy,.xy i,.xy em{font-family:var(--ff-brand)}
@@ -2086,6 +2104,80 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 .s31 .cart{flex:1;background:#EDE9FF;color:#5A4BC0}
 .s31 .buynow{flex:1;background:#111;color:#fff;box-shadow:0 8px 20px rgba(17,17,20,.22)}
 
+/* —— 32 星尘提现 —— */
+.s32 .top{padding:2px 20px 0;display:flex;align-items:center;gap:12px;flex:none}
+.s32 .top .bk{width:22px;display:grid;place-items:center;cursor:pointer;color:rgba(17,17,20,.6);font-size:20px;line-height:1}
+.s32 .top h4{font-size:18px;font-weight:700;letter-spacing:.06em}
+.s32 .top s{margin-left:auto;text-decoration:none;font-size:10.5px;color:rgba(17,17,20,.38);cursor:pointer}
+.s32 .bd{padding:12px 20px 0;overflow-y:auto;min-height:0;flex:1;scrollbar-width:none}
+.s32 .bd::-webkit-scrollbar{display:none}
+.s32 .wcard{position:relative;border-radius:22px;padding:18px;color:#EDE4D3;overflow:hidden;
+  background:linear-gradient(140deg,#2A2438,#161320 62%,#0F0D18);box-shadow:0 14px 30px rgba(20,16,40,.24)}
+.s32 .wcard:after{content:"";position:absolute;right:-34px;top:-44px;width:154px;height:154px;border-radius:50%;
+  background:radial-gradient(circle,rgba(155,138,255,.34),rgba(155,138,255,0) 68%)}
+.s32 .wcard h6{font-size:10.5px;letter-spacing:.16em;color:rgba(242,234,220,.48);font-weight:500}
+.s32 .wcard .amt{display:flex;align-items:baseline;gap:5px;margin-top:12px}
+.s32 .wcard .amt em{font-style:normal;font-size:14px;font-weight:600;color:rgba(242,234,220,.72)}
+.s32 .wcard .amt b{font-size:31px;font-weight:800;font-family:"DIN Alternate",monospace;line-height:1;letter-spacing:.01em}
+.s32 .wcard .sub{display:flex;align-items:center;gap:8px;margin-top:13px;font-size:10.5px;color:rgba(242,234,220,.5)}
+.s32 .wcard .sub>i{font-style:normal;width:3px;height:3px;border-radius:50%;background:rgba(242,234,220,.32);flex:none}
+.s32 .wcard .sub b{font-family:"DIN Alternate",monospace;font-weight:600;font-size:11.5px;color:rgba(242,234,220,.82);letter-spacing:.02em}
+.s32 .card{background:#fff;border-radius:18px;padding:15px;margin-top:12px}
+.s32 .card h6{font-size:12px;font-weight:600;color:rgba(17,17,20,.72);display:flex;align-items:center}
+.s32 .card h6 em{margin-left:auto;font-style:normal;font-size:10.5px;font-weight:500;color:#5A4BC0;cursor:pointer}
+.s32 .fld{display:flex;align-items:center;gap:8px;margin-top:12px;padding:12px 13px;border-radius:14px;background:#F5F4FB}
+.s32 .fld input{flex:1;min-width:0;border:0;background:none;outline:none;font:inherit;font-size:19px;font-weight:700;
+  font-family:"DIN Alternate",monospace;color:#111114}
+.s32 .fld input::placeholder{font-size:13.5px;font-weight:400;color:rgba(17,17,20,.24);font-family:inherit}
+.s32 .fld u{text-decoration:none;font-size:11.5px;color:rgba(17,17,20,.4)}
+.s32 .got{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;
+  border-top:1px dashed rgba(17,17,20,.1);font-size:11px;color:rgba(17,17,20,.4)}
+.s32 .got b{margin-left:auto;font-size:15px;font-weight:800;color:#111114;font-family:"DIN Alternate",monospace}
+.s32 .chips{display:flex;gap:7px;margin-top:11px}
+.s32 .chips b{flex:1;text-align:center;font-size:11px;font-weight:500;color:rgba(17,17,20,.5);
+  padding:8px 0;border-radius:10px;background:#F5F4FB;cursor:pointer;transition:.2s}
+.s32 .chips b.on{background:#191A20;color:#fff;font-weight:600}
+.s32 .ways{display:grid;gap:8px;margin-top:12px}
+.s32 .way{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;background:#F5F4FB;
+  border:1.5px solid transparent;cursor:pointer;transition:.2s}
+.s32 .way.on{border-color:#6C5CE7;background:#F3F0FF}
+.s32 .way .ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;background:#fff}
+.s32 .way b{font-size:12px;font-weight:600}
+.s32 .way s{display:block;text-decoration:none;font-size:9.5px;color:rgba(17,17,20,.36);margin-top:2px}
+.s32 .way i{margin-left:auto;font-style:normal;width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(17,17,20,.18)}
+.s32 .way.on i{border-color:#6C5CE7;background:#6C5CE7;box-shadow:inset 0 0 0 3px #fff}
+.s32 .tips{margin:14px 4px 0;font-size:10px;line-height:1.9;color:rgba(17,17,20,.36)}
+.s32 .tips b{display:block;font-size:10.5px;font-weight:600;color:rgba(17,17,20,.5);margin-bottom:2px}
+.s32 .pad{height:14px}
+.s32 .wbbar{flex:none;padding:9px 20px 14px;background:linear-gradient(180deg,rgba(255,255,255,0),#F7F6FB 46%)}
+.s32 .wbbar button{width:100%;height:46px;border:0;border-radius:15px;font:inherit;font-size:13px;font-weight:700;
+  color:#fff;background:linear-gradient(135deg,#6C5CE7,#9B8AFF);cursor:pointer;
+  box-shadow:0 10px 24px rgba(108,92,231,.3);transition:.2s}
+.s32 .wbbar button:disabled{background:#E6E4EF;color:rgba(17,17,20,.32);box-shadow:none;cursor:not-allowed}
+
+/* —— 提现确认 / 提现记录弹层 —— */
+#p27 .hd2,#p28 .hd2{display:flex;align-items:baseline;padding:16px 20px 0}
+#p27 .hd2 b,#p28 .hd2 b{font-size:17px;font-weight:700;letter-spacing:.04em}
+#p27 .hd2 s,#p28 .hd2 s{margin-left:auto;text-decoration:none;font-size:11px;color:rgba(17,17,20,.42)}
+#p27 .note,#p28 .note{margin:12px 20px 0;font-size:10px;line-height:1.8;color:rgba(17,17,20,.4);text-align:center}
+#p27 .go,#p28 .go{padding:14px 20px 22px}
+#p27 .pill.gl{background:#F2F1F7;color:rgba(17,17,20,.62);border:1px solid rgba(17,17,20,.07);box-shadow:none}
+.pp .wsum{margin:14px 20px 0;border-radius:16px;background:#F7F6FB;padding:11px 14px}
+.pp .wsum>div{display:flex;align-items:center;font-size:11.5px;color:rgba(17,17,20,.44);padding:5px 0}
+.pp .wsum em{font-style:normal}
+.pp .wsum b{margin-left:auto;font-size:12px;font-weight:600;color:#111114}
+#p28 #wRecs{margin:8px 20px 0}
+.pp .wrec{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(17,17,20,.06)}
+.pp .wrec:last-child{border-bottom:0}
+.pp .wrec>div{min-width:0}
+.pp .wrec b{display:block;font-size:12px;font-weight:600}
+.pp .wrec s{display:block;text-decoration:none;font-size:9.5px;color:rgba(17,17,20,.36);margin-top:3px}
+.pp .wrec em{margin-left:auto;font-style:normal;text-align:right;font-size:12px;font-weight:700;color:#111114;
+  font-family:"DIN Alternate",monospace}
+.pp .wrec em u{display:block;text-decoration:none;font-size:9.5px;font-weight:500;color:rgba(17,17,20,.36);
+  margin-top:3px;font-family:inherit}
+.pp .wrec em.ok{color:#8A6A2F}
+
 /* 28 我的 · 商城入口 */
 .s28 .shop-ent{display:flex;align-items:center;gap:10px;margin:10px 20px 0;padding:13px 14px;border-radius:16px;
   background:linear-gradient(120deg,#fff,#F1ECFF);border:1px solid rgba(108,92,231,.16);cursor:pointer}
@@ -2096,6 +2188,81 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 .s28 .shop-ent s{text-decoration:none;font-size:9.5px;color:rgba(17,17,20,.42);display:block;margin-top:4px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s28 .shop-ent em{margin-left:auto;font-style:normal;font-size:10.5px;color:#5A4BC0;white-space:nowrap}
+
+/* ================= 23 数字头像商城 · 星海画廊（重制版，全部作用域限定在 .s23） ================= */
+.pg.dk.s23{background:#0A0A0F}
+.s23{overflow:hidden;color:#fff;background:#0A0A0F}
+.s23::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(80% 40% at 50% -14%, rgba(108,92,231,.46), rgba(108,92,231,0) 70%),
+    radial-gradient(64% 40% at 106% 104%, rgba(70,52,150,.4), rgba(70,52,150,0) 72%),
+    radial-gradient(52% 30% at -8% 74%, rgba(242,199,154,.1), rgba(242,199,154,0) 76%),
+    #0A0A0F}
+.s23::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.55;
+  background:
+    radial-gradient(1.5px 1.5px at 9% 14%, rgba(255,255,255,.6), transparent 62%),
+    radial-gradient(1.5px 1.5px at 27% 7%, rgba(255,255,255,.42), transparent 62%),
+    radial-gradient(1.6px 1.6px at 45% 17%, rgba(255,255,255,.52), transparent 62%),
+    radial-gradient(1.4px 1.4px at 64% 6%, rgba(255,255,255,.36), transparent 62%),
+    radial-gradient(1.5px 1.5px at 84% 21%, rgba(255,255,255,.5), transparent 62%),
+    radial-gradient(1.4px 1.4px at 16% 44%, rgba(255,255,255,.3), transparent 62%),
+    radial-gradient(1.5px 1.5px at 38% 51%, rgba(255,255,255,.34), transparent 62%),
+    radial-gradient(1.4px 1.4px at 71% 47%, rgba(255,255,255,.28), transparent 62%),
+    radial-gradient(1.5px 1.5px at 92% 63%, rgba(255,255,255,.34), transparent 62%),
+    radial-gradient(1.4px 1.4px at 12% 78%, rgba(255,255,255,.26), transparent 62%),
+    radial-gradient(1.5px 1.5px at 57% 88%, rgba(255,255,255,.3), transparent 62%),
+    radial-gradient(1.4px 1.4px at 86% 92%, rgba(255,255,255,.22), transparent 62%)}
+.s23>.top,.s23>.gen,.s23>.bd,.s23>.tbar{position:relative;z-index:1}
+
+.s23 .top{padding:6px 20px 0}
+.s23 .top h4{font-size:20px;font-weight:800;letter-spacing:.08em;color:#fff;
+  text-shadow:0 0 24px rgba(155,138,255,.4)}
+.s23 .gem{background:rgba(255,255,255,.055);border:1px solid rgba(240,216,168,.26);color:#F6E7C4;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:7px 13px 7px 11px}
+.s23 .gem em{color:rgba(240,216,168,.62)}
+
+.s23 .gen{padding:13px 20px 3px;gap:8px}
+.s23 .gen span{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  color:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.s23 .gen span.on{background:linear-gradient(135deg,#9A88FF,#5B46C9);border-color:rgba(186,170,255,.62);
+  color:#fff;font-weight:600;box-shadow:0 10px 24px -12px rgba(108,92,231,.95),inset 0 1px 0 rgba(255,255,255,.3)}
+
+.s23 .bd{padding:2px 20px 2px}
+.s23 .sec{margin:13px 2px 0;align-items:center}
+.s23 .sec b{font-size:13.5px;font-weight:700;letter-spacing:.05em;color:#fff;display:flex;align-items:center}
+.s23 .sec b::before{content:"";width:3px;height:12px;margin-right:8px;border-radius:2px;flex:none;
+  background:linear-gradient(180deg,#BCACFF,#6C5CE7);box-shadow:0 0 10px rgba(108,92,231,.6)}
+.s23 .sec s{font-size:10px;color:rgba(255,255,255,.36);letter-spacing:.02em}
+
+.s23 .strip{padding:12px 0 4px;gap:11px}
+.s23 .strip>div{width:112px;height:74px;border-radius:16px;border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 16px 32px -24px rgba(0,0,0,.95);background:#141420}
+.s23 .strip>div::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,0) 44%)}
+.s23 .strip .t{padding:18px 10px 9px;background:linear-gradient(180deg,rgba(8,8,12,0),rgba(8,8,12,.9))}
+.s23 .strip .t i{display:inline-block;padding:1px 5px;border-radius:6px;background:rgba(8,8,12,.5);
+  font-size:10px;line-height:1.3}
+.s23 .strip .t i{color:#F0D8A8}
+
+.s23 .grid9{gap:11px;padding:10px 0 4px}
+.s23 .sa{border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#141420;
+  box-shadow:0 18px 34px -26px rgba(0,0,0,.95)}
+.s23 .sa .pz{left:8px;bottom:27px;font-size:10px;font-weight:700;letter-spacing:.01em;color:#FBEBC4;
+  padding:3px 7px;border-radius:8px;background:rgba(8,8,12,.62);
+  border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  text-shadow:none}
+.s23 .sa .mk2{padding:18px 6px 9px;font-size:10px;color:rgba(255,255,255,.78);
+  background:linear-gradient(180deg,rgba(8,8,12,0),rgba(8,8,12,.88))}
+.s23 .sa .fr{background:rgba(18,14,8,.72);border-color:rgba(240,216,168,.5);color:#F0D8A8;border-radius:7px}
+
+.s23 .promo{margin:12px 0 4px;padding:12px 15px;border-radius:16px;
+  background:linear-gradient(118deg,rgba(240,216,168,.09),rgba(108,92,231,.09));
+  border:1px dashed rgba(201,169,106,.42)}
+.s23 .promo b{color:#F6E8CC}
+.s23 .promo s{color:rgba(255,255,255,.4)}
+.s23 .promo em{color:#E9C992}
+.s23 .todo{background:rgba(255,255,255,.05);color:rgba(255,255,255,.34);border-color:rgba(255,255,255,.14)}
 </style>
 
 </head>
@@ -2104,12 +2271,9 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 
   <aside class="rail">
     <div class="lg">
-      <svg viewBox="0 0 48 48" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#8F7CFF"/><stop offset="1" stop-color="#5B48D6"/></linearGradient></defs>
-        <path d="M24 3l4.9 12.6L41 20l-12.1 4.4L24 37l-4.9-12.6L7 20l12.1-4.4z" fill="url(#lg)"/>
-        <path d="M36 30l2.2 5.4L44 37.6l-5.8 2.2L36 45l-2.2-5.2L28 37.6l5.8-2.2z" fill="url(#lg)" opacity=".75"/></svg>
+      <img src="assets/logo-planet.png" alt="星域">
       <div>
-        <div class="mk"><b class="xl">Meetu</b><i class="dv"></i><b class="xy">星域</b></div>
+        <div class="mk"><b class="xy">星域</b><b class="xl">MeetU</b></div>
       </div>
     </div>
     <div class="tt">SCREENS · 10</div>
@@ -2127,15 +2291,15 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
       <div class="isl"></div>
 
       <!-- ============ 01 启动与登录 ============ -->
-      <section class="pg dk s01" id="s01" data-n="01" data-ti="启动与登录" data-s="原图真人开屏 · 绘星动效 · 极简字标 · 单一入口">
+      <section class="pg dk s01" id="s01" data-n="01" data-ti="启动与登录" data-s="原图真人开屏 · 星环动效 · 极简字标 · 单一入口">
         <div class="bg im i44"></div><div class="sc"></div>
         <div class="in">
           <div class="brand">
-            <svg viewBox="0 0 48 48"><path d="M24 3l4.9 12.6L41 20l-12.1 4.4L24 37l-4.9-12.6L7 20l12.1-4.4z" stroke="#fff" stroke-width="1.4"/></svg>
-            <h2 class="st" style="--d:1.5s">星域</h2>
-            <div class="en xl st" style="--d:1.62s">meetu</div>
+            <video class="st" style="--d:1.35s" src="assets/ring-motion.webm" autoplay muted playsinline></video>
+            <h2 class="st" style="--d:1.5s"><span>星域</span></h2>
+            <div class="en xl st" style="--d:1.62s">MeetU</div>
             <div class="hr st" style="--d:1.74s"></div>
-            <div class="tag st" style="--d:1.84s"><i class="xy">星域</i>遇见你</div>
+            <div class="tag st" style="--d:1.84s">遇见你</div>
           </div>
           <div class="cta">
             <!-- <div class="st" style="--d:2.0s"><div class="pill dg" data-pop="p08"
@@ -2235,9 +2399,9 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <div class="tx"><b>他在黑夜中出现</b><s>第 3 集 · 还剩 01:42</s><span class="pg2"><i></i></span></div>
             <span class="go2">续播</span>
           </div>
-          <div class="newg st" style="--d:1.08s" data-pop="p10" data-tip="新人礼包条|弹出首充礼包 ¥1 / 320 钻石">
+          <div class="newg st" style="--d:1.08s" data-pop="p10" data-tip="新人礼包条|弹出首充礼包 ¥1 / 320 星尘">
             <span class="ic">🎁</span>
-            <div><b>新人首充 ¥1 得 320 钻石</b><s>第 2 天回来才弹 · 24 小时内有效</s></div>
+            <div><b>新人首充 ¥1 得 320 星尘</b><s>第 2 天回来才弹 · 24 小时内有效</s></div>
             <span class="get">领取</span>
           </div>
         </div>
@@ -2371,7 +2535,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="bd">
           <header class="topbar">
             <div>
-              <div class="topline">MEETU · SOCIAL UNIVERSE</div>
+              <div class="topline">MeetU · SOCIAL UNIVERSE</div>
               <div class="head"><h1>派对大厅<span class="title-dot">.</span></h1></div>
               <div class="sub">今晚，和有趣的人相遇</div>
             </div>
@@ -3003,11 +3167,11 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
               <span class="rt2"><em>20:48</em><u>18</u></span></div>
             <div class="row st" style="--d:.28s" data-go="s19" data-tip="开播提醒|直接进入 19 个人直播频道">
               <span class="a ava i12"></span>
-              <div class="tx"><b>沐沐酱 正在直播</b><s class="hi">古风翻唱 · 你的守护等级还差 20 钻石</s></div>
+              <div class="tx"><b>沐沐酱 正在直播</b><s class="hi">古风翻唱 · 你的守护等级还差 20 星尘</s></div>
               <span class="rt2"><em>20:30</em><u class="q">直播</u></span></div>
-            <div class="row st" style="--d:.33s" data-toast="系统通知 · 钻石到账">
+            <div class="row st" style="--d:.33s" data-toast="系统通知 · 星尘到账">
               <span class="a im i11" style="border-radius:14px"></span>
-              <div class="tx"><b>星域 · 免费看短剧小助手</b><s>你的 320 钻石已到账，新人礼包 24 小时后失效</s></div>
+              <div class="tx"><b>星域 · 免费看短剧小助手</b><s>你的 320 星尘已到账，新人礼包 24 小时后失效</s></div>
               <span class="rt2"><em>昨天</em></span></div>
             <div class="row st" style="--d:.38s" data-go="s07">
               <span class="a ava i9"><i></i></span>
@@ -3099,13 +3263,13 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <div class="lc st" style="--d:.16s" data-go="s19" data-tip="进入房间|全屏个人直播频道，直播不断流">
               <div class="p"><span class="im i18" style="position:absolute;inset:0"></span><span class="sc"></span>
                 <span class="lv"><i></i>直播中</span><span class="vv">1.2 万</span></div>
-              <div class="nm"><b>他在黑夜中出现 · 陪看到第 12 集</b><s>弹幕一起猜结局 · 每 20 分钟抽一次钻石</s></div>
+              <div class="nm"><b>他在黑夜中出现 · 陪看到第 12 集</b><s>弹幕一起猜结局 · 每 20 分钟抽一次星尘</s></div>
               <div class="who"><span class="ava im i12"></span><b>沐沐酱</b><em>陪伴</em></div>
             </div>
             <div class="lc st" style="--d:.21s" data-go="s22" data-tip="PK 中|进入 22 连麦 PK 分屏">
               <div class="p"><span class="im i6" style="position:absolute;inset:0"></span><span class="sc"></span>
                 <span class="lv" style="background:rgba(229,72,77,.86);border-color:transparent"><i></i>连麦 PK</span><span class="vv">8 940</span></div>
-              <div class="nm"><b>晚风与酒 vs 老周聊结局</b><s>还剩 06:12 · 差 320 钻石</s></div>
+              <div class="nm"><b>晚风与酒 vs 老周聊结局</b><s>还剩 06:12 · 差 320 星尘</s></div>
               <div class="who"><span class="ava im i14"></span><b>连麦房间</b><em>PK</em></div>
             </div>
             <div class="lc st" style="--d:.26s" data-go="s19">
@@ -3210,13 +3374,13 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="cta st" style="--d:.36s">
             <div class="pill w" data-go="s19" data-tip="跳过特效|回到 19 个人直播频道，不打断观看">跳过</div>
-            <div class="pill gr" data-toast="已续一次特效 · 消耗 520 钻石" data-tip="再来一次|按同一档续费，特效继续">再来一次</div>
+            <div class="pill gr" data-toast="已续一次特效 · 消耗 520 星尘" data-tip="再来一次|按同一档续费，特效继续">再来一次</div>
           </div>
         </div>
       </section>
 
       <!-- ============ 21 贡献榜 ============ -->
-      <section class="pg dk s21" id="s21" data-n="21" data-ti="贡献榜" data-s="榜单是打赏的第二次曝光；「差 20 钻石」比特效更能促单">
+      <section class="pg dk s21" id="s21" data-n="21" data-ti="贡献榜" data-s="榜单是打赏的第二次曝光；「差 20 星尘」比特效更能促单">
         <div class="hd">
           <span class="bk tap" data-go="s19" data-tip="返回|回到 19 个人直播频道">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></span>
@@ -3232,17 +3396,17 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="lst">
           <div class="rw st" style="--d:.2s" data-toast="TA 是本场守护者 · 享有进房公告">
             <em>4</em><span class="ava im i15"></span><div class="tx"><b>半糖不加冰</b><s>送出 月色 ×12 · 21:48</s></div>
-            <div class="v"><b>624</b><s>钻石</s></div></div>
+            <div class="v"><b>624</b><s>星尘</s></div></div>
           <div class="rw st" style="--d:.25s"><em>5</em><span class="ava im i17"></span><div class="tx"><b>小满</b><s>送出 星际 ×4 · 21:52</s></div>
-            <div class="v"><b>396</b><s>钻石</s></div></div>
+            <div class="v"><b>396</b><s>星尘</s></div></div>
           <div class="rw st" style="--d:.3s"><em>6</em><span class="ava im i15"></span><div class="tx"><b>凌晨四点</b><s>送出 咖啡 ×18 · 22:01</s></div>
-            <div class="v"><b>90</b><s>钻石</s></div></div>
+            <div class="v"><b>90</b><s>星尘</s></div></div>
           <div class="rw st" style="--d:.35s" data-pop="p18" data-tip="我|点自己的行直接补礼物">
             <em>12</em><span class="ava im i8"></span><div class="tx"><b>我 · 夜航星</b><s>送出 胶片 ×1 · 刚进房</s></div>
-            <div class="v"><b>20</b><s>钻石</s></div></div>
+            <div class="v"><b>20</b><s>星尘</s></div></div>
         </div>
         <div class="gap st" style="--d:.42s">
-          <div class="b2"><b>再送 20 钻石进入前 10</b><s>前 10 名会在主播下次开播时展示头像</s>
+          <div class="b2"><b>再送 20 星尘进入前 10</b><s>前 10 名会在主播下次开播时展示头像</s>
             <div class="bar2"><i style="--w:62%"></i></div></div>
           <div class="pill gr" data-pop="p18" data-tip="去送礼|打开礼物面板，直播不断流">去送礼</div>
         </div>
@@ -3268,7 +3432,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <span class="vs">VS</span>
           <div class="hp st" style="--d:.1s"><i class="l"></i><i class="r"></i></div>
-          <div class="hplab st" style="--d:.14s"><span>6 820 钻石</span><s>5 140 钻石</s></div>
+          <div class="hplab st" style="--d:.14s"><span>6 820 星尘</span><s>5 140 星尘</s></div>
           <div class="cdw st" style="--d:.18s"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.5 2"/></svg>剩余 <b>06:12</b></div>
           <span class="bk tap" data-go="s19" data-tip="退出|回到 19 单人间"
             style="position:absolute;left:14px;top:14px;z-index:6;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(8,8,12,.5);border:1px solid rgba(255,255,255,.16)">
@@ -3288,46 +3452,46 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
       </section>
 
       <!-- ============ 23 数字头像商城 ============ -->
-      <section class="pg lt s23" id="s23" data-n="23" data-ti="数字头像商城" data-s="风格横滑分类 + 热门位 + 样例网格，钻石余额常驻右上角">
+      <section class="pg dk s23" id="s23" data-n="23" data-ti="数字头像商城" data-s="风格横滑分类 + 热门位 + 样例网格，星尘余额常驻右上角">
         <div class="top">
-          <h4>AI 头像</h4>
+          <h4>数字头像</h4>
           <span class="gem" data-go="s27" data-tip="余额|跳到 27 钱包看流水">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F0D8A8" stroke-width="1.7"><path d="M5 8h14l-7 12z"/></svg>
-            1,280<em>钻石</em></span>
+            1,280<em>星尘</em></span>
         </div>
         <div class="gen" data-sel id="g23"><span class="on">国风</span><span>赛博</span><span>油画</span><span>黏土</span><span>胶片</span><span>暗黑童话</span><span>水墨</span></div>
         <div class="bd">
           <div class="sec st" style="--d:.06s"><b>今日热门风格</b><s data-toast="按生成量排序 · 每小时更新">按生成量 ›</s></div>
           <div class="strip st" style="--d:.12s">
-            <div data-pop="p21" data-tip="热门风格|唤起 21 风格选择抽屉"><span class="im i24" style="position:absolute;inset:0"></span><span class="t">国风<i>45</i></span></div>
-            <div data-pop="p21"><span class="im i29" style="position:absolute;inset:0"></span><span class="t">暗黑童话<i>60</i></span></div>
-            <div data-pop="p21"><span class="im i26" style="position:absolute;inset:0"></span><span class="t">油画<i>52</i></span></div>
-            <div data-pop="p21"><span class="im i27" style="position:absolute;inset:0"></span><span class="t">黏土<i>40</i></span></div>
+            <div data-pop="p21" data-tip="热门风格|唤起 21 风格选择抽屉"><span class="im ai18" style="position:absolute;inset:0"></span><span class="t">国风<i>45</i></span></div>
+            <div data-pop="p21"><span class="im ai16" style="position:absolute;inset:0"></span><span class="t">暗黑童话<i>60</i></span></div>
+            <div data-pop="p21"><span class="im ai09" style="position:absolute;inset:0"></span><span class="t">油画<i>52</i></span></div>
+            <div data-pop="p21"><span class="im ai06" style="position:absolute;inset:0"></span><span class="t">黏土<i>40</i></span></div>
           </div>
           <div class="sec st" style="--d:.18s"><b>头像样例</b><s data-toast="点卡片右下角「生成同款」">点卡片生成同款</s></div>
           <div class="grid9">
-            <div class="sa st" style="--d:.22s" data-pop="p21" data-tip="生成同款|风格 / 上传照 / 隐私口径一屏说清"><span class="im i24" style="position:absolute;inset:0"></span><span class="pz">45 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.25s" data-pop="p21"><span class="im i29" style="position:absolute;inset:0"></span><span class="pz">60 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.28s" data-pop="p21"><span class="im i30" style="position:absolute;inset:0"></span><span class="fr">限免</span><span class="pz">0 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.31s" data-pop="p21"><span class="im i28" style="position:absolute;inset:0"></span><span class="pz">35 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.34s" data-pop="p21"><span class="im i26" style="position:absolute;inset:0"></span><span class="pz">52 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.37s" data-pop="p21"><span class="im i25" style="position:absolute;inset:0"></span><span class="pz">48 钻</span><span class="mk2">生成同款</span></div>
-            <div class="sa st" style="--d:.4s" data-pop="p21"><span class="im i27" style="position:absolute;inset:0"></span><span class="pz">40 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.22s" data-pop="p21" data-tip="生成同款|风格 / 上传照 / 隐私口径一屏说清"><span class="im ai17" style="position:absolute;inset:0"></span><span class="pz">45 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.25s" data-pop="p21"><span class="im ai15" style="position:absolute;inset:0"></span><span class="pz">60 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.28s" data-pop="p21"><span class="im ai08" style="position:absolute;inset:0"></span><span class="fr">限免</span><span class="pz">0 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.31s" data-pop="p21"><span class="im ai05" style="position:absolute;inset:0"></span><span class="pz">35 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.34s" data-pop="p21"><span class="im ai03" style="position:absolute;inset:0"></span><span class="pz">52 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.37s" data-pop="p21"><span class="im ai12" style="position:absolute;inset:0"></span><span class="pz">48 钻</span><span class="mk2">生成同款</span></div>
+            <div class="sa st" style="--d:.4s" data-pop="p21"><span class="im ai11" style="position:absolute;inset:0"></span><span class="pz">40 钻</span><span class="mk2">生成同款</span></div>
             <div class="sa st" style="--d:.43s" data-go="s25"><span class="im i33" style="position:absolute;inset:0"></span><span class="fr">限量</span><span class="pz">480 钻</span><span class="mk2">看编号</span></div>
             <div class="sa st" style="--d:.46s" data-go="s25" data-tip="限量头像|进入 25 黑金限量详情"><span class="im i31" style="position:absolute;inset:0"></span><span class="fr">限量</span><span class="pz">680 钻</span><span class="mk2">看编号</span></div>
           </div>
-          <div class="promo st" style="--d:.52s" data-pop="p21" data-tip="本周限免|水墨风 0 钻石，剩 3 天">
+          <div class="promo st" style="--d:.52s" data-pop="p21" data-tip="本周限免|水墨风 0 星尘，剩 3 天">
             <span style="font-size:17px">🖌</span>
-            <div><b>本周限免 · 水墨风头像</b><s>不消耗钻石 · 每人一次</s></div>
+            <div><b>本周限免 · 水墨风头像</b><s>不消耗星尘 · 每人一次</s></div>
             <em>剩 3 天 ›</em>
           </div>
         </div>
         <div class="tbar" data-tab>
           <i data-go="s04"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>首页</i>
           <i data-go="s12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>短剧</i>
-          <i class="on" data-go="s23"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 8h14l-7 12z"/></svg>头像</i>
+          <i data-pop="p17"><span class="plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></i>
           <i data-go="s16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16v11H8l-4 3z"/></svg>消息</i>
-          <i data-go="s28"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"/></svg>我的</i>
+          <i class="on" data-go="s28"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"/></svg>我的</i>
         </div>
       </section>
 
@@ -3337,25 +3501,25 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           <span class="bk tap" data-go="s23" data-tip="返回|回到 23 头像商城">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></span>
           <h4>4 张已生成</h4>
-          <s>国风 · 本批 30 钻石</s>
+          <s>国风 · 本批 30 星尘</s>
         </div>
         <div class="bd">
           <div class="pick" data-sel id="pick24">
-            <div class="pk on st" style="--d:.08s"><span class="no">1</span><span class="im i24" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
-            <div class="pk st" style="--d:.13s"><span class="no">2</span><span class="im i26" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
-            <div class="pk st" style="--d:.18s"><span class="no">3</span><span class="im i42" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
-            <div class="pk st" style="--d:.23s"><span class="no">4</span><span class="im i30" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
+            <div class="pk on st" style="--d:.08s"><span class="no">1</span><span class="im ai14" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
+            <div class="pk st" style="--d:.13s"><span class="no">2</span><span class="im ai15" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
+            <div class="pk st" style="--d:.18s"><span class="no">3</span><span class="im ai01" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
+            <div class="pk st" style="--d:.23s"><span class="no">4</span><span class="im ai17" style="position:absolute;inset:0"></span><span class="wb">佩戴</span></div>
           </div>
           <div class="nt st" style="--d:.3s">佩戴后，<b>你的主页、聊天和个人直播频道都会换成它</b>。<br>好友看到的下一次头像更新，就是这张。</div>
           <div class="dyn st" style="--d:.36s" data-tg="dyn">
-            <div><b>设为动态头像</b><s>头像会缓慢旋转一帧 · 额外 10 钻石</s></div>
+            <div><b>设为动态头像</b><s>头像会缓慢旋转一帧 · 额外 10 星尘</s></div>
             <span class="sw3"></span>
           </div>
         </div>
         <div class="bot">
           <div class="mic st" style="--d:.42s">4 张结果为你保留 7 天 · 可随时回来佩戴</div>
           <div class="btns st" style="--d:.46s">
-            <div class="pill gl2" data-toast="已重新抽一批 · 本批不再扣钻石" data-tip="重新生成|同一批免费重抽一次">重新生成</div>
+            <div class="pill gl2" data-toast="已重新抽一批 · 本批不再扣星尘" data-tip="重新生成|同一批免费重抽一次">重新生成</div>
             <div class="pill gd2" data-toast="已佩戴 · 主页 / 聊天 / 个人直播频道同步" data-go="s28" data-tip="立即佩戴|三端同步，跳到 28 看效果">立即佩戴</div>
           </div>
         </div>
@@ -3388,7 +3552,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 7"/></svg>二级市场优先购</p>
           </div>
           <div class="buy st" style="--d:.22s">
-            <div class="r"><span class="pr">680<i>钻石</i></span><s>约 ¥68.00<br>剩余 83 份</s></div>
+            <div class="r"><span class="pr">680<i>星尘</i></span><s>约 ¥68.00<br>剩余 83 份</s></div>
             <div class="pill" data-pop="p23" data-tip="立即购买|拆分单价与服务费的确认弹窗">立即购买</div>
             <div class="cr" data-go="s26" data-tip="链上凭证|进入 26 确权证书，逐字可查">查看链上凭证 <u>›</u></div>
           </div>
@@ -3423,7 +3587,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="tlh st" style="--d:.24s">确权进度</div>
           <div class="tl2 st" style="--d:.28s">
-            <div class="ti2 done"><span class="d"></span><div><b>支付成功</b><s>10-19 21:05 · 钻石支付 680</s></div></div>
+            <div class="ti2 done"><span class="d"></span><div><b>支付成功</b><s>10-19 21:05 · 星尘支付 680</s></div></div>
             <div class="ti2 done"><span class="d"></span><div><b>合约写入完成</b><s>10-19 21:08 · 区块 18,904,277</s></div></div>
             <div class="ti2 off"><span class="d"></span><div><b>转赠解锁</b><s>持有满 30 天后开放</s></div></div>
           </div>
@@ -3433,7 +3597,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
       </section>
 
       <!-- ============ 27 钱包与流水 ============ -->
-      <section class="pg lt s27" id="s27" data-n="27" data-ti="钱包与流水" data-s="余额卡 + 收支明细，收入用哑金区分；充值入口常驻余额卡">
+      <section class="pg lt s27" id="s27" data-n="27" data-ti="钱包与流水" data-s="星尘账户可充值消费，现金收益单独提现；流水按星尘与收益分组">
         <div class="top">
           <span class="bk tap" data-go="s28" data-tip="返回|回到 28 个人主页">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></span>
@@ -3442,31 +3606,50 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         </div>
         <div class="bd">
           <div class="wal st" style="--d:.06s">
-            <h6>钻石账户</h6>
+            <h6>星尘账户</h6>
             <div class="c3">
-              <div class="cell"><b>1,280</b><s>当前余额</s></div>
+              <div class="cell"><b data-xc>1,280</b><s>当前余额</s></div>
               <div class="cell"><b>875</b><s>累计已消耗</s></div>
-              <div class="cell re"><span class="go2" data-pop="p26" data-tip="充值|唤起 26 充值抽屉">充值</span></div>
+            </div>
+            <div class="acts">
+              <span class="go2 fill" data-pop="p26" data-tip="充值|星尘用于礼物与头像消费">充值星尘</span>
             </div>
           </div>
-          <div class="seg st" style="--d:.12s" data-sel id="seg27"><b class="on">收支流水</b><b data-toast="订单 · 3 笔 · 可查看凭证">订单</b></div>
-          <div class="sum st" style="--d:.18s">10 月支出 <b>875.0</b> 钻石 · 收入 <i>808.0</i><s data-toast="仅显示最近 24 个月">导出 ›</s></div>
-          <div class="lst">
-            <div class="rw2 st" style="--d:.22s" data-go="s26" data-tip="限量头像|展开到 26 链上证书">
-              <span class="ic">🏝</span><div class="tx"><b>限量头像「暗格 · 006 号」</b><s>10-19 21:05 · 商城</s></div>
-              <span class="a2">−680.0<s>钻石</s></span></div>
-            <div class="rw2 st" style="--d:.26s" data-go="s24"><span class="ic">🎴</span><div class="tx"><b>AI 头像 · 国风四连</b><s>10-19 20:41 · 头像商城</s></div>
-              <span class="a2">−30.0<s>钻石</s></span></div>
-            <div class="rw2 st" style="--d:.3s" data-go="s19"><span class="ic">🎁</span><div class="tx"><b>个人直播频道礼物 · 胶片 ×6</b><s>10-18 23:07 · 主播 沐沐酱</s></div>
-              <span class="a2">−120.0<s>钻石</s></span></div>
-            <div class="rw2 in st" style="--d:.34s" data-toast="账单详情 · 10-18 22:51 微信支付 ¥68.00 到账 680 + 多送 68"><span class="ic">＋</span><div class="tx"><b>钻石充值 ¥68.00</b><s>10-18 22:51 · 微信支付 · 含多送 68</s></div>
-              <span class="a2">+748.0<s>钻石</s></span></div>
-            <div class="rw2 st" style="--d:.38s"><span class="ic">🎞</span><div class="tx"><b>动态头像 · 胶片边框</b><s>10-17 21:19 · 头像商城</s></div>
-              <span class="a2">−45.0<s>钻石</s></span></div>
-            <div class="rw2 in st" style="--d:.42s"><span class="ic">✓</span><div class="tx"><b>新人签到 · 七天礼盒</b><s>10-16 09:24 · 平台活动</s></div>
-              <span class="a2">+60.0<s>钻石</s></span></div>
+          <div class="wcash st" style="--d:.1s" data-go="s32" data-tip="收益提现|礼物分成与任务奖励可提现">
+            <div>
+              <h6>现金收益</h6>
+              <div class="amt"><em>¥</em><b data-cash>18.60</b></div>
+              <s>收益星尘 <i data-cashxc>1,860</i> · 100 星尘收益 = ¥1</s>
+            </div>
+            <span class="go3">提现</span>
           </div>
-          <div class="exp2 st" style="--d:.48s">账单按月可导出 · 保留最近 24 个月</div>
+          <div class="seg st" style="--d:.12s" data-sel id="seg27"><b class="on">收支流水</b><b data-toast="订单 · 3 笔 · 可查看凭证">订单</b></div>
+          <div class="sum st" style="--d:.18s">10 月支出 <b>875.0</b> 星尘 · 收入 <i>808.0</i><s data-toast="仅显示最近 24 个月">导出 ›</s></div>
+          <div class="lst" id="wFlows">
+            <div class="rw2 st" style="--d:.2s" data-go="s26" data-tip="限量头像|展开到 26 链上证书">
+              <span class="ic">🏝</span><div class="tx"><b>限量头像「暗格 · 006 号」</b><s>10-19 21:05 · 商城</s></div>
+              <span class="a2">−680.0<s>星尘</s></span></div>
+            <div class="rw2 st" style="--d:.26s" data-go="s24"><span class="ic">🎴</span><div class="tx"><b>数字头像 · 国风四连</b><s>10-19 20:41 · 头像商城</s></div>
+              <span class="a2">−30.0<s>星尘</s></span></div>
+            <div class="rw2 st" style="--d:.3s" data-go="s19"><span class="ic">🎁</span><div class="tx"><b>个人直播频道礼物 · 胶片 ×6</b><s>10-18 23:07 · 主播 沐沐酱</s></div>
+              <span class="a2">−120.0<s>星尘</s></span></div>
+            <div class="rw2 in st" style="--d:.34s" data-toast="账单详情 · 10-18 22:51 微信支付 ¥68.00 到账 680 + 多送 68"><span class="ic">＋</span><div class="tx"><b>星尘充值 ¥68.00</b><s>10-18 22:51 · 微信支付 · 含多送 68</s></div>
+              <span class="a2">+748.0<s>星尘</s></span></div>
+            <div class="rw2 st" style="--d:.38s"><span class="ic">🎞</span><div class="tx"><b>动态头像 · 胶片边框</b><s>10-17 21:19 · 头像商城</s></div>
+              <span class="a2">−45.0<s>星尘</s></span></div>
+            <div class="rw2 in st" style="--d:.42s"><span class="ic">✓</span><div class="tx"><b>新人签到 · 七天礼盒</b><s>10-16 09:24 · 平台活动</s></div>
+              <span class="a2">+60.0<s>星尘</s></span></div>
+          </div>
+          <div class="flowhd st" style="--d:.46s">现金收益</div>
+          <div class="lst" id="cashFlows">
+            <div class="rw2 st" style="--d:.48s" data-pop="p28" data-tip="提现记录|查看提现进度与到账状态">
+              <span class="ic">↗</span><div class="tx"><b>收益提现 · 微信零钱</b><s>11-18 21:04 · 已到账</s></div>
+              <span class="a2">−500<s>星尘收益</s></span></div>
+            <div class="rw2 in st" style="--d:.52s" data-toast="礼物收益结算 · 10-17 22:00 结算 800 星尘收益">
+              <span class="ic">＋</span><div class="tx"><b>直播礼物分成</b><s>10-17 22:00 · 沐沐酱直播间</s></div>
+              <span class="a2">+800<s>星尘收益</s></span></div>
+          </div>
+          <div class="exp2 st" style="--d:.56s">账单按月可导出 · 保留最近 24 个月</div>
           <div class="pad"></div>
         </div>
       </section>
@@ -3499,7 +3682,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="ent2 st" style="--d:.24s">
           <div data-go="s27" data-tip="钱包|余额与流水都在 27"><span class="ic">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 8h14l-7 12z"/></svg></span>
-            <div><b>1,280 钻石</b><s>钱包与流水</s></div></div>
+            <div><b><span data-xc>1,280</span> 星尘</b><s>钱包与流水</s></div></div>
           <div data-go="s25" data-tip="限量头像|回到 25 看这一期"><span class="ic">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 15l3-6 3 6"/></svg></span>
             <div><b>暗格 · 006 号</b><s>我的限量头像</s></div></div>
@@ -3561,7 +3744,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="grp st" style="--d:.28s">支付</div>
           <div class="bx st" style="--d:.32s">
-            <div class="it" data-go="s27" data-tip="我的钱包|进入 27 看流水"><b>我的钱包</b><s>1,280 钻石</s><em>›</em></div>
+            <div class="it" data-go="s27" data-tip="我的钱包|进入 27 看流水"><b>我的钱包</b><s>1,280 星尘</s><em>›</em></div>
           </div>
           <div class="grp st" style="--d:.36s">帮助与反馈 · 关于星域 · 免费看短剧</div>
           <div class="bx st" style="--d:.4s">
@@ -3577,7 +3760,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
       <section class="pg lt s30" id="s30" data-n="30" data-ti="商城首页" data-s="星选好物 · 数字头像入口 · 商品直达 31">
         <div class="top">
           <h4>星选商城</h4>
-          <span class="gem" data-go="s27" data-tip="钱包|余额与充值在 27">1,280<em>钻石</em></span>
+          <span class="gem" data-go="s27" data-tip="钱包|余额与充值在 27">1,280<em>星尘</em></span>
         </div>
         <div class="shop-tabs">
           <b class="on">星选好物</b>
@@ -3664,6 +3847,53 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         </div>
       </section>
 
+      <!-- ============ 32 收益提现 ============ -->
+      <section class="pg lt s32" id="s32" data-n="32" data-ti="收益提现" data-s="礼物分成与任务奖励的收益，按 100:1 兑换现金 · 到账方式 · 提现规则">
+        <div class="top">
+          <span class="bk" data-go="s27" data-tip="返回|回到 27 钱包">‹</span>
+          <h4>收益提现</h4>
+          <s data-pop="p28" data-tip="提现记录|查看历史提现状态">提现记录 ›</s>
+        </div>
+        <div class="bd">
+          <div class="wcard st" style="--d:.06s">
+            <h6>可提现收益</h6>
+            <div class="amt"><em>¥</em><b id="wRmb">18.60</b></div>
+            <div class="sub"><span>收益星尘 <b data-cashxc>1,860</b></span><i></i><span>100 星尘收益 = ¥1</span></div>
+          </div>
+          <div class="card st" style="--d:.12s">
+            <h6>提现收益 <em id="wAll">全部</em></h6>
+            <div class="fld">
+              <input id="wIn" type="tel" inputmode="numeric" value="200" placeholder="输入要提现的星尘收益">
+              <u>星尘</u>
+            </div>
+            <div class="got"><span>按 100 星尘收益 = ¥1 折算，预计到账</span><b id="wOut">¥2.00</b></div>
+            <div class="chips" id="wChips">
+              <b data-v="200" class="on">200</b>
+              <b data-v="500">500</b>
+              <b data-v="1000">1,000</b>
+              <b data-v="all">全部</b>
+            </div>
+          </div>
+          <div class="card st" style="--d:.18s">
+            <h6>到账方式</h6>
+            <div class="ways" id="wWays">
+              <div class="way on"><span class="ic">💚</span><div><b>微信零钱</b><s>实时到账 · 已实名</s></div><i></i></div>
+              <div class="way"><span class="ic">💙</span><div><b>支付宝</b><s>T+1 到账 · 138****6688</s></div><i></i></div>
+            </div>
+          </div>
+          <div class="tips st" style="--d:.24s">
+            <b>提现说明</b>
+            单笔最低 100 星尘收益（¥1），每日上限 5,000；<br>
+            1–2 个工作日到账，平台不收取手续费；<br>
+            收益来自直播礼物分成与任务奖励；星尘余额需先消费，不可直接提现。
+          </div>
+          <div class="pad"></div>
+        </div>
+        <div class="wbbar st" style="--d:.3s">
+          <button id="wBtn" data-tip="确认提现|核对金额与到账方式">立即提现 ¥2.00</button>
+        </div>
+      </section>
+
       <!-- ============ P01 用户协议 ============ -->
       <div class="pp center" id="p01">
         <div class="mk" data-close></div>
@@ -3715,13 +3945,13 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="plist" id="prices">
             <div class="pric on"><span class="rd"><i></i></span><div><div class="t1">本集解锁</div><div class="t2">仅限第 4 集 · 48 小时内有效</div></div>
-              <div class="amt"><b>30</b><s style="text-decoration:none">钻石</s></div></div>
+              <div class="amt"><b>30</b><s style="text-decoration:none">星尘</s></div></div>
             <div class="pric"><span class="rd"><i></i></span><div><div class="t1">全集结局包<span class="tagx">省 63%</span></div><div class="t2">9 集 · 永久观看 · 含幕后花絮</div></div>
               <div class="amt"><b>99</b><s>270</s></div></div>
-            <div class="pric"><span class="rd"><i></i></span><div><div class="t1">星域 · 免费看短剧月卡</div><div class="t2">全站短剧免广告 · 每月赠 300 钻石</div></div>
+            <div class="pric"><span class="rd"><i></i></span><div><div class="t1">星域 · 免费看短剧月卡</div><div class="t2">全站短剧免广告 · 每月赠 300 星尘</div></div>
               <div class="amt"><b>199</b><s>¥19.9</s></div></div>
           </div>
-          <div class="rbar"><div class="bal">钻石余额 <b>1,280</b></div>
+          <div class="rbar"><div class="bal">星尘余额 <b>1,280</b></div>
             <div class="pill gr" data-toast="已解锁第 4 集 · 继续播放" data-close data-tip="立即解锁|扣款成功并关闭">立即解锁</div></div>
         </div></div>
       </div>
@@ -3731,7 +3961,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="mk" data-close></div>
         <div class="cd"><div class="card dk" style="border-radius:30px 30px 0 0">
           <div style="width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:11px auto 2px"></div>
-          <div class="gv"><b style="font-size:18px">为《他在黑夜中出现》打 call</b><s>余额 1,280 钻石</s></div>
+          <div class="gv"><b style="font-size:18px">为《他在黑夜中出现》打 call</b><s>余额 1,280 星尘</s></div>
           <div class="gifts" id="gifts">
             <div class="on"><i>🌧</i><s>雨伞 · 1</s></div><div><i>☕</i><s>咖啡 · 5</s></div>
             <div><i>🍭</i><s>糖果 · 10</s></div><div><i>🎬</i><s>胶片 · 20</s></div>
@@ -3740,7 +3970,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="rbar"><div class="bal">数量 <b>×1</b></div>
             <div class="pill gl" data-close style="max-width:96px">取消</div>
-            <div class="pill gr" data-toast="送出 🌧 雨伞 ×1" data-close data-tip="送出|扣钻石并关闭">送出</div></div>
+            <div class="pill gr" data-toast="送出 🌧 雨伞 ×1" data-close data-tip="送出|扣星尘并关闭">送出</div></div>
         </div></div>
       </div>
 
@@ -3776,7 +4006,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <div class="r"><s>Token ID</s><b class="hash">0x7F2A…9C41</b></div>
             <div class="r"><s>发行方</s><b>星域 · 免费看短剧 × 夜色工作室</b></div>
             <div class="r"><s>剩余</s><b>39 / 500</b></div>
-            <div class="r"><s>价格</s><b style="color:#BCB0FF">¥80 · 800 钻石</b></div>
+            <div class="r"><s>价格</s><b style="color:#BCB0FF">¥80 · 800 星尘</b></div>
           </div>
           <div class="row" style="padding:0 18px 18px">
             <div class="pill gl" data-close data-tip="以后再说|关闭弹窗">以后再说</div>
@@ -3826,9 +4056,9 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="mk" data-close></div>
         <div class="cd"><div class="card dk" style="border-radius:30px 30px 0 0">
           <div style="width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:11px auto 2px"></div>
-          <div class="gv"><b style="font-size:17px">送给 @沐沐酱</b><s>余额 1,280 钻石</s></div>
+          <div class="gv"><b style="font-size:17px">送给 @沐沐酱</b><s>余额 1,280 星尘</s></div>
           <div class="tabs3" data-sel id="l18p">
-            <b class="on">礼物</b><b data-toast="特权 · 守护可用">特权</b><b data-toast="盲盒 · 随机 1–520 钻石">钻石盲盒</b>
+            <b class="on">礼物</b><b data-toast="特权 · 守护可用">特权</b><b data-toast="盲盒 · 随机 1–520 星尘">星尘盲盒</b>
           </div>
           <div class="gifts" id="gifts18" data-sel>
             <div class="on"><i>🌧</i><s>雨伞 · 1</s></div><div><i>☕</i><s>咖啡 · 5</s></div>
@@ -3838,9 +4068,9 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <div class="hg"><i class="fx">全屏</i><i>💍</i><s>承诺 · 1314</s></div>
           </div>
           <div class="qty" data-sel><span>数量</span><b class="on">×1</b><b>×5</b><b>×10</b><b>×52</b><b>连击</b></div>
-          <div class="rbar"><div class="bal">合计 <b>1</b> 钻石</div>
+          <div class="rbar"><div class="bal">合计 <b>1</b> 星尘</div>
             <div class="pill gl" data-close style="max-width:88px">取消</div>
-            <div class="pill gr" data-toast="送出 🌧 雨伞 ×1 · 特效已播放" data-go="s20" data-tip="送出|扣钻石并触发全屏特效">送出</div></div>
+            <div class="pill gr" data-toast="送出 🌧 雨伞 ×1 · 特效已播放" data-go="s20" data-tip="送出|扣星尘并触发全屏特效">送出</div></div>
         </div></div>
       </div>
 
@@ -3863,7 +4093,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <p><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 7"/></svg>守护专属群 · 主播每周在场<em>长期</em></p>
           </div>
           <div class="go" style="margin-top:auto;padding:18px 0 24px">
-            <div class="pill gr" data-toast="已开通护航 · 下次进房有特效" data-close data-tip="立即开通|月费订阅，可随时取消" style="height:50px;font-size:14px">立即开通 · 198 钻石</div>
+            <div class="pill gr" data-toast="已开通护航 · 下次进房有特效" data-close data-tip="立即开通|月费订阅，可随时取消" style="height:50px;font-size:14px">立即开通 · 198 星尘</div>
             <div class="law">次月 1 日 0 点自动重新排序 · <u>权益对比 ›</u></div>
           </div>
         </div></div>
@@ -3931,7 +4161,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <span class="ep">7</span><span class="ep">8</span><span class="ep">9</span><span class="ep">10</span><span class="ep">11</span><span class="ep">12</span>
           </div>
           <div class="lk2"><i>已看 3 集</i><i>当前 第 4 集</i><i>第 4 集起需解锁</i><i data-toast="已下载 12 集 · 离线可看">全剧可下载</i></div>
-          <div class="rbar"><div class="bal">钻石余额 <b>1,280</b></div>
+          <div class="rbar"><div class="bal">星尘余额 <b>1,280</b></div>
             <div class="pill gl" data-close data-go="s14" style="max-width:112px">加入日历</div>
             <div class="pill gr" data-toast="已从第 4 集继续播放" data-close data-tip="继续看|关闭抽屉并回到播放">继续看第 4 集</div></div>
         </div></div>
@@ -3985,12 +4215,12 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <span class="ic">▶</span><div><b>看一段广告，免费解锁本集</b><s>30 秒 · 每天最多 5 次 · 今日剩 2 次</s></div>
             <span class="go">免费看</span></div>
           <div class="alts">
-            <div class="alt2" data-go="s27" data-close data-tip="钻石解锁|跳 27 钱包看余额与充值">
-              <div>钻石解锁本集<s>余额 1,280 · 本集 30</s></div><span class="r">30</span></div>
+            <div class="alt2" data-go="s27" data-close data-tip="星尘解锁|跳 27 钱包看余额与充值">
+              <div>星尘解锁本集<s>余额 1,280 · 本集 30</s></div><span class="r">30</span></div>
             <div class="alt2" data-pop="p04" data-close data-tip="全季包|回到 04 解锁档位（省 62%）">
               <div>买全集结局包<s>9 集 · 永久 · 含花絮</s></div><span class="r">99</span></div>
             <div class="alt2" data-toast="月卡已开通 · 全站短剧免广告">
-              <div>星域 · 免费看短剧月卡<s>免广告 + 每月 300 钻石</s></div><span class="r">199</span></div>
+              <div>星域 · 免费看短剧月卡<s>免广告 + 每月 300 星尘</s></div><span class="r">199</span></div>
           </div>
           <div class="law2">虚拟商品一经使用不支持退款 · 未成年人消费需监护人确认</div>
           <div style="height:14px"></div>
@@ -4044,14 +4274,14 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           <div class="hb"><h5>新人首充礼包</h5>
             <div class="amt"><i>¥</i><b>1</b><s>原价 ¥30</s></div></div>
           <div class="items">
-            <div><i>🪙</i><b>320 钻石</b><s>含赠送 20 · 够解锁 10 集</s></div>
+            <div><i>🪙</i><b>320 星尘</b><s>含赠送 20 · 够解锁 10 集</s></div>
             <div><i>🚫</i><b>3 日免广告</b><s>全站生效</s></div>
             <div><i>🧩</i><b>头像碎片 ×3</b><s>集齐换限量</s></div>
           </div>
           <div class="cd2">礼包失效 <em>23</em><em class="sp">:</em><em class="tk">59</em><em class="sp">:</em><em>41</em></div>
           <div class="row">
             <div class="pill gl" data-close data-tip="先不了|关闭后 24 小时内可在钱包里再领">先不了</div>
-            <div class="pill gr" data-toast="¥1 支付成功 · 320 钻石已到账" data-close data-tip="拿下礼包|模拟支付并入账钻石">¥1 拿下</div>
+            <div class="pill gr" data-toast="¥1 支付成功 · 320 星尘已到账" data-close data-tip="拿下礼包|模拟支付并入账星尘">¥1 拿下</div>
           </div>
         </div></div>
       </div>
@@ -4079,7 +4309,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           </div>
           <div class="shield"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4-3 6.6-7 9-4-2.4-7-5-7-9V6z"/></svg>
             照片仅用于本次生成，24 小时后自动删除</div>
-          <div class="go"><div class="pill" data-pop="p22" data-close data-tip="开始生成|扣 30 钻石并进入 22 进度浮层">开始生成 · 30 钻石</div></div>
+          <div class="go"><div class="pill" data-pop="p22" data-close data-tip="开始生成|扣 30 星尘并进入 22 进度浮层">开始生成 · 30 星尘</div></div>
         </div></div>
       </div>
 
@@ -4099,7 +4329,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
               <div><span class="im i30" style="position:absolute;inset:0"></span></div>
               <div class="sp2"><i></i>绘制中</div>
             </div>
-            <div class="wait">预计还需 12 秒 · 生成失败会自动退回钻石<br>余额已扣：1,310 → 1,280 钻石</div>
+            <div class="wait">预计还需 12 秒 · 生成失败会自动退回星尘<br>余额已扣：1,310 → 1,280 星尘</div>
           </div>
           <div class="row" style="flex-direction:column;gap:9px">
             <div class="pill gr" data-go="s24" data-close data-tip="查看结果|进入 24 佩戴确认">查看 4 张结果</div>
@@ -4115,11 +4345,11 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
           <div class="goods"><span class="th im i31"></span>
             <div><b>暗格 · 006 号</b><s>限量编号 006 / 300 · 星域 · 免费看短剧数藏工作室</s></div></div>
           <div class="l2">
-            <div><s>单价</s><b>620.0 钻石</b></div>
-            <div><s>平台服务费</s><b>60.0 钻石</b></div>
-            <div class="tt"><s>合计</s><b>680 钻石</b></div>
+            <div><s>单价</s><b>620.0 星尘</b></div>
+            <div><s>平台服务费</s><b>60.0 星尘</b></div>
+            <div class="tt"><s>合计</s><b>680 星尘</b></div>
           </div>
-          <div class="bal2">钻石余额 <b>1,280</b>，本次消耗 <b>680</b>，剩余 <b>600</b></div>
+          <div class="bal2">星尘余额 <b>1,280</b>，本次消耗 <b>680</b>，剩余 <b>600</b></div>
           <div class="fine"><b>虚拟商品一经售出不可退款</b>，请确认编号无误</div>
           <div class="btns">
             <div class="pill no" data-close data-tip="再想想|不扣款，回到详情">再想想</div>
@@ -4132,14 +4362,14 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
       <div class="pp sheet" id="p24">
         <div class="mk" data-close></div>
         <div class="cd">
-          <div class="minic"><span class="th im i31"></span><div><b>暗格 · 006 号</b><s>合计 680 钻石 · 剩 83 份</s></div></div>
+          <div class="minic"><span class="th im i31"></span><div><b>暗格 · 006 号</b><s>合计 680 星尘 · 剩 83 份</s></div></div>
           <div class="card" style="border-radius:30px 30px 0 0;margin-top:9px">
             <div style="width:38px;height:4px;border-radius:4px;background:rgba(17,17,20,.14);margin:11px auto 2px"></div>
             <div class="shd" style="padding:14px 18px 0"><b>确认支付</b><s>订单 20261019-2105<br>15 分钟内有效</s></div>
-            <div class="amt2"><s>支付金额</s><b>680 钻石</b><p>等值 ¥68.00 · 兑换比例 1 元 = 10 钻石</p></div>
+            <div class="amt2"><s>支付金额</s><b>680 星尘</b><p>等值 ¥68.00 · 兑换比例 1 元 = 10 星尘</p></div>
             <div style="margin-top:14px" data-sel id="pay24">
               <div class="prow on"><span class="rd"><i></i></span><span class="ic">◆</span>
-                <div class="tx"><b>钻石余额支付</b><s>可用 1,280 · 本次可抵 680</s></div><span class="tag">余额充足</span></div>
+                <div class="tx"><b>星尘余额支付</b><s>可用 1,280 · 本次可抵 680</s></div><span class="tag">余额充足</span></div>
               <div class="prow"><span class="rd"><i></i></span><span class="ic">微</span>
                 <div class="tx"><b>微信支付</b><s>星域 · 免费看短剧不保存支付信息</s></div><span class="tag">推荐</span></div>
               <div class="prow"><span class="rd"><i></i></span><span class="ic">支</span>
@@ -4151,7 +4381,7 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
             <div class="pwd"><s>支付密码</s>
               <div class="cells"><div>•</div><div>•</div><div>•</div><div>•</div><div class="e"><span class="cur2"></span></div><div class="e"></div></div>
             </div>
-            <div class="go3"><div class="pill" data-toast="支付成功 · 证书已生成" data-go="s26" data-tip="确认支付|扣款后直连 26 链上证书">确认支付 680 钻石</div>
+            <div class="go3"><div class="pill" data-toast="支付成功 · 证书已生成" data-go="s26" data-tip="确认支付|扣款后直连 26 链上证书">确认支付 680 星尘</div>
               <div class="law3">支付即视为同意《虚拟商品交易规则》· 未成年人消费需监护人确认</div></div>
           </div>
         </div>
@@ -4176,24 +4406,60 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
         <div class="mk" data-close></div>
         <div class="cd"><div class="card" style="border-radius:30px 30px 0 0">
           <div style="width:38px;height:4px;border-radius:4px;background:rgba(17,17,20,.14);margin:11px auto 2px"></div>
-          <div class="hd2"><b>钻石充值</b><s>当前余额 <i>1,280</i> 钻石</s></div>
-          <div class="first" data-toast="新人首充 ¥1 每人限一次 · 已使用" data-tip="首充礼包|¥1 得 320 钻石，仅限一次">
-            <span class="tg">首充</span><div><b>¥1 得 320 钻石</b><s>已使用 · 每人限一次</s></div><em>›</em></div>
+          <div class="hd2"><b>星尘充值</b><s>当前余额 <i>1,280</i> 星尘</s></div>
+          <div class="first" data-toast="新人首充 ¥1 每人限一次 · 已使用" data-tip="首充礼包|¥1 得 320 星尘，仅限一次">
+            <span class="tg">首充</span><div><b>¥1 得 320 星尘</b><s>已使用 · 每人限一次</s></div><em>›</em></div>
           <div class="tiers" data-sel>
-            <div><b>¥6</b><s>60 钻石</s></div>
-            <div><b>¥30</b><s>300 钻石</s></div>
-            <div class="on"><b>¥68</b><s>680 钻石</s><i>多送 68</i></div>
-            <div><b>¥128</b><s>1,280 钻石</s><i>多送 160</i></div>
-            <div><b>¥328</b><s>3,280 钻石</s><i>多送 520</i></div>
-            <div><b>¥648</b><s>6,480 钻石</s><i>多送 1,200</i></div>
+            <div><b>¥6</b><s>60 星尘</s></div>
+            <div><b>¥30</b><s>300 星尘</s></div>
+            <div class="on"><b>¥68</b><s>680 星尘</s><i>多送 68</i></div>
+            <div><b>¥128</b><s>1,280 星尘</s><i>多送 160</i></div>
+            <div><b>¥328</b><s>3,280 星尘</s><i>多送 520</i></div>
+            <div><b>¥648</b><s>6,480 星尘</s><i>多送 1,200</i></div>
           </div>
           <div class="ways" data-sel>
             <div class="w on"><span class="ic">微</span><div><b>微信支付</b><s>星域 · 免费看短剧不保存支付信息</s></div></div>
             <div class="w"><span class="ic">支</span><div><b>支付宝</b><s>已绑定 夜航星</s></div></div>
             <div class="w"><span class="ic">卡</span><div><b>银行卡</b><s>工商银行 储蓄卡 6296</s></div></div>
           </div>
-          <div class="note">兑换比例 1 元 = 10 钻石 · 未成年人单笔充值上限 50 元<br>钻石为虚拟商品，充值到账后不支持退款</div>
-          <div class="go"><div class="pill bk" data-toast="充值成功 · 余额 1,280 → 2,028 钻石" data-tip="确认充值|¥68 到账 680 + 多送 68">确认充值 ¥68.00</div></div>
+          <div class="note">兑换比例 1 元 = 10 星尘 · 未成年人单笔充值上限 50 元<br>星尘为虚拟商品，充值到账后不支持退款</div>
+          <div class="go"><div class="pill bk" data-toast="充值成功 · 余额 1,280 → 2,028 星尘" data-tip="确认充值|¥68 到账 680 + 多送 68">确认充值 ¥68.00</div></div>
+        </div></div>
+      </div>
+
+      <!-- ============ P27 确认提现 ============ -->
+      <div class="pp sheet" id="p27">
+        <div class="mk" data-close></div>
+        <div class="cd"><div class="card" style="border-radius:30px 30px 0 0">
+          <div style="width:38px;height:4px;border-radius:4px;background:rgba(17,17,20,.14);margin:11px auto 2px"></div>
+          <div class="hd2"><b>确认提现</b><s>请核对金额与到账账户</s></div>
+          <div class="wsum">
+            <div><em>提现星尘</em><b id="wcXc">200 星尘</b></div>
+            <div><em>折算金额</em><b id="wcRmb">¥2.00</b></div>
+            <div><em>到账方式</em><b id="wcWay">微信零钱</b></div>
+            <div><em>手续费</em><b>¥0.00</b></div>
+            <div><em>预计到账</em><b>1–2 个工作日</b></div>
+          </div>
+          <div class="note">确认后收益星尘立即扣除；若审核失败，将原路退回收益账户</div>
+          <div class="row">
+            <div class="pill gl" data-close data-tip="再想想|关闭弹层不做操作">再想想</div>
+            <div class="pill gr" id="wOk">确认提现</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- ============ P28 提现记录 ============ -->
+      <div class="pp sheet" id="p28">
+        <div class="mk" data-close></div>
+        <div class="cd"><div class="card" style="border-radius:30px 30px 0 0">
+          <div style="width:38px;height:4px;border-radius:4px;background:rgba(17,17,20,.14);margin:11px auto 2px"></div>
+          <div class="hd2"><b>提现记录</b><s>近 12 个月 · 按时间倒序</s></div>
+          <div id="wRecs">
+            <div class="wrec"><div><b>微信零钱</b><s>11-18 21:04 · 已到账</s></div><em class="ok">−500 星尘收益<u>¥5.00</u></em></div>
+            <div class="wrec"><div><b>支付宝</b><s>11-12 09:36 · 已到账</s></div><em class="ok">−300 星尘收益<u>¥3.00</u></em></div>
+          </div>
+          <div class="note">提现记录保留 12 个月 · 审核中的提现可联系客服撤回</div>
+          <div class="go"><div class="pill bk" data-close>知道了</div></div>
         </div></div>
       </div>
 
@@ -4228,7 +4494,7 @@ const GROUPS=[
 {n:'板块 2 · 短剧内容与付费',p:['s04','s05','s12','s13','s14']},
 {n:'板块 3 · 兴趣社交',p:['s06','s07','s08','s09','s10','s15','s16','s17']},
 {n:'板块 4 · 娱乐直播',p:['s18','s19','s20','s21','s22']},
-{n:'板块 5 · 虚拟商品 · 钱包 · 账户',p:['s23','s24','s25','s26','s27','s28','s29']},
+{n:'板块 5 · 虚拟商品 · 钱包 · 账户',p:['s23','s24','s25','s26','s27','s28','s29','s32']},
 {n:'板块 6 · 电商产品商城',p:['s30','s31']}];
 const seq=GROUPS.reduce((a,g)=>a.concat(g.p),[]);
 const POPN=document.querySelectorAll('.pp').length;
@@ -4248,7 +4514,7 @@ GROUPS.forEach(g=>{
   });
 });
 
-const ANIM={s01:'开屏照片缓慢推近|星标描线后填色|meetu 与星域落字|主按钮呼吸光',
+const ANIM={s01:'开屏照片缓慢推近|星标描线后填色|MeetU 与星域落字|主按钮呼吸光',
 s02:'题干与选项交错上浮|勾选弹跳|进度条平滑增长',
 s03:'标签九宫格逐格入场|点选描边 + 角标弹出|已选计数实时更新',
 s04:'骨架屏流光 2.8s 后淡出|Hero 缓慢推近|播放键呼吸|卡片交错上浮|续播进度条增长|Tab 指示条伸缩',
@@ -4300,6 +4566,7 @@ function guide(id){
   });
 }
 
+function replayVideo(p){const v=p&&p.querySelector('video');if(v){try{v.currentTime=0;v.play();}catch(e){}}}
 function go(id){
   if(id===cur||!document.getElementById(id)) return;
   const fwd=seq.indexOf(id)>seq.indexOf(cur);
@@ -4310,6 +4577,7 @@ function go(id){
   void n.offsetWidth;
   n.classList.add('on');
   cur=id; closeAll();
+  replayVideo(n);
   idx.querySelectorAll('.it').forEach(x=>x.classList.toggle('on',x.dataset.id===id));
   guide(id);
   if(id==='s06') count();
@@ -4404,8 +4672,77 @@ document.getElementById('btour').onclick=e=>{
 };
 document.getElementById('breplay').onclick=()=>{
   const p=document.getElementById(cur); p.classList.remove('on'); void p.offsetWidth; p.classList.add('on');
+  replayVideo(p);
   if(cur==='s06') count(); if(cur==='s02'){ q=3; paint02(); }
 };
+/* 32 收益提现：收益余额 → 提现 → 二次确认 → 扣减 + 记录 */
+(function(){
+  const inp=document.getElementById('wIn'),out=document.getElementById('wOut'),btn=document.getElementById('wBtn');
+  const chips=document.getElementById('wChips'),ways=document.getElementById('wWays'),all=document.getElementById('wAll');
+  const rmb=document.getElementById('wRmb'),recs=document.getElementById('wRecs');
+  if(!inp) return;
+  const RATE=0.01,MIN=100;
+  let CASH=1860;
+  const fmt=n=>n.toLocaleString('en-US');
+  const val=()=>Number(String(inp.value).replace(/\D/g,''))||0;
+  const wayName=()=>{const w=ways.querySelector('.way.on b');return w?w.textContent:'微信零钱';};
+  function syncCash(){
+    rmb.textContent=(CASH*RATE).toFixed(2);
+    document.querySelectorAll('[data-cash]').forEach(el=>el.textContent=(CASH*RATE).toFixed(2));
+    document.querySelectorAll('[data-cashxc]').forEach(el=>el.textContent=fmt(CASH));
+  }
+  function paint(){
+    const v=val();
+    out.textContent='¥'+(v*RATE).toFixed(2);
+    if(v<MIN){ btn.disabled=true; btn.textContent=v?('还差 '+fmt(MIN-v)+' 星尘收益'):'立即提现'; }
+    else if(v>CASH){ btn.disabled=true; btn.textContent='超出可提现收益'; }
+    else { btn.disabled=false; btn.textContent='立即提现 ¥'+(v*RATE).toFixed(2); }
+  }
+  function syncConfirm(){
+    const v=val();
+    document.getElementById('wcXc').textContent=fmt(v)+' 星尘收益';
+    document.getElementById('wcRmb').textContent='¥'+(v*RATE).toFixed(2);
+    document.getElementById('wcWay').textContent=wayName();
+  }
+  function addRecord(v){
+    const d=new Date(),p=n=>String(n).padStart(2,'0');
+    const r=document.createElement('div'); r.className='wrec';
+    r.innerHTML='<div><b>'+wayName()+'</b><s>'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+' · 审核中</s></div>'
+      +'<em>−'+fmt(v)+' 星尘收益<u>¥'+(v*RATE).toFixed(2)+'</u></em>';
+    recs.insertBefore(r,recs.firstChild);
+    const lst=document.getElementById('cashFlows');
+    if(lst){
+      const row=document.createElement('div'); row.className='rw2 st';
+      row.dataset.pop='p28'; row.dataset.tip='提现记录|刚刚提交的提现正在审核';
+      row.innerHTML='<span class="ic">↗</span><div class="tx"><b>收益提现 · '+wayName()+'</b><s>刚刚 · 审核中</s></div>'
+        +'<span class="a2">−'+fmt(v)+'<s>星尘收益</s></span>';
+      lst.insertBefore(row,lst.firstChild);
+    }
+  }
+  inp.addEventListener('input',()=>{
+    inp.value=String(val()).slice(0,6);
+    if(inp.value==='0') inp.value='';
+    chips.querySelectorAll('b').forEach(x=>x.classList.remove('on'));
+    paint();
+  });
+  chips.addEventListener('click',e=>{
+    const b=e.target.closest('b'); if(!b) return;
+    chips.querySelectorAll('b').forEach(x=>x.classList.toggle('on',x===b));
+    inp.value=b.dataset.v==='all'?CASH:b.dataset.v; paint();
+  });
+  all.onclick=()=>{ inp.value=CASH; paint(); };
+  ways.addEventListener('click',e=>{
+    const w=e.target.closest('.way'); if(!w) return;
+    ways.querySelectorAll('.way').forEach(x=>x.classList.toggle('on',x===w));
+  });
+  btn.onclick=()=>{ if(btn.disabled) return; syncConfirm(); popUp('p27'); };
+  document.getElementById('wOk').onclick=()=>{
+    const v=val(); if(v<MIN||v>CASH) return;
+    CASH-=v; syncCash(); addRecord(v); closeAll(); paint();
+    toast('提现申请已提交 · ¥'+(v*RATE).toFixed(2)+' · 预计 1–2 个工作日到账');
+  };
+  syncCash(); paint();
+})();
 document.getElementById('bhome').onclick=()=>{ stopTour(); go('s01'); };
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key==='ArrowDown'){ stopTour(); go(seq[Math.min(seq.length-1,seq.indexOf(cur)+1)]); }
