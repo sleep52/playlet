@@ -1034,41 +1034,167 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
   border-radius:999px;padding:7px 13px;cursor:pointer;backdrop-filter:blur(8px);white-space:nowrap;flex:none}
 
 /* ================= 20 全屏打赏特效 ================= */
-.pg.dk.s20{background:radial-gradient(80% 60% at 50% 60%,rgba(108,92,231,.55),rgba(8,8,12,.97) 72%),#0D0D12}
-.s20 .in{position:relative;z-index:3;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
-  padding:0 24px;text-align:center;overflow:hidden}
-.s20 .shn{position:absolute;left:-40%;top:0;width:40%;height:100%;z-index:1;
-  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.14),rgba(255,255,255,0))}
-.s20.on .shn{animation:swp 2.6s .6s ease-in-out infinite}
-@keyframes swp{0%{transform:translateX(0)}100%{transform:translateX(360%)}}
-.s20 .host{margin-top:60px;display:grid;justify-items:center;gap:11px;z-index:3}
-.s20 .host .ava{width:76px;height:76px;border:3px solid rgba(255,255,255,.85);box-shadow:0 18px 40px -12px rgba(0,0,0,.85)}
-.s20 .host b{font-size:15px;font-weight:700;letter-spacing:.06em}
-.s20 .host s{text-decoration:none;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.06em}
-.s20 .cmb{margin-top:22px;font-family:"DIN Alternate",monospace;font-weight:700;line-height:.9;z-index:3;
-  background:linear-gradient(180deg,#FFF6DE,#E9B949 58%,#A9711A);-webkit-background-clip:text;background-clip:text;
-  color:transparent;filter:drop-shadow(0 6px 22px rgba(233,185,73,.5))}
-.s20 .cmb b{display:block;font-size:74px}
-.s20 .cmb s{display:block;font-size:12px;letter-spacing:.32em;text-decoration:none;color:#F0D8A8;margin-top:8px;
-  -webkit-text-fill-color:#F0D8A8}
-.s20.on .cmb{animation:pop .55s .4s var(--ease) both}
-.s20 .fly{position:absolute;left:50%;bottom:120px;width:0;height:0;z-index:2}
-.s20 .fly i{position:absolute;left:0;bottom:0;font-style:normal;font-size:25px;opacity:0;animation:fly 2.8s var(--ease) infinite}
-@keyframes fly{0%{opacity:0;transform:translate(-50%,60px) scale(.5) rotate(-18deg)}
-  16%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx,60px)),-520px) scale(1.15) rotate(16deg)}}
-.s20 .ann{margin-top:auto;width:100%;border-radius:16px;padding:13px 15px;display:flex;align-items:center;gap:11px;
-  text-align:left;background:linear-gradient(120deg,rgba(240,216,168,.2),rgba(255,255,255,.05));
-  border:1px solid rgba(240,216,168,.34);backdrop-filter:blur(14px);z-index:3}
-.s20 .ann .ava{width:34px;height:34px;border:1.5px solid rgba(240,216,168,.6);flex:none}
-.s20 .ann b{font-size:12.5px;font-weight:600;display:block}
-.s20 .ann s{text-decoration:none;font-size:10.5px;color:rgba(255,255,255,.52);display:block;margin-top:5px}
-.s20 .ann em{margin-left:auto;flex:none;font-style:normal;font-size:9px;letter-spacing:.12em;color:#F0D8A8;
-  border:1px solid rgba(240,216,168,.4);border-radius:6px;padding:4px 8px}
+.pg.dk.s20{background:#05040A;overflow:hidden}
+.s20 .bgim{position:absolute;inset:-6%;background:url(assets/s20-stage.webp) center 46%/cover no-repeat;opacity:.74;transform:scale(1.05)}
+.s20.on .bgim{animation:x20kb 9s ease-in-out infinite alternate}
+@keyframes x20kb{from{transform:scale(1.03) translateY(2%)}to{transform:scale(1.12) translateY(-3%)}}
+.s20 .veil{position:absolute;inset:0;background:
+  radial-gradient(64% 38% at 50% 41%,rgba(255,224,170,.16),rgba(5,4,10,0) 72%),
+  linear-gradient(180deg,rgba(5,4,10,.92),rgba(5,4,10,.44) 30%,rgba(5,4,10,.30) 52%,rgba(5,4,10,.80) 78%,rgba(5,4,10,.97))}
+.s20 .beam{position:absolute;left:50%;top:-12%;width:330px;height:78%;transform:translateX(-50%) rotate(4deg);
+  background:linear-gradient(180deg,rgba(255,232,196,.15),rgba(255,232,196,0) 70%);
+  filter:blur(20px);mix-blend-mode:screen;opacity:.7}
+.s20 .burst{position:absolute;left:50%;top:41%;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,238,205,.42),rgba(255,196,110,.20) 24%,rgba(168,139,250,.14) 42%,rgba(0,0,0,0) 68%);
+  mix-blend-mode:screen;z-index:1}
+.s20.on .burst{animation:x20burst 4.6s ease-in-out infinite}
+@keyframes x20burst{0%,100%{transform:scale(.84);opacity:.5}50%{transform:scale(1.12);opacity:1}}
+.s20 .rays{position:absolute;left:50%;top:41%;width:660px;height:660px;margin:-330px 0 0 -330px;
+  background:repeating-conic-gradient(from 0deg,rgba(255,232,190,.5) 0deg 1.3deg,rgba(255,232,190,0) 1.3deg 8.6deg);
+  -webkit-mask-image:radial-gradient(circle,rgba(0,0,0,.95) 10%,rgba(0,0,0,.55) 32%,rgba(0,0,0,.2) 48%,transparent 66%);
+  mask-image:radial-gradient(circle,rgba(0,0,0,.95) 10%,rgba(0,0,0,.55) 32%,rgba(0,0,0,.2) 48%,transparent 66%);
+  mix-blend-mode:screen;opacity:.42;z-index:1}
+.s20.on .rays{animation:x20rays 26s linear infinite}
+@keyframes x20rays{to{transform:rotate(360deg)}}
+.s20 .halo{position:absolute;left:50%;top:41%;width:346px;height:346px;margin:-173px 0 0 -173px;border-radius:50%;
+  background:conic-gradient(from 0deg,rgba(255,214,140,0),rgba(255,214,140,.8) 34deg,rgba(255,214,140,0) 118deg,rgba(168,139,250,.65) 196deg,rgba(255,214,140,0) 292deg);
+  -webkit-mask-image:radial-gradient(circle,transparent 63%,#000 69% 76%,transparent 84%);
+  mask-image:radial-gradient(circle,transparent 63%,#000 69% 76%,transparent 84%);
+  mix-blend-mode:screen;opacity:.9;z-index:1}
+.s20.on .halo{animation:x20halo 11s linear infinite reverse}
+@keyframes x20halo{to{transform:rotate(360deg)}}
+.s20 .shock{position:absolute;left:50%;top:41%;width:0;height:0;z-index:1}
+.s20 .shock i{position:absolute;left:0;top:0;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;
+  border:1.5px solid rgba(255,228,182,.5);box-shadow:0 0 20px rgba(255,206,130,.45),inset 0 0 16px rgba(255,206,130,.22);opacity:0}
+.s20.on .shock i{animation:x20shock 3.4s ease-out infinite}
+.s20.on .shock i:nth-child(2){animation-delay:1.13s}
+.s20.on .shock i:nth-child(3){animation-delay:2.26s}
+@keyframes x20shock{0%{opacity:0;transform:scale(.62)}14%{opacity:.9}100%{opacity:0;transform:scale(2.8)}}
+.s20 .dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.s20 .dust i{position:absolute;left:var(--x,50%);bottom:-8%;font-style:normal;font-size:var(--s,9px);color:#FFE2AE;
+  opacity:0;text-shadow:0 0 8px rgba(255,196,110,.9)}
+.s20.on .dust i{animation:x20dust var(--du,7s) linear var(--dd,0s) infinite}
+@keyframes x20dust{0%{opacity:0;transform:translate(0,0) scale(.6)}12%{opacity:.85}72%{opacity:.55}
+  100%{opacity:0;transform:translate(var(--dx,10px),-620px) scale(1.05)}}
+.s20 .flash{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(58% 40% at 50% 41%,rgba(255,246,230,.95),rgba(255,208,142,.5) 44%,rgba(255,196,110,0) 78%)}
+.s20.on .flash{animation:x20flash 12s ease-out infinite}
+@keyframes x20flash{0%{opacity:.9}4%{opacity:.4}9%,100%{opacity:0}}
+.s20 .scan{position:absolute;top:0;bottom:0;left:-130%;width:130%;z-index:3;pointer-events:none;mix-blend-mode:screen;opacity:0;
+  background:linear-gradient(100deg,rgba(255,240,214,0),rgba(255,240,214,.26) 48%,rgba(255,240,214,0))}
+.s20.on .scan{animation:x20scan 12s ease-in-out infinite}
+@keyframes x20scan{0%,52%{transform:translateX(0);opacity:0}58%{opacity:.32}70%{transform:translateX(100%);opacity:0}100%{transform:translateX(100%);opacity:0}}
+.s20 .orbit{position:absolute;left:50%;top:35%;width:0;height:0;z-index:2;pointer-events:none}
+.s20 .orbit .r1{position:absolute;left:0;top:0;animation:x20orb 15s linear infinite}
+.s20 .orbit .r1 i{position:absolute;left:0;top:0;width:0;height:0}
+.s20 .orbit .r1 img{position:absolute;left:var(--lx);top:var(--ly);width:var(--sz);height:var(--sz);object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(255,214,150,.8)) brightness(1.15);animation:x20orb 15s linear infinite reverse;opacity:.95}
+@keyframes x20orb{to{transform:rotate(360deg)}}
+.s20 .fall{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+.s20 .fall i{position:absolute;top:-6%;left:var(--x);font-style:normal;font-size:var(--s,10px);color:#FFE9C6;opacity:0;
+  text-shadow:0 0 10px rgba(255,206,130,.85)}
+.s20.on .fall i{animation:x20fall 12s linear var(--dd,0s) infinite}
+@keyframes x20fall{0%,24%{opacity:0;transform:translateY(0) rotate(0deg)}
+  32%{opacity:.95}55%{opacity:.6}72%{opacity:0;transform:translateY(720px) rotate(210deg)}
+  100%{opacity:0;transform:translateY(720px) rotate(210deg)}}
+.s20 .cmb .ph{position:relative;height:19px;margin-top:7px}
+.s20 .cmb .ph em{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;font-style:normal;
+  font-size:10.5px;letter-spacing:.06em;color:rgba(255,255,255,.56)}
+.s20.on .cmb .ph em:nth-child(1){animation:x20phA 12s linear infinite}
+.s20.on .cmb .ph em:nth-child(2){animation:x20phB 12s linear infinite}
+@keyframes x20phA{0%,42%{opacity:1}48%,92%{opacity:0}100%{opacity:1}}
+@keyframes x20phB{0%,44%{opacity:0}50%,90%{opacity:1}96%,100%{opacity:0}}
+.s20 .in{position:relative;z-index:4;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  padding:44px 20px 46px;text-align:center}
+.s20 .plate{display:flex;align-items:center;gap:9px;padding:7px 12px 7px 7px;border-radius:999px;
+  background:rgba(9,7,15,.52);border:1px solid rgba(255,214,140,.26);backdrop-filter:blur(14px);max-width:100%}
+.s20 .plate .ava{width:30px;height:30px;border:1.5px solid rgba(255,222,168,.7)}
+.s20 .plate .tx{text-align:left}
+.s20 .plate b{display:block;font-size:12px;font-weight:600;letter-spacing:.02em}
+.s20 .plate s{display:block;text-decoration:none;font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.02em}
+.s20 .plate em{font-style:normal;font-size:8.5px;letter-spacing:.14em;color:#FFE6BC;border:1px solid rgba(255,214,140,.42);
+  border-radius:6px;padding:3px 7px;background:rgba(255,214,140,.1);white-space:nowrap}
+.s20 .gem{position:relative;width:270px;height:270px;margin-top:8px;display:grid;place-items:center;z-index:3}
+.s20 .gem img{width:270px;height:270px;object-fit:contain;
+  filter:drop-shadow(0 14px 26px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,200,126,.42))}
+.s20.on .gem img{animation:x20gem 12s cubic-bezier(.25,.6,.3,1) infinite}
+@keyframes x20gem{
+  0%{opacity:.35;transform:scale(.55) rotate(-18deg);filter:brightness(2.2) blur(5px)}
+  6%{opacity:1;transform:scale(1.12) rotate(0deg);filter:brightness(1.75) blur(0)}
+  13%{transform:scale(1) rotate(10deg);filter:brightness(1.12)}
+  24%{transform:scale(1.02) rotate(52deg) translateY(-5px)}
+  36%{transform:scale(1) rotate(104deg) translateY(3px)}
+  48%{transform:scale(1.03) rotate(156deg) translateY(-7px)}
+  60%{transform:scale(1.02) rotate(208deg) translateY(-2px)}
+  70%{transform:scale(1.08) rotate(252deg) translateY(-4px);filter:brightness(1.28)}
+  78%{transform:scale(.97) rotate(286deg);filter:brightness(1.05)}
+  90%{opacity:1;transform:scale(1.03) rotate(332deg);filter:brightness(1.15)}
+  96%{opacity:1;transform:scale(1.12) rotate(352deg);filter:brightness(1.45)}
+  100%{opacity:.35;transform:scale(.6) rotate(366deg);filter:brightness(2.2) blur(4px)}}
+.s20 .gem::after{content:"";position:absolute;inset:6%;border-radius:50%;mix-blend-mode:screen;pointer-events:none;
+  background:linear-gradient(104deg,rgba(255,255,255,0) 43%,rgba(255,255,255,.75) 50%,rgba(255,255,255,0) 57%);
+  -webkit-mask-image:radial-gradient(circle,#000 34%,rgba(0,0,0,.5) 58%,transparent 74%);
+  mask-image:radial-gradient(circle,#000 34%,rgba(0,0,0,.5) 58%,transparent 74%);opacity:0}
+.s20.on .gem::after{animation:x20sweep 5.8s ease-in-out infinite}
+@keyframes x20sweep{0%,70%{opacity:0;transform:translateX(-86%)}80%{opacity:.5}100%{opacity:0;transform:translateX(86%)}}
+.s20 .gem .sp{position:absolute;font-size:12px;color:#FFF2D6;opacity:0;text-shadow:0 0 10px rgba(255,214,150,.95)}
+.s20 .gem .sp:nth-child(2){left:6%;top:16%;--sd:.2s}
+.s20 .gem .sp:nth-child(3){right:4%;top:28%;--sd:1.1s;font-size:15px}
+.s20 .gem .sp:nth-child(4){left:2%;bottom:22%;--sd:2s;font-size:10px}
+.s20 .gem .sp:nth-child(5){right:8%;bottom:14%;--sd:2.9s;font-size:13px}
+.s20.on .gem .sp{animation:x20tw 3.6s ease-in-out var(--sd,0s) infinite}
+@keyframes x20tw{0%,100%{opacity:0;transform:scale(.5) rotate(0)}45%{opacity:1;transform:scale(1.05) rotate(45deg)}70%{opacity:.35;transform:scale(.8) rotate(90deg)}}
+.s20 .cmb{margin-top:4px;z-index:3;position:relative}
+.s20 .cmb s{display:block;text-decoration:none;font-family:"DIN Alternate",monospace;font-size:10px;letter-spacing:.4em;
+  color:#F3DCAE;opacity:.82;margin-bottom:2px}
+.s20 .cmb b{display:block;font-family:"DIN Alternate",monospace;font-size:66px;font-weight:700;line-height:.92;letter-spacing:-.02em;
+  background:linear-gradient(178deg,#FFFAF0 4%,#FFE6B0 30%,#EFB659 58%,#C1802F 84%,#F3DCAE 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(112,64,18,.45)) drop-shadow(0 12px 30px rgba(233,174,85,.45))}
+.s20 .cmb em{display:block;font-style:normal;font-size:10.5px;color:rgba(255,255,255,.56);letter-spacing:.06em;margin-top:9px}
+.s20 .cmb .rw2{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px}
+.s20 .cmb .rw2 span{height:1px;width:44px;background:linear-gradient(90deg,rgba(255,222,168,0),rgba(255,222,168,.6),rgba(255,222,168,0))}
+.s20 .cmb .rw2 b2{font-size:9.5px;letter-spacing:.18em;color:#F0D8A8;font-weight:600}
+.s20.on .cmb b{animation:x20num 3.2s ease-in-out infinite}
+@keyframes x20num{0%,100%{transform:scale(1)}8%{transform:scale(1.06)}30%{transform:scale(.99)}58%{transform:scale(1.03)}}
+.s20 .val{display:flex;align-items:baseline;justify-content:center;gap:7px;margin-top:12px;z-index:3}
+.s20 .val i{font-style:normal;font-size:9.5px;letter-spacing:.2em;color:rgba(255,255,255,.45)}
+.s20 .val b{font-family:"DIN Alternate",monospace;font-size:26px;font-weight:700;letter-spacing:.02em;
+  background:linear-gradient(180deg,#FFF4DA,#F0CF92 62%,#D8A85F);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 14px rgba(233,174,85,.35))}
+.s20 .val s{text-decoration:none;font-size:9.5px;color:rgba(255,255,255,.4);letter-spacing:.04em}
+.s20 .tags{display:flex;gap:7px;justify-content:center;margin-top:11px;z-index:3}
+.s20 .tags span{font-size:9.5px;letter-spacing:.08em;color:#FFE9C6;border:1px solid rgba(255,214,140,.32);
+  background:rgba(255,214,140,.1);border-radius:999px;padding:6px 11px;backdrop-filter:blur(8px);white-space:nowrap}
+.s20 .queue{margin-top:auto;margin-bottom:9px;width:100%;display:flex;align-items:center;gap:9px;padding:9px 12px;
+  border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(12px);text-align:left}
+.s20 .queue .ava{width:26px;height:26px;border:1px solid rgba(255,255,255,.38)}
+.s20 .queue b{display:block;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s20 .queue s{display:block;text-decoration:none;font-size:9.5px;color:rgba(255,255,255,.46);margin-top:3px}
+.s20 .queue em{margin-left:auto;font-style:normal;font-size:9px;letter-spacing:.08em;color:#FFE6BC;
+  border:1px solid rgba(255,214,140,.3);border-radius:6px;padding:3px 7px;white-space:nowrap}
+.s20 .ann{margin-top:9px;width:100%;border-radius:16px;padding:10px 13px;display:flex;align-items:center;gap:10px;text-align:left;
+  background:linear-gradient(104deg,rgba(255,214,140,.2),rgba(255,255,255,.05) 52%,rgba(168,139,250,.14));
+  border:1px solid rgba(255,214,140,.34);backdrop-filter:blur(16px);box-shadow:0 18px 40px -24px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.16)}
+.s20 .ann .ava{width:36px;height:36px;border:1.5px solid rgba(255,222,168,.65)}
+.s20 .ann .tx{flex:1;min-width:0}
+.s20 .ann b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s20 .ann s{display:block;text-decoration:none;font-size:10px;color:rgba(255,255,255,.54);margin-top:5px}
+.s20 .ann .pb{height:3px;border-radius:3px;margin-top:9px;background:rgba(255,255,255,.12);overflow:hidden}
+.s20 .ann .pb i{display:block;height:100%;width:78%;background:linear-gradient(90deg,#C9A96A,#FFE6BC);border-radius:3px}
+.s20.on .ann .pb i{animation:x20pb 8s linear infinite}
+@keyframes x20pb{from{width:78%}to{width:22%}}
+.s20 .ann em{font-style:normal;font-size:9px;letter-spacing:.12em;color:#FFE6BC;border:1px solid rgba(255,214,140,.45);
+  border-radius:6px;padding:4px 7px;align-self:flex-start;background:rgba(255,214,140,.1);white-space:nowrap}
 .s20 .cta{width:100%;margin-top:12px;display:flex;gap:11px;z-index:3}
-.s20 .cta .pill{flex:1;height:48px;font-size:13.5px}
-.s20 .glow{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:280px;height:280px;border-radius:50%;
-  background:radial-gradient(circle,rgba(240,216,168,.22),rgba(108,92,231,0) 68%);z-index:1}
-.s20.on .glow{animation:tk 2.4s ease-in-out infinite}
+.s20 .cta .pill{flex:1;height:46px;font-size:13.5px}
+.s20 .cta .gold{position:relative;overflow:hidden;border:none;color:#2A1B08;font-weight:700;
+  background:linear-gradient(135deg,#FFEFCF,#F0D8A8 42%,#E0AE5C);box-shadow:0 14px 32px -10px rgba(240,216,168,.7)}
+.s20 .cta .gold::after{content:"";position:absolute;top:0;left:-40%;width:34%;height:100%;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));
+  transform:skewX(-18deg)}
+.s20.on .cta .gold::after{animation:x20shine 2.8s 1.2s ease-in-out infinite}
+@keyframes x20shine{0%{left:-40%}58%,100%{left:118%}}
 
 /* ================= 21 贡献榜 ================= */
 .s21 .hd{display:flex;align-items:center;gap:12px;padding:2px 20px 0;flex:none}
@@ -3353,28 +3479,80 @@ body{background:#26272C;font-family:"PingFang SC","Microsoft YaHei",sans-serif;c
 
       <!-- ============ 20 全屏打赏特效 ============ -->
       <section class="pg dk s20" id="s20" data-n="20" data-ti="全屏打赏特效" data-s="付费的一刻整块屏幕属于送出的人；连击时长与公告是排面的度量">
-        <div class="shn"></div><div class="glow"></div>
+        <div class="bgim"></div>
+        <div class="veil"></div>
+        <div class="beam"></div>
+        <div class="burst"></div>
+        <div class="rays"></div>
+        <div class="halo"></div>
+        <div class="shock"><i></i><i></i><i></i></div>
+        <div class="dust">
+          <i style="--x:8%;--s:8px;--du:7.4s;--dd:.2s;--dx:14px">✦</i>
+          <i style="--x:18%;--s:6px;--du:8.2s;--dd:1.4s;--dx:-10px">✧</i>
+          <i style="--x:29%;--s:9px;--du:6.8s;--dd:2.6s;--dx:8px">✦</i>
+          <i style="--x:38%;--s:7px;--du:7.9s;--dd:.9s;--dx:-16px">✧</i>
+          <i style="--x:47%;--s:10px;--du:7.1s;--dd:3.4s;--dx:12px">✦</i>
+          <i style="--x:56%;--s:6px;--du:8.6s;--dd:1.9s;--dx:-8px">✧</i>
+          <i style="--x:64%;--s:9px;--du:6.5s;--dd:4.2s;--dx:16px">✦</i>
+          <i style="--x:72%;--s:7px;--du:7.7s;--dd:2.2s;--dx:-12px">✧</i>
+          <i style="--x:81%;--s:11px;--du:8.8s;--dd:.5s;--dx:10px">✦</i>
+          <i style="--x:88%;--s:6px;--du:7.2s;--dd:3.1s;--dx:-14px">✧</i>
+          <i style="--x:94%;--s:9px;--du:6.9s;--dd:5s;--dx:6px">✦</i>
+          <i style="--x:12%;--s:10px;--du:8.4s;--dd:4.6s;--dx:-6px">✧</i>
+        </div>
+        <div class="flash"></div>
+        <div class="scan"></div>
+        <div class="orbit">
+          <div class="r1">
+            <i><img src="assets/s20-gift-key.webp" alt="" style="--lx:-104px;--ly:-44px;--sz:40px"></i>
+            <i><img src="assets/s20-gift-crown.webp" alt="" style="--lx:62px;--ly:-58px;--sz:36px"></i>
+            <i><img src="assets/s20-gift-key.webp" alt="" style="--lx:56px;--ly:44px;--sz:24px"></i>
+            <i><img src="assets/s20-gift-crown.webp" alt="" style="--lx:-84px;--ly:38px;--sz:22px"></i>
+          </div>
+        </div>
+        <div class="fall">
+          <i style="--x:6%;--s:13px;--dd:.4s">✦</i><i style="--x:16%;--s:10px;--dd:1.2s">✧</i>
+          <i style="--x:25%;--s:15px;--dd:2.1s">✦</i><i style="--x:34%;--s:9px;--dd:.8s">✧</i>
+          <i style="--x:44%;--s:16px;--dd:1.7s">✦</i><i style="--x:53%;--s:11px;--dd:2.7s">✧</i>
+          <i style="--x:62%;--s:14px;--dd:.3s">✦</i><i style="--x:71%;--s:10px;--dd:2.0s">✧</i>
+          <i style="--x:80%;--s:15px;--dd:3.2s">✦</i><i style="--x:89%;--s:11px;--dd:.9s">✧</i>
+          <i style="--x:96%;--s:13px;--dd:2.4s">✦</i><i style="--x:39%;--s:12px;--dd:3.5s">✧</i>
+        </div>
         <div class="in">
-          <div class="host st" style="--d:.08s">
-            <span class="ava im i12"></span>
-            <b>沐沐酱</b>
-            <s>收到来自 小橘子 的星域 · 免费看短剧</s>
-          </div>
-          <div class="cmb st" style="--d:.14s"><b>×36</b><s>COMBO · 12.4 S</s></div>
-          <div class="fly">
-            <i style="--dx:-120px;animation-delay:.1s">🏝</i><i style="--dx:-40px;animation-delay:.4s">🏝</i>
-            <i style="--dx:60px;animation-delay:.7s">🏝</i><i style="--dx:130px;animation-delay:1s">🏝</i>
-            <i style="--dx:-90px;animation-delay:1.3s">💍</i><i style="--dx:20px;animation-delay:1.6s">💍</i>
-            <i style="--dx:100px;animation-delay:1.9s">🌙</i><i style="--dx:-140px;animation-delay:2.2s">🌙</i>
-          </div>
-          <div class="ann st" style="--d:.3s" data-toast="公告将展示 60 秒 · 房间内可见">
+          <div class="plate st" style="--d:.1s">
             <span class="ava im i15"></span>
-            <div><b>小橘子 登上本场守护第一</b><s>全房间公告 · 已播放 12 次 · 剩余 47 秒</s></div>
-            <em>公告</em>
+            <div class="tx"><b>小橘子</b><s>送出「星域之环」×36</s></div>
+            <em>全屏特效</em>
           </div>
-          <div class="cta st" style="--d:.36s">
+          <div class="gem st" style="--d:.2s">
+            <img src="assets/s20-gift.webp" alt="星域之环">
+            <span class="sp">✦</span><span class="sp">✧</span><span class="sp">✦</span><span class="sp">✧</span>
+          </div>
+          <div class="cmb st" style="--d:.26s">
+            <s>COMBO</s>
+            <b>×36</b>
+            <div class="ph"><em>连击 12.4s · 已触发 3 次星河追加</em><em>星河追加中 · 守护 BUFF 已生效</em></div>
+          </div>
+          <div class="val st" style="--d:.3s">
+            <i>本次送出</i><b>18 720</b><s>星尘 · 约 ¥187</s>
+          </div>
+          <div class="tags st" style="--d:.32s">
+            <span>✦ 全屏特效</span><span>✦ 连击 ×36</span><span>✦ 守护 60s</span>
+          </div>
+          <div class="queue st" style="--d:.36s">
+            <span class="ava im i14"></span>
+            <div class="tx"><b>晚风与酒</b><s>正在送出「星际之钥」×12</s></div>
+            <em>排队 2</em>
+          </div>
+          <div class="ann st" style="--d:.34s" data-toast="公告将展示 60 秒 · 房间内可见">
+            <span class="ava im i15"></span>
+            <div class="tx"><b>小橘子 登上本场守护第一</b><s>全房间公告 · 已播放 12 次 · 剩余 47 秒</s>
+              <div class="pb"><i></i></div></div>
+            <em>守护</em>
+          </div>
+          <div class="cta st" style="--d:.4s">
             <div class="pill w" data-go="s19" data-tip="跳过特效|回到 19 个人直播频道，不打断观看">跳过</div>
-            <div class="pill gr" data-toast="已续一次特效 · 消耗 520 星尘" data-tip="再来一次|按同一档续费，特效继续">再来一次</div>
+            <div class="pill gold" data-toast="已续一次特效 · 消耗 520 星尘" data-tip="再来一次|按同一档续费，特效继续">再来一次</div>
           </div>
         </div>
       </section>
@@ -4763,6 +4941,7 @@ if(hp[1]) popUp(hp[1]);
 </script>
 </body>
 </html>
+
 
 
 
