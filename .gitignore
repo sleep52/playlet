@@ -1,3 +1,18 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 无头浏览器临时配置目录（截图验证用）
+.edge*/
+
+# 根目录调试产物：临时页面副本、截图、录屏
+/_*.html
+/_*.png
+/_*.jpg
+/_*.jpeg
+/_*.mp4
+
+# 素材源文件与对照稿
+/assets/_*
+/type-options*.html
+/.trae-html-share-packages/
