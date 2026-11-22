@@ -11,6 +11,11 @@ desktop.ini
 /_*.jpg
 /_*.jpeg
 /_*.mp4
+/*.png
+/*.jpg
+/*.jpeg
+/*.webm
+/*.mp4
 
 # 素材源文件与对照稿
 /assets/_*
